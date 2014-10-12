@@ -64,14 +64,12 @@ Tools
 
 Deployment
 * check local library functions in configure
-* update msvscpp files
-* add codegear files
-* add macosx files
 
 20141012
 * removed README.macosx
 * updated dependencies
 * worked on utility scripts
+* changes for project site move
 
 20140318
 * Code clean up

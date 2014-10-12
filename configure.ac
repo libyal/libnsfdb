@@ -219,6 +219,7 @@ AC_CONFIG_FILES([libnsfdb/libnsfdb_definitions.h])
 dnl Have configure make distribution specific files
 AC_CONFIG_FILES([common/types.h])
 AC_CONFIG_FILES([dpkg/changelog])
+AC_CONFIG_FILES([dpkg/copyright])
 AC_CONFIG_FILES([libnsfdb/libnsfdb.rc])
 AC_CONFIG_FILES([libnsfdb.pc])
 AC_CONFIG_FILES([libnsfdb.spec])
