@@ -1,0 +1,77 @@
+/*
+ * Definitions for libnsfdb
+ *
+ * Copyright (C) 2010-2014, Joachim Metz <joachim.metz@gmail.com>
+ *
+ * Refer to AUTHORS for acknowledgements.
+ *
+ * This software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#if !defined( _LIBNSFDB_DEFINITIONS_H )
+#define _LIBNSFDB_DEFINITIONS_H
+
+#include <libnsfdb/types.h>
+
+#define LIBNSFDB_VERSION					@VERSION@
+
+/* The libnsfdb version string
+ */
+#define LIBNSFDB_VERSION_STRING					"@VERSION@"
+
+/* The access flags definitions
+ * bit 1        set to 1 for read access
+ * bit 2        set to 1 for write access
+ * bit 3-8      not used
+ */
+enum LIBNSFDB_ACCESS_FLAGS
+{
+	LIBNSFDB_ACCESS_FLAG_READ				= 0x01,
+/* Reserved: not supported yet */
+	LIBNSFDB_ACCESS_FLAG_WRITE				= 0x02
+};
+
+/* The file access macros
+ */
+#define LIBNSFDB_OPEN_READ					( LIBNSFDB_ACCESS_FLAG_READ )
+/* Reserved: not supported yet */
+#define LIBNSFDB_OPEN_WRITE					( LIBNSFDB_ACCESS_FLAG_WRITE )
+/* Reserved: not supported yet */
+#define LIBNSFDB_OPEN_READ_WRITE				( LIBNSFDB_ACCESS_FLAG_READ | LIBNSFDB_ACCESS_FLAG_WRITE )
+
+/* The note types
+ */
+enum LIBNSFDB_NOTE_TYPES
+{
+	LIBNSFDB_NOTE_TYPE_ALL					= (int) 'a',
+	LIBNSFDB_NOTE_TYPE_DATA					= (int) 'd',
+	LIBNSFDB_NOTE_TYPE_NON_DATA				= (int) 'n'
+};
+
+/* The note item classes
+ */
+enum LIBNSFDB_NOTE_ITEM_CLASSES
+{
+	LIBNSFDB_NOTE_ITEM_CLASS_NO_COMPUTE			= 0,
+	LIBNSFDB_NOTE_ITEM_CLASS_ERROR				= 1,
+	LIBNSFDB_NOTE_ITEM_CLASS_UNAVAILABLE			= 2,
+	LIBNSFDB_NOTE_ITEM_CLASS_NUMBER				= 3,
+	LIBNSFDB_NOTE_ITEM_CLASS_TIME				= 4,
+	LIBNSFDB_NOTE_ITEM_CLASS_TEXT				= 5,
+	LIBNSFDB_NOTE_ITEM_CLASS_FORMULA			= 6,
+	LIBNSFDB_NOTE_ITEM_CLASS_USERID				= 7
+};
+
+#endif
+

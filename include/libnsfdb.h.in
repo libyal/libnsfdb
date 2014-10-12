@@ -1,0 +1,320 @@
+/*
+ * Library to access the Notes Storage Facility (NSFDB) database file format
+ *
+ * Copyright (C) 2010-2014, Joachim Metz <joachim.metz@gmail.com>
+ *
+ * Refer to AUTHORS for acknowledgements.
+ *
+ * This software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#if !defined( _LIBNSFDB_H )
+#define _LIBNSFDB_H
+
+#include <libnsfdb/codepage.h>
+#include <libnsfdb/definitions.h>
+#include <libnsfdb/error.h>
+#include <libnsfdb/extern.h>
+#include <libnsfdb/features.h>
+#include <libnsfdb/types.h>
+
+#include <stdio.h>
+
+#if defined( LIBNSFDB_HAVE_BFIO )
+#include <libbfio.h>
+#endif
+
+#if defined( __cplusplus )
+extern "C" {
+#endif
+
+/* -------------------------------------------------------------------------
+ * Support functions
+ * ------------------------------------------------------------------------- */
+
+/* Returns the library version
+ */
+LIBNSFDB_EXTERN \
+const char *libnsfdb_get_version(
+             void );
+
+/* Returns the access flags for reading
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_get_access_flags_read(
+     void );
+
+/* Retrieves the narrow system string codepage
+ * A value of 0 represents no codepage, UTF-8 encoding is used instead
+ * Returns 1 if successful or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_get_codepage(
+     int *codepage,
+     libnsfdb_error_t **error );
+
+/* Sets the narrow system string codepage
+ * A value of 0 represents no codepage, UTF-8 encoding is used instead
+ * Returns 1 if successful or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_set_codepage(
+     int codepage,
+     libnsfdb_error_t **error );
+
+/* Determines if a file is a NSFDB file
+ * Returns 1 if true, 0 if not or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_check_file_signature(
+     const char *filename,
+     libnsfdb_error_t **error );
+
+#if defined( LIBNSFDB_HAVE_WIDE_CHARACTER_TYPE )
+/* Determines if a file is a NSFDB file
+ * Returns 1 if true, 0 if not or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_check_file_signature_wide(
+     const wchar_t *filename,
+     libnsfdb_error_t **error );
+#endif
+
+#if defined( LIBNSFDB_HAVE_BFIO )
+/* Determines if a file is a NSFDB file using a Basic File IO (bfio) handle
+ * Returns 1 if true, 0 if not or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_check_file_signature_file_io_handle(
+     libbfio_handle_t *file_io_handle,
+     libnsfdb_error_t **error );
+#endif
+
+/* -------------------------------------------------------------------------
+ * Notify functions
+ * ------------------------------------------------------------------------- */
+
+/* Sets the verbose notification
+ */
+LIBNSFDB_EXTERN \
+void libnsfdb_notify_set_verbose(
+      int verbose );
+
+/* Sets the notification stream
+ * Returns 1 if successful or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_notify_set_stream(
+     FILE *stream,
+     libnsfdb_error_t **error );
+
+/* Opens the notification stream using a filename
+ * The stream is opened in append mode
+ * Returns 1 if successful or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_notify_stream_open(
+     const char *filename,
+     libnsfdb_error_t **error );
+
+/* Closes the notification stream if opened using a filename
+ * Returns 0 if successful or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_notify_stream_close(
+     libnsfdb_error_t **error );
+
+/* -------------------------------------------------------------------------
+ * Error functions
+ * ------------------------------------------------------------------------- */
+
+/* Frees an error
+ */
+LIBNSFDB_EXTERN \
+void libnsfdb_error_free(
+      libnsfdb_error_t **error );
+
+/* Prints a descriptive string of the error to the stream
+ * Returns the number of printed characters if successful or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_error_fprint(
+     libnsfdb_error_t *error,
+     FILE *stream );
+
+/* Prints a descriptive string of the error to the string
+ * Returns the number of printed characters if successful or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_error_sprint(
+     libnsfdb_error_t *error,
+     char *string,
+     size_t size );
+
+/* Prints a backtrace of the error to the stream
+ * Returns the number of printed characters if successful or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_error_backtrace_fprint(
+     libnsfdb_error_t *error,
+     FILE *stream );
+
+/* Prints a backtrace of the error to the string
+ * Returns the number of printed characters if successful or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_error_backtrace_sprint(
+     libnsfdb_error_t *error,
+     char *string,
+     size_t size );
+
+/* -------------------------------------------------------------------------
+ * File functions
+ * ------------------------------------------------------------------------- */
+
+/* Creates a file
+ * Make sure the value file is referencing, is set to NULL
+ * Returns 1 if successful or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_file_initialize(
+     libnsfdb_file_t **file,
+     libnsfdb_error_t **error );
+
+/* Frees a file
+ * Returns 1 if successful or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_file_free(
+     libnsfdb_file_t **file,
+     libnsfdb_error_t **error );
+
+/* Signals the libnsfdb file to abort its current activity
+ * Returns 1 if successful or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_file_signal_abort(
+     libnsfdb_file_t *file,
+     libnsfdb_error_t **error );
+
+/* Opens a file
+ * Returns 1 if successful or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_file_open(
+     libnsfdb_file_t *file,
+     const char *filename,
+     int flags,
+     libnsfdb_error_t **error );
+
+#if defined( LIBNSFDB_HAVE_WIDE_CHARACTER_TYPE )
+/* Opens a file
+ * Returns 1 if successful or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_file_open_wide(
+     libnsfdb_file_t *file,
+     const wchar_t *filename,
+     int flags,
+     libnsfdb_error_t **error );
+#endif
+
+#if defined( LIBNSFDB_HAVE_BFIO )
+/* Opens a file using a Basic File IO (bfio) handle
+ * Returns 1 if successful or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_file_open_file_io_handle(
+     libnsfdb_file_t *file,
+     libbfio_handle_t *file_io_handle,
+     int flags,
+     libnsfdb_error_t **error );
+#endif
+
+/* Closes a file
+ * Returns 0 if successful or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_file_close(
+     libnsfdb_file_t *file,
+     libnsfdb_error_t **error );
+
+/* Retrieves the number of notes
+ * Returns 1 if successful or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_file_get_number_of_notes(
+     libnsfdb_file_t *file,
+     uint8_t note_type,
+     int *number_of_notes,
+     libnsfdb_error_t **error );
+
+/* Retrieves a specific note
+ * Returns 1 if successful or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_file_get_note(
+     libnsfdb_file_t *file,
+     uint8_t note_type,
+     int note_index,
+     libnsfdb_note_t **note,
+     libnsfdb_error_t **error );
+
+/* Retrieves a note for a specific identifier
+ * Returns 1 if successful, 0 if no such note was found or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_file_get_note_by_identifier(
+     libnsfdb_file_t *file,
+     uint8_t note_type,
+     uint32_t note_identifier,
+     libnsfdb_note_t **note,
+     libnsfdb_error_t **error );
+
+/* -------------------------------------------------------------------------
+ * Note functions
+ * ------------------------------------------------------------------------- */
+
+/* Frees a note
+ * Return 1 if successful or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_note_free(
+     libnsfdb_note_t **note,
+     libnsfdb_error_t **error );
+
+/* Retrieves the note identifier
+ * Returns 1 if successful or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_note_get_identifier(
+     libnsfdb_note_t *note,
+     uint32_t *note_identifier,
+     libnsfdb_error_t **error );
+
+/* Retrieves the number of values
+ * Returns 1 if successful or -1 on error
+ */
+LIBNSFDB_EXTERN \
+int libnsfdb_note_get_number_of_values(
+     libnsfdb_note_t *note,
+     int *number_of_values,
+     libnsfdb_error_t **error );
+
+#if defined( __cplusplus )
+}
+#endif
+
+#endif
+

@@ -1,0 +1,163 @@
+/*
+ * The internal definitions
+ *
+ * Copyright (C) 2010-2014, Joachim Metz <joachim.metz@gmail.com>
+ *
+ * Refer to AUTHORS for acknowledgements.
+ *
+ * This software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#if !defined( _LIBNSFDB_INTERNAL_DEFINITIONS_H )
+#define _LIBNSFDB_INTERNAL_DEFINITIONS_H
+
+#include <common.h>
+#include <byte_stream.h>
+
+#define LIBNSFDB_ENDIAN_BIG					_BYTE_STREAM_ENDIAN_BIG
+#define LIBNSFDB_ENDIAN_LITTLE					_BYTE_STREAM_ENDIAN_LITTLE
+
+/* Define HAVE_LOCAL_LIBNSFDB for local use of libnsfdb
+ */
+#if !defined( HAVE_LOCAL_LIBNSFDB )
+#include <libnsfdb/definitions.h>
+
+/* The definitions in <libnsfdb/definitions.h> are copied here
+ * for local use of libnsfdb
+ */
+#else
+#define LIBNSFDB_VERSION					@VERSION@
+
+/* The libnsfdb version string
+ */
+#define LIBNSFDB_VERSION_STRING					"@VERSION@"
+
+/* The access flags definitions
+ * bit 1        set to 1 for read access
+ * bit 2        set to 1 for write access
+ * bit 3-8      not used
+ */
+enum LIBNSFDB_ACCESS_FLAGS
+{
+	LIBNSFDB_ACCESS_FLAG_READ				= 0x01,
+/* Reserved: not supported yet */
+	LIBNSFDB_ACCESS_FLAG_WRITE				= 0x02
+};
+
+/* The file access macros
+ */
+#define LIBNSFDB_OPEN_READ					( LIBNSFDB_ACCESS_FLAG_READ )
+/* Reserved: not supported yet */
+#define LIBNSFDB_OPEN_WRITE					( LIBNSFDB_ACCESS_FLAG_WRITE )
+/* Reserved: not supported yet */
+#define LIBNSFDB_OPEN_READ_WRITE				( LIBNSFDB_ACCESS_FLAG_READ | LIBNSFDB_ACCESS_FLAG_WRITE )
+
+/* The note types
+ */
+enum LIBNSFDB_NOTE_TYPES
+{
+	LIBNSFDB_NOTE_TYPE_ALL					= (int) 'a',
+	LIBNSFDB_NOTE_TYPE_DATA					= (int) 'd',
+	LIBNSFDB_NOTE_TYPE_NON_DATA				= (int) 'n'
+};
+
+/* The note item classes
+ */
+enum LIBNSFDB_NOTE_ITEM_CLASSES
+{
+	LIBNSFDB_NOTE_ITEM_CLASS_NO_COMPUTE			= 0,
+	LIBNSFDB_NOTE_ITEM_CLASS_ERROR				= 1,
+	LIBNSFDB_NOTE_ITEM_CLASS_UNAVAILABLE			= 2,
+	LIBNSFDB_NOTE_ITEM_CLASS_NUMBER				= 3,
+	LIBNSFDB_NOTE_ITEM_CLASS_TIME				= 4,
+	LIBNSFDB_NOTE_ITEM_CLASS_TEXT				= 5,
+	LIBNSFDB_NOTE_ITEM_CLASS_FORMULA			= 6,
+	LIBNSFDB_NOTE_ITEM_CLASS_USERID				= 7
+};
+
+#endif
+
+/* The note classes
+ */
+enum LIBNSFDB_NOTE_CLASSES
+{
+	LIBNSFDB_NOTE_CLASS_DOCUMENT				= 0x0001,
+	LIBNSFDB_NOTE_CLASS_INFO				= 0x0002,
+	LIBNSFDB_NOTE_CLASS_FORM				= 0x0004,
+	LIBNSFDB_NOTE_CLASS_VIEW				= 0x0008,
+	LIBNSFDB_NOTE_CLASS_ICON				= 0x0010,
+	LIBNSFDB_NOTE_CLASS_DESIGN				= 0x0020,
+	LIBNSFDB_NOTE_CLASS_ACL					= 0x0040,
+	LIBNSFDB_NOTE_CLASS_HELP_INDEX				= 0x0080,
+	LIBNSFDB_NOTE_CLASS_HELP				= 0x0100,
+	LIBNSFDB_NOTE_CLASS_FILTER				= 0x0200,
+	LIBNSFDB_NOTE_CLASS_FIELD				= 0x0400,
+	LIBNSFDB_NOTE_CLASS_REPLFORMULA				= 0x0800,
+	LIBNSFDB_NOTE_CLASS_PRIVATE				= 0x1000,
+
+	LIBNSFDB_NOTE_CLASS_DEFAULT				= 0x8000
+};
+
+#define LIBNSFDB_NOTE_CLASS_DATA				LIBNSFDB_NOTE_CLASS_DOCUMENT
+
+/* The replication flags
+ */
+enum LIBNSFDB_REPLICATION_FLAGS
+{
+	LIBNSFDB_REPLICATION_FLAG_DISABLE			= 0x0004,
+	LIBNSFDB_REPLICATION_FLAG_MARK_NEW_AS_UNREAD		= 0x0008,
+	LIBNSFDB_REPLICATION_FLAG_IGNORE_DELETES		= 0x0010,
+};
+
+/* The note status flags
+ */
+enum LIBNSFDB_NOTE_STATUS_FIELD_FLAGS
+{
+	LIBNSFDB_NOTE_STATUS_FIELD_FLAG_READONLY		= 0x0001,
+	LIBNSFDB_NOTE_STATUS_FIELD_FLAG_ABSTRACTED		= 0x0002,
+	LIBNSFDB_NOTE_STATUS_FIELD_FLAG_INCREMENTAL		= 0x0004,
+
+	LIBNSFDB_NOTE_STATUS_FIELD_FLAG_LINKED			= 0x0020,
+	LIBNSFDB_NOTE_STATUS_FIELD_FLAG_INCREMENTAL_FULL	= 0x0040,
+
+	LIBNSFDB_NOTE_STATUS_FIELD_FLAG_CANONICAL		= 0x4000
+};
+
+/* The note item field flags
+ */
+enum LIBNSFDB_NOTE_ITEM_FIELD_FLAGS
+{
+	LIBNSFDB_NOTE_ITEM_FIELD_FLAG_SIGN			= 0x0001,
+	LIBNSFDB_NOTE_ITEM_FIELD_FLAG_SEAL			= 0x0002,
+	LIBNSFDB_NOTE_ITEM_FIELD_FLAG_SUMMARY			= 0x0004,
+
+	LIBNSFDB_NOTE_ITEM_FIELD_FLAG_0x0008			= 0x0008,
+
+	LIBNSFDB_NOTE_ITEM_FIELD_FLAG_READWRITERS		= 0x0020,
+	LIBNSFDB_NOTE_ITEM_FIELD_FLAG_NAMES			= 0x0040,
+
+	LIBNSFDB_NOTE_ITEM_FIELD_FLAG_PLACEHOLDER		= 0x0100,
+	LIBNSFDB_NOTE_ITEM_FIELD_FLAG_PROTECTED			= 0x0200,
+	LIBNSFDB_NOTE_ITEM_FIELD_FLAG_READERS			= 0x0400,
+
+	LIBNSFDB_NOTE_ITEM_FIELD_FLAG_UNCHANGED			= 0x1000
+};
+
+/* The maximum number of cache entries defintions
+ */
+#define LIBNSFDB_MAXIMUM_CACHE_ENTRIES_RRV_BUCKETS		128
+#define LIBNSFDB_MAXIMUM_CACHE_ENTRIES_BUCKETS			1024
+
+#endif
+

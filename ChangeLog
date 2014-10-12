@@ -1,0 +1,200 @@
+TODO
+* format support
+  - try reading non-summary notes
+* debug output:
+  - libnsfdb_io_handle_read_superblock print compression type string
+* add dpgk files
+* update msvscpp files
+* nsfdbinfo:
+  - refactor to info handle
+* code clean up
+  - remove intptr_t free/clone functions
+  - check if already set in initialize
+  - use goto
+  - create info handle
+* integrate libfvalue
+* superblock
+  - non-summary bucket descriptors
+* libfdatetime support for nsf timedate ALLDAY (0xffffffffL) definition
+  - if time is -1 only date is shown
+* change RRV vectors in lists
+  - what about the initial value ?
+
+* io handle add functions for
+  - unk table lookup
+
+Library
+* improve number of notes detection
+  - handle 'deleted' notes
+
+API
+* get database name
+* get other database info like categories, class, design class
+
+Debug
+* database flags
+  - add flags to definitions
+  - add flags to print function
+* database replication flags
+  - add flags to definitions
+  - add flags to print function
+* note status flags
+  - unknown status flags
+* note item field flags
+  - add flags to definitions
+  - add flags to print function
+* print note item type
+  - complete libnsfdb_note_item_type.[ch] and implement in libnsfdb_unique_name_key_table.c
+* add note item value print function
+
+File format
+* bitmaps
+* superblock
+  - non-summary bucket descriptors
+  - modifier note log
+  - data note identifier table
+  - folder directory object
+
+Tools
+* nsfdbinfo
+  - print database info
+* nsfdbexport
+  - export note items
+  - add export mode (all, data, non-data)
+
+Deployment
+* check local library functions in configure
+* update msvscpp files
+* add codegear files
+* add macosx files
+
+20141012
+* removed README.macosx
+* updated dependencies
+* worked on utility scripts
+
+20140318
+* Code clean up
+
+20140317
+* 2014 update
+
+20130922
+* 2013 update
+
+20121112
+* 2012 update
+* updated dependencies
+  - libcerror update
+  - libcdata update
+* code clean up
+  - added on_error to nsfdbtools
+  - refactored file into export handle
+* updated pc file
+* updated spec file
+
+20111217
+* updated configure.ac and m4 files
+* added libfcache
+* updated libcstring, libsystem, libuna, libbfio, libfdata, libfdatetime,
+  libfvalue
+* code clean up
+
+20111030
+* updated configure.ac and m4 files
+* fixed makefiles for libfvalue
+* updated libfdatetime, libfvalue
+
+20111008
+* 2011 update
+* updated configure.ac and m4 files
+* added gettext support
+* updated include/error.h, include/types.h
+* updated common, libcstring, liberror, libnotify, libsystem
+* updated libuna, libbfio, libfdata, libfvalue, libfdatetime
+* changes to code for updates
+* updated pc and spec file
+* updated msvscpp files
+
+20101120
+* updated configure.ac, acinclude.m4
+* added libnsfdb.rc
+* added libfvalue
+* updated include/types.h, include/error.h
+* updated common, libcstring, liberror, libnotify, libsystem, libuna, libbfio,
+  libfdata, libfdatetime
+* changes due to libfdata update
+* changes due to libsystem update
+
+20100713
+* worked on reading nsf files
+
+20100712
+* worked on reading nsf files
+* changed bucket vector in to list
+* worked on nsfexport
+
+20100711
+* worked on reading nsf files
+
+20100710
+* updated configure.ac and acinclude.m4
+* updated common, libcstring, liberror, libnotify, libuna, libfdatetime,
+  libbfio, libsystem
+* added libfdata
+* change amount of in number of
+* updated XOR32 with memory alignment support
+* update manuals
+* created nsfdbexport
+* added libfdata support
+
+20100425
+* worked on reading nsf files
+
+20100418
+* updated libcstring, liberror, libuna, libbfio, libfdatetime
+
+20100408
+* worked on reading nsf files
+
+20100407
+* worked on reading nsf files
+
+20100406
+* worked on reading nsf files
+
+20100405
+* worked on reading nsf files
+
+20100403
+* worked on reading nsf files
+
+20100402
+* renamed project to libnsfdb to prevent name clash with existing libnsf
+  for the NES sound file format
+* worked on reading nsf files
+
+20100401
+* worked on reading nsf files
+
+20100331
+* worked on reading nsf files
+* updated msvscpp files
+
+20100330
+* worked on reading nsf files
+
+20100329
+* added libcstring
+* updated liberror, libnotify, libuna, libbfio, libsystem, libfdatetime
+* worked on reading nsf files
+* removed common/narrow_string.h common/wide_string.h
+
+20100322
+* worked on msvscpp files
+* worked on reading nsf files
+
+20100321
+* initial version
+* worked on reading nsf files
+
