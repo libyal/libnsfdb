@@ -65,6 +65,9 @@ Tools
 Deployment
 * check local library functions in configure
 
+20141019
+* changes for deployment
+
 20141012
 * removed README.macosx
 * updated dependencies
