@@ -1,4 +1,5 @@
 TODO
+* complete libnsfdb_io_handle_clear
 * format support
   - try reading non-summary notes
 * debug output:
@@ -64,6 +65,9 @@ Tools
 
 Deployment
 * check local library functions in configure
+
+20141207
+* code clean up
 
 20141026
 * changes for deployment

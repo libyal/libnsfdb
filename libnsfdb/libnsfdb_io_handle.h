@@ -59,22 +59,6 @@ struct libnsfdb_io_handle
 	 */
 	libfcache_cache_t *rrv_bucket_cache;
 
-	/* The summary bucket list
-	 */
-	libfdata_list_t *summary_bucket_list;
-
-	/* The summary bucket cache
-	 */
-	libfcache_cache_t *summary_bucket_cache;
-
-	/* The non-summary bucket list
-	 */
-	libfdata_list_t *non_summary_bucket_list;
-
-	/* The non-summary bucket cache
-	 */
-	libfcache_cache_t *non_summary_bucket_cache;
-
 	/* The format version
 	 */
 	uint32_t format_version;
@@ -116,6 +100,10 @@ int libnsfdb_io_handle_free(
      libnsfdb_io_handle_t **io_handle,
      libcerror_error_t **error );
 
+int libnsfdb_io_handle_clear(
+     libnsfdb_io_handle_t *io_handle,
+     libcerror_error_t **error );
+
 int libnsfdb_io_handle_read_file_header(
      libnsfdb_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
@@ -147,6 +135,10 @@ int libnsfdb_io_handle_read_superblock(
      libbfio_handle_t *file_io_handle,
      off64_t superblock_offset,
      uint32_t superblock_size,
+     libfdata_list_t *summary_bucket_list,
+     libfcache_cache_t *summary_bucket_cache,
+     libfdata_list_t *non_summary_bucket_list,
+     libfcache_cache_t *non_summary_bucket_cache,
      libcerror_error_t **error );
 
 int libnsfdb_io_handle_read_bucket_descriptor_block(
@@ -157,7 +149,7 @@ int libnsfdb_io_handle_read_bucket_descriptor_block(
      libcerror_error_t **error );
 
 int libnsfdb_io_handle_read_rrv_bucket(
-     intptr_t *io_handle,
+     libnsfdb_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      libfdata_vector_t *vector,
      libfcache_cache_t *cache,
@@ -170,7 +162,7 @@ int libnsfdb_io_handle_read_rrv_bucket(
      libcerror_error_t **error );
 
 int libnsfdb_io_handle_read_bucket(
-     intptr_t *io_handle,
+     intptr_t *data_handle,
      libbfio_handle_t *file_io_handle,
      libfdata_list_element_t *list_element,
      libfcache_cache_t *cache,
@@ -202,20 +194,6 @@ int libnsfdb_io_handle_get_rrv_value_by_identifier(
      uint8_t note_type,
      uint32_t rrv_identifier,
      libnsfdb_rrv_value_t **rrv_value,
-     libcerror_error_t **error );
-
-int libnsfdb_io_handle_get_summary_bucket_by_index(
-     libnsfdb_io_handle_t *io_handle,
-     libbfio_handle_t *file_io_handle,
-     uint32_t summary_bucket_index,
-     libnsfdb_bucket_t **summary_bucket,
-     libcerror_error_t **error );
-
-int libnsfdb_io_handle_get_non_summary_bucket_by_index(
-     libnsfdb_io_handle_t *io_handle,
-     libbfio_handle_t *file_io_handle,
-     uint32_t non_summary_bucket_index,
-     libnsfdb_bucket_t **non_summary_bucket,
      libcerror_error_t **error );
 
 #if defined( __cplusplus )

@@ -1,5 +1,5 @@
 /*
- * The libfdatetime header wrapper
+ * The libbfio header wrapper
  *
  * Copyright (C) 2010-2014, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,35 +19,31 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBNSFDB_LIBFDATETIME_H )
-#define _LIBNSFDB_LIBFDATETIME_H
+#if !defined( _NSFDBTOOLS_LIBBFIO_H )
+#define _NSFDBTOOLS_LIBBFIO_H
 
 #include <common.h>
 
-/* Define HAVE_LOCAL_LIBFDATETIME for local use of libfdatetime
+/* Define HAVE_LOCAL_LIBBFIO for local use of libbfio
  */
-#if defined( HAVE_LOCAL_LIBFDATETIME )
+#if defined( HAVE_LOCAL_LIBBFIO )
 
-#include <libfdatetime_date_time_values.h>
-#include <libfdatetime_definitions.h>
-#include <libfdatetime_fat_date_time.h>
-#include <libfdatetime_filetime.h>
-#include <libfdatetime_floatingtime.h>
-#include <libfdatetime_nsf_timedate.h>
-#include <libfdatetime_posix_time.h>
-#include <libfdatetime_systemtime.h>
-#include <libfdatetime_types.h>
+#include <libbfio_definitions.h>
+#include <libbfio_file.h>
+#include <libbfio_handle.h>
+#include <libbfio_pool.h>
+#include <libbfio_types.h>
 
 #else
 
-/* If libtool DLL support is enabled set LIBFDATETIME_DLL_IMPORT
- * before including libfdatetime.h
+/* If libtool DLL support is enabled set LIBBFIO_DLL_IMPORT
+ * before including libbfio.h
  */
 #if defined( _WIN32 ) && defined( DLL_IMPORT )
-#define LIBFDATETIME_DLL_IMPORT
+#define LIBBFIO_DLL_IMPORT
 #endif
 
-#include <libfdatetime.h>
+#include <libbfio.h>
 
 #endif
 

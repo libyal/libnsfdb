@@ -1,4 +1,4 @@
-.Dd September 22, 2013
+.Dd November 24, 2014
 .Dt libnsfdb 3
 .Os libnsfdb
 .Sh NAME
@@ -51,7 +51,7 @@ File functions
 .Ft int
 .Fn libnsfdb_file_free "libnsfdb_file_t **file, libnsfdb_error_t **error"
 .Ft int
-.Fn libnsfdb_file_open "libnsfdb_file_t *file, const char *filename, int flags, libnsfdb_error_t **error"
+.Fn libnsfdb_file_open "libnsfdb_file_t *file, const char *filename, int access_flags, libnsfdb_error_t **error"
 .Ft int
 .Fn libnsfdb_file_close "libnsfdb_file_t *file, libnsfdb_error_t **error"
 .Ft int
@@ -63,11 +63,11 @@ File functions
 .Pp
 Available when compiled with wide character string support:
 .Ft int
-.Fn libnsfdb_file_open_wide "libnsfdb_file_t *file, const wchar_t *filename, int flags, libnsfdb_error_t **error"
+.Fn libnsfdb_file_open_wide "libnsfdb_file_t *file, const wchar_t *filename, int access_flags, libnsfdb_error_t **error"
 .Pp
 Available when compiled with libbfio support:
 .Ft int
-.Fn libnsfdb_file_open_file_io_handle "libnsfdb_file_t *file, libbfio_handle_t *file_io_handle, int flags, libnsfdb_error_t **error"
+.Fn libnsfdb_file_open_file_io_handle "libnsfdb_file_t *file, libbfio_handle_t *file_io_handle, int access_flags, libnsfdb_error_t **error"
 .Pp
 Item functions
 .Ft int
@@ -117,7 +117,7 @@ https://github.com/libyal/libnsfdb/
 .Sh AUTHOR
 These man pages were written by Joachim Metz.
 .Sh COPYRIGHT
-Copyright 2010-2013, Joachim Metz <joachim.metz@gmail.com>.
+Copyright 2010-2014, Joachim Metz <joachim.metz@gmail.com>.
 This is free software; see the source for copying conditions. There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 .Sh SEE ALSO
 the libnsfdb.h include file

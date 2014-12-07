@@ -178,6 +178,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\libnsfdb\libnsfdb_bucket_list.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\libnsfdb\libnsfdb_checksum.c"
 				>
 			</File>
@@ -253,6 +257,10 @@
 			>
 			<File
 				RelativePath="..\..\libnsfdb\libnsfdb_bucket.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\libnsfdb\libnsfdb_bucket_list.h"
 				>
 			</File>
 			<File
@@ -373,6 +381,10 @@
 			</File>
 			<File
 				RelativePath="..\..\libnsfdb\libnsfdb_unique_name_key_table.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\libnsfdb\libnsfdb_unused.h"
 				>
 			</File>
 			<File

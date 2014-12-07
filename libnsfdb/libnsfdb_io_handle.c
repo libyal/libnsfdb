@@ -41,6 +41,7 @@
 #include "libnsfdb_rrv_bucket_descriptor.h"
 #include "libnsfdb_unique_name_key.h"
 #include "libnsfdb_unique_name_key_table.h"
+#include "libnsfdb_unused.h"
 
 #include "nsfdb_bucket.h"
 #include "nsfdb_bucket_descriptor_block.h"
@@ -246,76 +247,121 @@ int libnsfdb_io_handle_free(
 				result = -1;
 			}
 		}
-		if( ( *io_handle )->summary_bucket_list != NULL )
-		{
-			if( libfdata_list_free(
-			     &( ( *io_handle )->summary_bucket_list ),
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-				 "%s: unable to free summary bucket list.",
-				 function );
-
-				result = -1;
-			}
-		}
-		if( ( *io_handle )->summary_bucket_cache != NULL )
-		{
-			if( libfcache_cache_free(
-			     &( ( *io_handle )->summary_bucket_cache ),
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-				 "%s: unable to free summary bucket cache.",
-				 function );
-
-				result = -1;
-			}
-		}
-		if( ( *io_handle )->non_summary_bucket_list != NULL )
-		{
-			if( libfdata_list_free(
-			     &( ( *io_handle )->non_summary_bucket_list ),
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-				 "%s: unable to free non-summary bucket list.",
-				 function );
-
-				result = -1;
-			}
-		}
-		if( ( *io_handle )->non_summary_bucket_cache != NULL )
-		{
-			if( libfcache_cache_free(
-			     &( ( *io_handle )->non_summary_bucket_cache ),
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-				 "%s: unable to free non-summary bucket cache.",
-				 function );
-
-				result = -1;
-			}
-		}
 		memory_free(
 		 *io_handle );
 
 		*io_handle = NULL;
 	}
 	return( result );
+}
+
+/* Clears the IO handle
+ * Returns 1 if successful or -1 on error
+ */
+int libnsfdb_io_handle_clear(
+     libnsfdb_io_handle_t *io_handle,
+     libcerror_error_t **error )
+{
+	static char *function = "libnsfdb_io_handle_clear";
+	int result            = 1;
+
+	if( io_handle == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid IO handle.",
+		 function );
+
+		return( -1 );
+	}
+	if( libcdata_array_empty(
+	     io_handle->rrv_bucket_descriptors,
+	     (int (*)(intptr_t **, libcerror_error_t **)) &libnsfdb_rrv_bucket_descriptor_free,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+		 "%s: unable to empty RRV bucket descriptors array.",
+		 function );
+
+		result = -1;
+	}
+	if( libcdata_array_empty(
+	     io_handle->unique_name_key_table,
+	     (int (*)(intptr_t **, libcerror_error_t **)) &libnsfdb_unique_name_key_free,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+		 "%s: unable to empty unique name key table.",
+		 function );
+
+		result = -1;
+	}
+	if( io_handle->rrv_bucket_vector != NULL )
+	{
+		if( libfdata_vector_empty(
+		     io_handle->rrv_bucket_vector,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 "%s: unable to free RRV bucket vector.",
+			 function );
+
+			result = -1;
+		}
+	}
+	if( io_handle->rrv_bucket_cache != NULL )
+	{
+		if( libfcache_cache_empty(
+		     io_handle->rrv_bucket_cache,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 "%s: unable to empty RRV bucket cache.",
+			 function );
+
+			result = -1;
+		}
+	}
+        io_handle->format_version                  = 0;
+        io_handle->rrv_bucket_size                 = 0;
+        io_handle->summary_bucket_size             = 0;
+        io_handle->minimum_summary_bucket_size     = 0;
+        io_handle->maximum_summary_bucket_size     = 0;
+        io_handle->minimum_non_summary_bucket_size = 0;
+        io_handle->maximum_non_summary_bucket_size = 0;
+        io_handle->file_size                       = 0;
+
+/* TODO refactor IO handle
+	if( memory_set(
+	     io_handle,
+	     0,
+	     sizeof( libnsfdb_io_handle_t ) ) == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_MEMORY,
+		 LIBCERROR_MEMORY_ERROR_SET_FAILED,
+		 "%s: unable to clear IO handle.",
+		 function );
+
+		return( -1 );
+	}
+*/
+	return( 1 );
 }
 
 /* Reads the file header
@@ -2379,88 +2425,6 @@ int libnsfdb_io_handle_read_database_header(
 			goto on_error;
 		}
 	}
-	if( io_handle->summary_bucket_list == NULL )
-	{
-		/* TODO free and clone function ? */
-
-		if( libfdata_list_initialize(
-		     &( io_handle->summary_bucket_list ),
-		     (intptr_t *) io_handle,
-		     NULL,
-		     NULL,
-		     (int (*)(intptr_t *, intptr_t *, libfdata_list_element_t *, libfcache_cache_t *, int, off64_t, size64_t, uint32_t, uint8_t, libcerror_error_t **)) &libnsfdb_io_handle_read_bucket,
-		     NULL,
-		     LIBFDATA_DATA_HANDLE_FLAG_NON_MANAGED,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-			 "%s: unable to create summary bucket list.",
-			 function );
-
-			goto on_error;
-		}
-	}
-	if( io_handle->summary_bucket_cache == NULL )
-	{
-		if( libfcache_cache_initialize(
-		     &( io_handle->summary_bucket_cache ),
-		     LIBNSFDB_MAXIMUM_CACHE_ENTRIES_BUCKETS,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-			 "%s: unable to create summary bucket cache.",
-			 function );
-
-			goto on_error;
-		}
-	}
-	if( io_handle->non_summary_bucket_list == NULL )
-	{
-		/* TODO free and clone function ? */
-
-		if( libfdata_list_initialize(
-		     &( io_handle->non_summary_bucket_list ),
-		     (intptr_t *) io_handle,
-		     NULL,
-		     NULL,
-		     (int (*)(intptr_t *, intptr_t *, libfdata_list_element_t *, libfcache_cache_t *, int, off64_t, size64_t, uint32_t, uint8_t, libcerror_error_t **)) &libnsfdb_io_handle_read_bucket,
-		     NULL,
-		     LIBFDATA_DATA_HANDLE_FLAG_NON_MANAGED,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-			 "%s: unable to create non-summary bucket list.",
-			 function );
-
-			goto on_error;
-		}
-	}
-	if( io_handle->non_summary_bucket_cache == NULL )
-	{
-		if( libfcache_cache_initialize(
-		     &( io_handle->non_summary_bucket_cache ),
-		     LIBNSFDB_MAXIMUM_CACHE_ENTRIES_BUCKETS,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-			 "%s: unable to create non-summary bucket cache.",
-			 function );
-
-			goto on_error;
-		}
-	}
 	return( 1 );
 
 on_error:
@@ -2483,6 +2447,10 @@ int libnsfdb_io_handle_read_superblock(
      libbfio_handle_t *file_io_handle,
      off64_t superblock_offset,
      uint32_t superblock_size,
+     libfdata_list_t *summary_bucket_list,
+     libfcache_cache_t *summary_bucket_cache,
+     libfdata_list_t *non_summary_bucket_list,
+     libfcache_cache_t *non_summary_bucket_cache,
      libcerror_error_t **error )
 {
 	nsfdb_superblock_header_t superblock_header;
@@ -3473,7 +3441,7 @@ int libnsfdb_io_handle_read_superblock(
 			if( number_of_summary_buckets > 0 )
 			{
 				if( libfdata_list_resize(
-				     io_handle->summary_bucket_list,
+				     summary_bucket_list,
 				     number_of_summary_buckets,
 				     error ) != 1 )
 				{
@@ -3585,7 +3553,7 @@ int libnsfdb_io_handle_read_superblock(
 					bucket_descriptor_offset <<= 8;
 
 					if( libfdata_list_set_element_by_index(
-					     io_handle->summary_bucket_list,
+					     summary_bucket_list,
 					     (int) bucket_descriptor_iterator,
 					     0,
 					     bucket_descriptor_offset,
@@ -3731,7 +3699,7 @@ int libnsfdb_io_handle_read_superblock(
 			if( number_of_non_summary_buckets > 0 )
 			{
 				if( libfdata_list_resize(
-				     io_handle->non_summary_bucket_list,
+				     non_summary_bucket_list,
 				     number_of_non_summary_buckets,
 				     error ) != 1 )
 				{
@@ -3778,7 +3746,7 @@ int libnsfdb_io_handle_read_superblock(
 					bucket_descriptor_offset <<= 8;
 
 					if( libfdata_list_set_element_by_index(
-					     io_handle->non_summary_bucket_list,
+					     non_summary_bucket_list,
 					     (int) bucket_descriptor_iterator,
 					     0,
 					     bucket_descriptor_offset,
@@ -4826,7 +4794,7 @@ on_error:
  * Returns 1 if successful or -1 on error
  */
 int libnsfdb_io_handle_read_rrv_bucket(
-     intptr_t *io_handle,
+     libnsfdb_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      libfdata_vector_t *vector,
      libfcache_cache_t *cache,
@@ -4876,7 +4844,7 @@ int libnsfdb_io_handle_read_rrv_bucket(
 
 		return( -1 );
 	}
-	if( element_size != ( (libnsfdb_io_handle_t *) io_handle )->rrv_bucket_size )
+	if( element_size != io_handle->rrv_bucket_size )
 	{
 		libcerror_error_set(
 		 error,
@@ -5017,7 +4985,7 @@ on_error:
  * Returns 1 if successful or -1 on error
  */
 int libnsfdb_io_handle_read_bucket(
-     intptr_t *io_handle,
+     intptr_t *data_handle LIBNSFDB_ATTRIBUTE_UNUSED,
      libbfio_handle_t *file_io_handle,
      libfdata_list_element_t *list_element,
      libfcache_cache_t *cache,
@@ -5031,17 +4999,8 @@ int libnsfdb_io_handle_read_bucket(
 	libnsfdb_bucket_t *bucket = NULL;
 	static char *function     = "libnsfdb_io_handle_read_bucket";
 
-	if( io_handle == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid IO handle.",
-		 function );
+	LIBNSFDB_UNREFERENCED_PARAMETER( data_handle )
 
-		return( -1 );
-	}
 	if( element_offset < 0 )
 	{
 		libcerror_error_set(
@@ -5658,119 +5617,5 @@ int libnsfdb_io_handle_get_rrv_value_by_identifier(
 		}
 	}
 	return( result );
-}
-
-/* Retrieves a specific summary bucket
- * Buckets are numbered from 1 to N
- * Returns 1 if successful or -1 on error
- */
-int libnsfdb_io_handle_get_summary_bucket_by_index(
-     libnsfdb_io_handle_t *io_handle,
-     libbfio_handle_t *file_io_handle,
-     uint32_t summary_bucket_index,
-     libnsfdb_bucket_t **summary_bucket,
-     libcerror_error_t **error )
-{
-	static char *function = "libnsfdb_io_handle_get_summary_bucket_by_index";
-
-	if( io_handle == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid IO handle.",
-		 function );
-
-		return( -1 );
-	}
-	if( summary_bucket_index == 0 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_VALUE_ZERO_OR_LESS,
-		 "%s: invalid summary bucket index value zero or less.",
-		 function );
-
-		return( -1 );
-	}
-	if( libfdata_list_get_element_value_by_index(
-	     io_handle->summary_bucket_list,
-	     (intptr_t *) file_io_handle,
-	     io_handle->summary_bucket_cache,
-	     (int) summary_bucket_index - 1,
-	     (intptr_t **) summary_bucket,
-	     0,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve summary bucket: %" PRIu32 ".",
-		 function,
-		 summary_bucket_index );
-
-		return( -1 );
-	}
-	return( 1 );
-}
-
-/* Retrieves a specific non-summary bucket
- * Buckets are numbered from 1 to N
- * Returns 1 if successful or -1 on error
- */
-int libnsfdb_io_handle_get_non_summary_bucket_by_index(
-     libnsfdb_io_handle_t *io_handle,
-     libbfio_handle_t *file_io_handle,
-     uint32_t non_summary_bucket_index,
-     libnsfdb_bucket_t **non_summary_bucket,
-     libcerror_error_t **error )
-{
-	static char *function = "libnsfdb_io_handle_get_non_summary_bucket_by_index";
-
-	if( io_handle == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid IO handle.",
-		 function );
-
-		return( -1 );
-	}
-	if( non_summary_bucket_index == 0 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_VALUE_ZERO_OR_LESS,
-		 "%s: invalid non-summary bucket index value zero or less.",
-		 function );
-
-		return( -1 );
-	}
-	if( libfdata_list_get_element_value_by_index(
-	     io_handle->non_summary_bucket_list,
-	     (intptr_t *) file_io_handle,
-	     io_handle->non_summary_bucket_cache,
-	     (int) non_summary_bucket_index - 1,
-	     (intptr_t **) non_summary_bucket,
-	     0,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve non-summary bucket: %" PRIu32 ".",
-		 function,
-		 non_summary_bucket_index );
-
-		return( -1 );
-	}
-	return( 1 );
 }
 

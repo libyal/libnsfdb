@@ -30,6 +30,8 @@
 #include "libnsfdb_libbfio.h"
 #include "libnsfdb_libcdata.h"
 #include "libnsfdb_libcerror.h"
+#include "libnsfdb_libfcache.h"
+#include "libnsfdb_libfdata.h"
 #include "libnsfdb_rrv_value.h"
 #include "libnsfdb_types.h"
 
@@ -53,6 +55,22 @@ struct libnsfdb_internal_note
 	 */
 	libnsfdb_rrv_value_t *rrv_value;
 
+	/* The summary bucket list
+	 */
+	libfdata_list_t *summary_bucket_list;
+
+	/* The summary bucket cache
+	 */
+	libfcache_cache_t *summary_bucket_cache;
+
+	/* The non-summary bucket list
+	 */
+	libfdata_list_t *non_summary_bucket_list;
+
+	/* The non-summary bucket cache
+	 */
+	libfcache_cache_t *non_summary_bucket_cache;
+
 	/* The note class
 	 */
 	uint16_t note_class;
@@ -67,6 +85,10 @@ int libnsfdb_note_initialize(
      libbfio_handle_t *file_io_handle,
      libnsfdb_io_handle_t *io_handle,
      libnsfdb_rrv_value_t *rrv_value,
+     libfdata_list_t *summary_bucket_list,
+     libfcache_cache_t *summary_bucket_cache,
+     libfdata_list_t *non_summary_bucket_list,
+     libfcache_cache_t *non_summary_bucket_cache,
      libcerror_error_t **error );
 
 LIBNSFDB_EXTERN \

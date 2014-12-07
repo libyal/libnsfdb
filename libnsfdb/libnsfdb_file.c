@@ -32,6 +32,8 @@
 #include "libnsfdb_libcerror.h"
 #include "libnsfdb_libcnotify.h"
 #include "libnsfdb_libcstring.h"
+#include "libnsfdb_libfcache.h"
+#include "libnsfdb_libfdata.h"
 #include "libnsfdb_note.h"
 #include "libnsfdb_rrv_value.h"
 #include "libnsfdb_types.h"
@@ -148,7 +150,24 @@ int libnsfdb_file_free(
 	if( *file != NULL )
 	{
 		internal_file = (libnsfdb_internal_file_t *) *file;
-		*file         = NULL;
+
+		if( internal_file->file_io_handle != NULL )
+		{
+			if( libnsfdb_file_close(
+			     *file,
+			     error ) != 0 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_IO,
+				 LIBCERROR_IO_ERROR_CLOSE_FAILED,
+				 "%s: unable to close file.",
+				 function );
+
+				result = -1;
+			}
+		}
+		*file = NULL;
 
 		if( libnsfdb_io_handle_free(
 		     &( internal_file->io_handle ),
@@ -162,23 +181,6 @@ int libnsfdb_file_free(
 			 function );
 
 			result = -1;
-		}
-		if( ( internal_file->file_io_handle_created_in_library != 0 )
-		 && ( internal_file->file_io_handle != NULL ) )
-		{
-			if( libbfio_handle_free(
-			     &( internal_file->file_io_handle ),
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-				 "%s: unable to free file io handle.",
-				 function );
-
-				result = -1;
-			}
 		}
 		memory_free(
 		 internal_file );
@@ -217,7 +219,7 @@ int libnsfdb_file_signal_abort(
 int libnsfdb_file_open(
      libnsfdb_file_t *file,
      const char *filename,
-     int flags,
+     int access_flags,
      libcerror_error_t **error )
 {
 	libbfio_handle_t *file_io_handle        = NULL;
@@ -235,6 +237,8 @@ int libnsfdb_file_open(
 
 		return( -1 );
 	}
+	internal_file = (libnsfdb_internal_file_t *) file;
+
 	if( filename == NULL )
 	{
 		libcerror_error_set(
@@ -246,19 +250,19 @@ int libnsfdb_file_open(
 
 		return( -1 );
 	}
-	if( ( ( flags & LIBNSFDB_ACCESS_FLAG_READ ) == 0 )
-	 && ( ( flags & LIBNSFDB_ACCESS_FLAG_WRITE ) == 0 ) )
+	if( ( ( access_flags & LIBNSFDB_ACCESS_FLAG_READ ) == 0 )
+	 && ( ( access_flags & LIBNSFDB_ACCESS_FLAG_WRITE ) == 0 ) )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
-		 "%s: unsupported flags.",
+		 "%s: unsupported access flags.",
 		 function );
 
 		return( -1 );
 	}
-	if( ( flags & LIBNSFDB_ACCESS_FLAG_WRITE ) != 0 )
+	if( ( access_flags & LIBNSFDB_ACCESS_FLAG_WRITE ) != 0 )
 	{
 		libcerror_error_set(
 		 error,
@@ -269,8 +273,6 @@ int libnsfdb_file_open(
 
 		return( -1 );
 	}
-	internal_file = (libnsfdb_internal_file_t *) file;
-
 	if( libbfio_file_initialize(
 	     &file_io_handle,
 	     error ) != 1 )
@@ -279,10 +281,10 @@ int libnsfdb_file_open(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-		 "%s: unable to create file io handle.",
+		 "%s: unable to create file IO handle.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libbfio_handle_set_track_offsets_read(
@@ -294,14 +296,10 @@ int libnsfdb_file_open(
                  error,
                  LIBCERROR_ERROR_DOMAIN_RUNTIME,
                  LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-                 "%s: unable to set track offsets read in file io handle.",
+                 "%s: unable to set track offsets read in file IO handle.",
                  function );
 
-		libbfio_handle_free(
-		 &file_io_handle,
-		 NULL );
-
-                return( -1 );
+		goto on_error;
 	}
 #endif
 	if( libbfio_file_set_name(
@@ -315,19 +313,15 @@ int libnsfdb_file_open(
                  error,
                  LIBCERROR_ERROR_DOMAIN_RUNTIME,
                  LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-                 "%s: unable to set filename in file io handle.",
+                 "%s: unable to set filename in file IO handle.",
                  function );
 
-		libbfio_handle_free(
-		 &file_io_handle,
-		 NULL );
-
-                return( -1 );
+		goto on_error;
 	}
 	if( libnsfdb_file_open_file_io_handle(
 	     file,
 	     file_io_handle,
-	     flags,
+	     access_flags,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -338,15 +332,20 @@ int libnsfdb_file_open(
 		 function,
 		 filename );
 
-		libbfio_handle_free(
-		 &file_io_handle,
-		 NULL );
-
-		return( -1 );
+		goto on_error;
 	}
 	internal_file->file_io_handle_created_in_library = 1;
 
 	return( 1 );
+
+on_error:
+	if( file_io_handle != NULL )
+	{
+		libbfio_handle_free(
+		 &file_io_handle,
+		 NULL );
+	}
+	return( -1 );
 }
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
@@ -357,7 +356,7 @@ int libnsfdb_file_open(
 int libnsfdb_file_open_wide(
      libnsfdb_file_t *file,
      const wchar_t *filename,
-     int flags,
+     int access_flags,
      libcerror_error_t **error )
 {
 	libbfio_handle_t *file_io_handle        = NULL;
@@ -375,6 +374,8 @@ int libnsfdb_file_open_wide(
 
 		return( -1 );
 	}
+	internal_file = (libnsfdb_internal_file_t *) file;
+
 	if( filename == NULL )
 	{
 		libcerror_error_set(
@@ -386,19 +387,19 @@ int libnsfdb_file_open_wide(
 
 		return( -1 );
 	}
-	if( ( ( flags & LIBNSFDB_ACCESS_FLAG_READ ) == 0 )
-	 && ( ( flags & LIBNSFDB_ACCESS_FLAG_WRITE ) == 0 ) )
+	if( ( ( access_flags & LIBNSFDB_ACCESS_FLAG_READ ) == 0 )
+	 && ( ( access_flags & LIBNSFDB_ACCESS_FLAG_WRITE ) == 0 ) )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
-		 "%s: unsupported flags.",
+		 "%s: unsupported access flags.",
 		 function );
 
 		return( -1 );
 	}
-	if( ( flags & LIBNSFDB_ACCESS_FLAG_WRITE ) != 0 )
+	if( ( access_flags & LIBNSFDB_ACCESS_FLAG_WRITE ) != 0 )
 	{
 		libcerror_error_set(
 		 error,
@@ -409,8 +410,6 @@ int libnsfdb_file_open_wide(
 
 		return( -1 );
 	}
-	internal_file = (libnsfdb_internal_file_t *) file;
-
 	if( libbfio_file_initialize(
 	     &file_io_handle,
 	     error ) != 1 )
@@ -419,10 +418,10 @@ int libnsfdb_file_open_wide(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-		 "%s: unable to create file io handle.",
+		 "%s: unable to create file IO handle.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libbfio_handle_set_track_offsets_read(
@@ -434,14 +433,10 @@ int libnsfdb_file_open_wide(
                  error,
                  LIBCERROR_ERROR_DOMAIN_RUNTIME,
                  LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-                 "%s: unable to set track offsets read in file io handle.",
+                 "%s: unable to set track offsets read in file IO handle.",
                  function );
 
-		libbfio_handle_free(
-		 &file_io_handle,
-		 NULL );
-
-                return( -1 );
+		goto on_error;
 	}
 #endif
 	if( libbfio_file_set_name_wide(
@@ -455,19 +450,15 @@ int libnsfdb_file_open_wide(
                  error,
                  LIBCERROR_ERROR_DOMAIN_RUNTIME,
                  LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-                 "%s: unable to set filename in file io handle.",
+                 "%s: unable to set filename in file IO handle.",
                  function );
 
-		libbfio_handle_free(
-		 &file_io_handle,
-		 NULL );
-
-                return( -1 );
+		goto on_error;
 	}
 	if( libnsfdb_file_open_file_io_handle(
 	     file,
 	     file_io_handle,
-	     flags,
+	     access_flags,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -478,18 +469,23 @@ int libnsfdb_file_open_wide(
 		 function,
 		 filename );
 
-		libbfio_handle_free(
-		 &file_io_handle,
-		 NULL );
-
-		return( -1 );
+		goto on_error;
 	}
 	internal_file->file_io_handle_created_in_library = 1;
 
 	return( 1 );
+
+on_error:
+	if( file_io_handle != NULL )
+	{
+		libbfio_handle_free(
+		 &file_io_handle,
+		 NULL );
+	}
+	return( -1 );
 }
 
-#endif
+#endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
 /* Opens a Notes Storage Facility file using a Basic File IO (bfio) handle
  * Returns 1 if successful or -1 on error
@@ -497,13 +493,14 @@ int libnsfdb_file_open_wide(
 int libnsfdb_file_open_file_io_handle(
      libnsfdb_file_t *file,
      libbfio_handle_t *file_io_handle,
-     int flags,
+     int access_flags,
      libcerror_error_t **error )
 {
 	libnsfdb_internal_file_t *internal_file = NULL;
 	static char *function                   = "libnsfdb_file_open_file_io_handle";
-	int file_io_flags                       = 0;
+	int bfio_access_flags                   = 0;
 	int file_io_handle_is_open              = 0;
+	int file_io_handle_opened_in_library    = 0;
 
 	if( file == NULL )
 	{
@@ -516,30 +513,43 @@ int libnsfdb_file_open_file_io_handle(
 
 		return( -1 );
 	}
+	internal_file = (libnsfdb_internal_file_t *) file;
+
+	if( internal_file->file_io_handle != NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
+		 "%s: invalid file - file IO handle already set.",
+		 function );
+
+		return( -1 );
+	}
 	if( file_io_handle == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid file io handle.",
+		 "%s: invalid file IO handle.",
 		 function );
 
 		return( -1 );
 	}
-	if( ( ( flags & LIBNSFDB_ACCESS_FLAG_READ ) == 0 )
-	 && ( ( flags & LIBNSFDB_ACCESS_FLAG_WRITE ) == 0 ) )
+	if( ( ( access_flags & LIBNSFDB_ACCESS_FLAG_READ ) == 0 )
+	 && ( ( access_flags & LIBNSFDB_ACCESS_FLAG_WRITE ) == 0 ) )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
-		 "%s: unsupported flags.",
+		 "%s: unsupported access flags.",
 		 function );
 
 		return( -1 );
 	}
-	if( ( flags & LIBNSFDB_ACCESS_FLAG_WRITE ) != 0 )
+	if( ( access_flags & LIBNSFDB_ACCESS_FLAG_WRITE ) != 0 )
 	{
 		libcerror_error_set(
 		 error,
@@ -550,16 +560,12 @@ int libnsfdb_file_open_file_io_handle(
 
 		return( -1 );
 	}
-	internal_file = (libnsfdb_internal_file_t *) file;
-
-	if( ( flags & LIBNSFDB_ACCESS_FLAG_READ ) != 0 )
+	if( ( access_flags & LIBNSFDB_ACCESS_FLAG_READ ) != 0 )
 	{
-		file_io_flags = LIBBFIO_ACCESS_FLAG_READ;
+		bfio_access_flags = LIBBFIO_ACCESS_FLAG_READ;
 	}
-	internal_file->file_io_handle = file_io_handle;
-
 	file_io_handle_is_open = libbfio_handle_is_open(
-	                          internal_file->file_io_handle,
+	                          file_io_handle,
 	                          error );
 
 	if( file_io_handle_is_open == -1 )
@@ -568,30 +574,32 @@ int libnsfdb_file_open_file_io_handle(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_IO,
 		 LIBCERROR_IO_ERROR_OPEN_FAILED,
-		 "%s: unable to open file.",
+		 "%s: unable to determine if file IO handle is open.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 	else if( file_io_handle_is_open == 0 )
 	{
 		if( libbfio_handle_open(
-		     internal_file->file_io_handle,
-		     file_io_flags,
+		     file_io_handle,
+		     bfio_access_flags,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_IO,
 			 LIBCERROR_IO_ERROR_OPEN_FAILED,
-			 "%s: unable to open file io handle.",
+			 "%s: unable to open file IO handle.",
 			 function );
 
-			return( -1 );
+			goto on_error;
 		}
+		file_io_handle_opened_in_library = 1;
 	}
 	if( libnsfdb_file_open_read(
 	     internal_file,
+	     file_io_handle,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -601,9 +609,21 @@ int libnsfdb_file_open_file_io_handle(
 		 "%s: unable to read from file handle.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
+	internal_file->file_io_handle                   = file_io_handle;
+	internal_file->file_io_handle_opened_in_library = file_io_handle_opened_in_library;
+
 	return( 1 );
+
+on_error:
+	if( file_io_handle_opened_in_library != 0 )
+	{
+		libbfio_handle_close(
+		 file_io_handle,
+		 error );
+	}
+	return( -1 );
 }
 
 /* Closes a Notes Storage Facility file
@@ -641,10 +661,10 @@ int libnsfdb_file_close(
 
 		return( -1 );
 	}
-	if( internal_file->file_io_handle_created_in_library != 0 )
-	{
 #if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
+	if( libcnotify_verbose != 0 )
+	{
+		if( internal_file->file_io_handle_created_in_library != 0 )
 		{
 			if( libnsfdb_debug_print_read_offsets(
 			     internal_file->file_io_handle,
@@ -660,7 +680,10 @@ int libnsfdb_file_close(
 				result = -1;
 			}
 		}
+	}
 #endif
+	if( internal_file->file_io_handle_opened_in_library != 0 )
+	{
 		if( libbfio_handle_close(
 		     internal_file->file_io_handle,
 		     error ) != 0 )
@@ -669,10 +692,107 @@ int libnsfdb_file_close(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_IO,
 			 LIBCERROR_IO_ERROR_CLOSE_FAILED,
-			 "%s: unable to close file io handle.",
+			 "%s: unable to close file IO handle.",
 			 function );
 
-			return( -1 );
+			result = -1;
+		}
+		internal_file->file_io_handle_opened_in_library = 0;
+	}
+	if( internal_file->file_io_handle_created_in_library != 0 )
+	{
+		if( libbfio_handle_free(
+		     &( internal_file->file_io_handle ),
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 "%s: unable to free file IO handle.",
+			 function );
+
+			result = -1;
+		}
+		internal_file->file_io_handle_created_in_library = 0;
+	}
+	internal_file->file_io_handle = NULL;
+
+	if( libnsfdb_io_handle_clear(
+	     internal_file->io_handle,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+		 "%s: unable to clear IO handle.",
+		 function );
+
+		result = -1;
+	}
+	if( internal_file->summary_bucket_list != NULL )
+	{
+		if( libfdata_list_free(
+		     &( internal_file->summary_bucket_list ),
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 "%s: unable to free summary bucket list.",
+			 function );
+
+			result = -1;
+		}
+	}
+	if( internal_file->summary_bucket_cache != NULL )
+	{
+		if( libfcache_cache_free(
+		     &( internal_file->summary_bucket_cache ),
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 "%s: unable to free summary bucket cache.",
+			 function );
+
+			result = -1;
+		}
+	}
+	if( internal_file->non_summary_bucket_list != NULL )
+	{
+		if( libfdata_list_free(
+		     &( internal_file->non_summary_bucket_list ),
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 "%s: unable to free non-summary bucket list.",
+			 function );
+
+			result = -1;
+		}
+	}
+	if( internal_file->non_summary_bucket_cache != NULL )
+	{
+		if( libfcache_cache_free(
+		     &( internal_file->non_summary_bucket_cache ),
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 "%s: unable to free non-summary bucket cache.",
+			 function );
+
+			result = -1;
 		}
 	}
 	return( result );
@@ -683,6 +803,7 @@ int libnsfdb_file_close(
  */
 int libnsfdb_file_open_read(
      libnsfdb_internal_file_t *internal_file,
+     libbfio_handle_t *file_io_handle,
      libcerror_error_t **error )
 {
 	static char *function                   = "libnsfdb_file_open_read";
@@ -708,7 +829,7 @@ int libnsfdb_file_open_read(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid internal file.",
+		 "%s: invalid file.",
 		 function );
 
 		return( -1 );
@@ -719,7 +840,51 @@ int libnsfdb_file_open_read(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid internal file - missing io handle.",
+		 "%s: invalid file - missing io handle.",
+		 function );
+
+		return( -1 );
+	}
+	if( internal_file->summary_bucket_list != NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
+		 "%s: invalid file - summary bucket list already set.",
+		 function );
+
+		return( -1 );
+	}
+	if( internal_file->summary_bucket_cache != NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
+		 "%s: invalid file - summary bucket cache already set.",
+		 function );
+
+		return( -1 );
+	}
+	if( internal_file->non_summary_bucket_list != NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
+		 "%s: invalid file - non summary bucket list already set.",
+		 function );
+
+		return( -1 );
+	}
+	if( internal_file->non_summary_bucket_cache != NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
+		 "%s: invalid file - non summary bucket cache already set.",
 		 function );
 
 		return( -1 );
@@ -733,7 +898,7 @@ int libnsfdb_file_open_read(
 #endif
 	if( libnsfdb_io_handle_read_file_header(
 	     internal_file->io_handle,
-	     internal_file->file_io_handle,
+	     file_io_handle,
 	     &database_header_size,
 	     error ) != 1 )
 	{
@@ -744,7 +909,7 @@ int libnsfdb_file_open_read(
 		 "%s: unable to read file header.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 #if defined( HAVE_VERBOSE_OUTPUT )
 	if( libcnotify_verbose != 0 )
@@ -755,7 +920,7 @@ int libnsfdb_file_open_read(
 #endif
 	if( libnsfdb_io_handle_read_database_header(
 	     internal_file->io_handle,
-	     internal_file->file_io_handle,
+	     file_io_handle,
 	     database_header_size,
 	     &superblock1_offset,
 	     &superblock1_size,
@@ -780,7 +945,73 @@ int libnsfdb_file_open_read(
 		 "%s: unable to read database header.",
 		 function );
 
-		return( -1 );
+		goto on_error;
+	}
+	if( libfdata_list_initialize(
+	     &( internal_file->summary_bucket_list ),
+	     NULL,
+	     NULL,
+	     NULL,
+	     (int (*)(intptr_t *, intptr_t *, libfdata_list_element_t *, libfcache_cache_t *, int, off64_t, size64_t, uint32_t, uint8_t, libcerror_error_t **)) &libnsfdb_io_handle_read_bucket,
+	     NULL,
+	     LIBFDATA_DATA_HANDLE_FLAG_NON_MANAGED,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create summary bucket list.",
+		 function );
+
+		goto on_error;
+	}
+	if( libfcache_cache_initialize(
+	     &( internal_file->summary_bucket_cache ),
+	     LIBNSFDB_MAXIMUM_CACHE_ENTRIES_BUCKETS,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create summary bucket cache.",
+		 function );
+
+		goto on_error;
+	}
+	if( libfdata_list_initialize(
+	     &( internal_file->non_summary_bucket_list ),
+	     NULL,
+	     NULL,
+	     NULL,
+	     (int (*)(intptr_t *, intptr_t *, libfdata_list_element_t *, libfcache_cache_t *, int, off64_t, size64_t, uint32_t, uint8_t, libcerror_error_t **)) &libnsfdb_io_handle_read_bucket,
+	     NULL,
+	     LIBFDATA_DATA_HANDLE_FLAG_NON_MANAGED,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create non-summary bucket list.",
+		 function );
+
+		goto on_error;
+	}
+	if( libfcache_cache_initialize(
+	     &( internal_file->non_summary_bucket_cache ),
+	     LIBNSFDB_MAXIMUM_CACHE_ENTRIES_BUCKETS,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create non-summary bucket cache.",
+		 function );
+
+		goto on_error;
 	}
 	/* TODO determine the last modified superblock
 	 * try to read it
@@ -796,9 +1027,13 @@ int libnsfdb_file_open_read(
 #endif
 	if( libnsfdb_io_handle_read_superblock(
 	     internal_file->io_handle,
-	     internal_file->file_io_handle,
+	     file_io_handle,
 	     superblock1_offset,
 	     superblock1_size,
+	     internal_file->summary_bucket_list,
+	     internal_file->summary_bucket_cache,
+	     internal_file->non_summary_bucket_list,
+	     internal_file->non_summary_bucket_cache,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -808,7 +1043,7 @@ int libnsfdb_file_open_read(
 		 "%s: unable to read superblock.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 #ifdef TODO
 /* TODO read secondary superblock */
@@ -821,9 +1056,13 @@ int libnsfdb_file_open_read(
 #endif
 	if( libnsfdb_io_handle_read_superblock(
 	     internal_file->io_handle,
-	     internal_file->file_io_handle,
+	     file_io_handle,
 	     superblock2_offset,
 	     superblock2_size,
+	     internal_file->summary_bucket_list,
+	     internal_file->summary_bucket_cache,
+	     internal_file->non_summary_bucket_list,
+	     internal_file->non_summary_bucket_cache,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -833,7 +1072,7 @@ int libnsfdb_file_open_read(
 		 "%s: unable to read superblock.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 #endif
 	/* TODO determine the last modified BDB
@@ -850,7 +1089,7 @@ int libnsfdb_file_open_read(
 #endif
 	if( libnsfdb_io_handle_read_bucket_descriptor_block(
 	     internal_file->io_handle,
-	     internal_file->file_io_handle,
+	     file_io_handle,
 	     bucket_descriptor_block1_offset,
 	     bucket_descriptor_block1_size,
 	     error ) != 1 )
@@ -862,9 +1101,36 @@ int libnsfdb_file_open_read(
 		 "%s: unable to read bucket descriptor block.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 	return( 1 );
+
+on_error:
+	if( internal_file->non_summary_bucket_cache != NULL )
+	{
+		libfcache_cache_free(
+		 &( internal_file->non_summary_bucket_cache ),
+		 NULL );
+	}
+	if( internal_file->non_summary_bucket_list != NULL )
+	{
+		libfdata_list_free(
+		 &( internal_file->non_summary_bucket_list ),
+		 NULL );
+	}
+	if( internal_file->summary_bucket_cache != NULL )
+	{
+		libfcache_cache_free(
+		 &( internal_file->summary_bucket_cache ),
+		 NULL );
+	}
+	if( internal_file->summary_bucket_list != NULL )
+	{
+		libfdata_list_free(
+		 &( internal_file->summary_bucket_list ),
+		 NULL );
+	}
+	return( -1 );
 }
 
 /* Retrieves the number of notes
@@ -983,6 +1249,10 @@ int libnsfdb_file_get_note(
 	     internal_file->file_io_handle,
 	     internal_file->io_handle,
 	     rrv_value,
+	     internal_file->summary_bucket_list,
+	     internal_file->summary_bucket_cache,
+	     internal_file->non_summary_bucket_list,
+	     internal_file->non_summary_bucket_cache,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -1074,6 +1344,10 @@ int libnsfdb_file_get_note_by_identifier(
 		     internal_file->file_io_handle,
 		     internal_file->io_handle,
 		     rrv_value,
+		     internal_file->summary_bucket_list,
+		     internal_file->summary_bucket_cache,
+		     internal_file->non_summary_bucket_list,
+		     internal_file->non_summary_bucket_cache,
 		     error ) != 1 )
 		{
 			libcerror_error_set(

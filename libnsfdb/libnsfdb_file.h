@@ -29,6 +29,8 @@
 #include "libnsfdb_io_handle.h"
 #include "libnsfdb_libbfio.h"
 #include "libnsfdb_libcerror.h"
+#include "libnsfdb_libfcache.h"
+#include "libnsfdb_libfdata.h"
 #include "libnsfdb_types.h"
 
 #if defined( __cplusplus )
@@ -50,6 +52,26 @@ struct libnsfdb_internal_file
 	/* Value to indicate if the file IO handle was created inside the library
 	 */
 	uint8_t file_io_handle_created_in_library;
+
+	/* Value to indicate if the file IO handle was opened inside the library
+	 */
+	uint8_t file_io_handle_opened_in_library;
+
+	/* The summary bucket list
+	 */
+	libfdata_list_t *summary_bucket_list;
+
+	/* The summary bucket cache
+	 */
+	libfcache_cache_t *summary_bucket_cache;
+
+	/* The non-summary bucket list
+	 */
+	libfdata_list_t *non_summary_bucket_list;
+
+	/* The non-summary bucket cache
+	 */
+	libfcache_cache_t *non_summary_bucket_cache;
 
 	/* Value to indicate if abort was signalled
 	 */
@@ -75,23 +97,25 @@ LIBNSFDB_EXTERN \
 int libnsfdb_file_open(
      libnsfdb_file_t *file,
      const char *filename,
-     int flags,
+     int access_flags,
      libcerror_error_t **error );
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
+
 LIBNSFDB_EXTERN \
 int libnsfdb_file_open_wide(
      libnsfdb_file_t *file,
      const wchar_t *filename,
-     int flags,
+     int access_flags,
      libcerror_error_t **error );
-#endif
+
+#endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
 LIBNSFDB_EXTERN \
 int libnsfdb_file_open_file_io_handle(
      libnsfdb_file_t *file,
      libbfio_handle_t *file_io_handle,
-     int flags,
+     int access_flags,
      libcerror_error_t **error );
 
 LIBNSFDB_EXTERN \
@@ -101,6 +125,7 @@ int libnsfdb_file_close(
 
 int libnsfdb_file_open_read(
      libnsfdb_internal_file_t *internal_file,
+     libbfio_handle_t *file_io_handle,
      libcerror_error_t **error );
 
 LIBNSFDB_EXTERN \

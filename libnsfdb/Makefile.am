@@ -23,6 +23,7 @@ lib_LTLIBRARIES = libnsfdb.la
 libnsfdb_la_SOURCES = \
 	libnsfdb.c \
 	libnsfdb_bucket.c libnsfdb_bucket.h \
+	libnsfdb_bucket_list.c libnsfdb_bucket_list.h \
 	libnsfdb_checksum.c libnsfdb_checksum.h \
 	libnsfdb_compression.c libnsfdb_compression.h \
 	libnsfdb_debug.c libnsfdb_debug.h \
@@ -53,6 +54,7 @@ libnsfdb_la_SOURCES = \
 	libnsfdb_types.h \
 	libnsfdb_unique_name_key.c libnsfdb_unique_name_key.h \
 	libnsfdb_unique_name_key_table.c libnsfdb_unique_name_key_table.h \
+	libnsfdb_unused.h \
 	nsfdb_bucket.h \
 	nsfdb_bucket_descriptor_block.h \
 	nsfdb_database_header.h \

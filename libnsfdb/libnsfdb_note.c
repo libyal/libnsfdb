@@ -25,6 +25,7 @@
 #include <types.h>
 
 #include "libnsfdb_bucket.h"
+#include "libnsfdb_bucket_list.h"
 #include "libnsfdb_checksum.h"
 #include "libnsfdb_debug.h"
 #include "libnsfdb_definitions.h"
@@ -52,6 +53,10 @@ int libnsfdb_note_initialize(
      libbfio_handle_t *file_io_handle,
      libnsfdb_io_handle_t *io_handle,
      libnsfdb_rrv_value_t *rrv_value,
+     libfdata_list_t *summary_bucket_list,
+     libfcache_cache_t *summary_bucket_cache,
+     libfdata_list_t *non_summary_bucket_list,
+     libfcache_cache_t *non_summary_bucket_cache,
      libcerror_error_t **error )
 {
 	libnsfdb_internal_note_t *internal_note = NULL;
@@ -138,7 +143,10 @@ int libnsfdb_note_initialize(
 		 "%s: unable to clear note.",
 		 function );
 
-		goto on_error;
+		memory_free(
+		 internal_note );
+
+		return( -1 );
 	}
 	if( libnsfdb_rrv_value_clone(
 	     &( internal_note->rrv_value ),
@@ -154,8 +162,12 @@ int libnsfdb_note_initialize(
 
 		goto on_error;
 	}
-	internal_note->file_io_handle = file_io_handle;
-	internal_note->io_handle      = io_handle;
+	internal_note->file_io_handle           = file_io_handle;
+	internal_note->io_handle                = io_handle;
+	internal_note->summary_bucket_list      = summary_bucket_list;
+	internal_note->summary_bucket_cache     = summary_bucket_cache;
+	internal_note->non_summary_bucket_list  = non_summary_bucket_list;
+	internal_note->non_summary_bucket_cache = non_summary_bucket_cache;
 
 	*note = (libnsfdb_note_t *) internal_note;
 
@@ -197,7 +209,8 @@ int libnsfdb_note_free(
 		internal_note = (libnsfdb_internal_note_t *) *note;
 		*note         = NULL;
 
-		/* The file_io_handle and io_handle references are freed elsewhere
+		/* The file_io_handle, io_handle, summary_bucket_list, summary_bucket_cache
+		 * non_summary_bucket_list and non_summary_bucket_cache references are freed elsewhere
 		 */
 		if( libnsfdb_rrv_value_free(
 		     &( internal_note->rrv_value ),
@@ -281,6 +294,10 @@ int libnsfdb_note_clone(
 	     internal_source_note->file_io_handle,
 	     internal_source_note->io_handle,
 	     internal_source_note->rrv_value,
+	     internal_source_note->summary_bucket_list,
+	     internal_source_note->summary_bucket_cache,
+	     internal_source_note->non_summary_bucket_list,
+	     internal_source_note->non_summary_bucket_cache,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -384,9 +401,10 @@ int libnsfdb_note_read(
 	}
 	if( internal_note->rrv_value->type == LIBNSFDB_RRV_VALUE_TYPE_BUCKET_SLOT_IDENTIFIER )
 	{
-		if( libnsfdb_io_handle_get_summary_bucket_by_index(
-		     internal_note->io_handle,
+		if( libnsfdb_bucket_list_get_bucket_by_index(
+		     internal_note->summary_bucket_list,
 		     internal_note->file_io_handle,
+		     internal_note->summary_bucket_cache,
 		     internal_note->rrv_value->bucket_index,
 		     &summary_bucket,
 		     error ) != 1 )
@@ -1036,9 +1054,10 @@ int libnsfdb_note_read(
 		if( ( non_summary_data_identifier != 0 )
 		 && ( ( non_summary_data_identifier & 0x80000000UL ) != 0 ) )
 		{
-			if( libnsfdb_io_handle_get_non_summary_bucket_by_index(
-			     internal_note->io_handle,
+			if( libnsfdb_bucket_list_get_bucket_by_index(
+			     internal_note->non_summary_bucket_list,
 			     internal_note->file_io_handle,
+			     internal_note->non_summary_bucket_cache,
 			     non_summary_data_identifier & 0x00ffffffUL,
 			     &non_summary_bucket,
 			     error ) != 1 )

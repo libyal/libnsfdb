@@ -1,7 +1,7 @@
 /*
  * Library to access the Notes Storage Facility (NSF) datbase file format
  *
- * Copyright (C) 2010-2014, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (c) 2010-2014, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -22,8 +22,16 @@
 #include <common.h>
 
 #if defined( WINAPI )
-
 #include <windows.h>
+#endif
+
+#include "libnsfdb_unused.h"
+
+/* Define HAVE_LOCAL_LIBNSFDB for local use of libnsfdb
+ */
+#if !defined( HAVE_LOCAL_LIBNSFDB )
+
+#if defined( WINAPI ) && defined( HAVE_DLLMAIN )
 
 #if defined( _MANAGED )
 #pragma managed( push, off )
@@ -36,6 +44,8 @@ BOOL WINAPI DllMain(
              DWORD fdwReason,
              LPVOID lpvReserved )
 {
+	LIBNSFDB_UNREFERENCED_PARAMETER( lpvReserved )
+
 	switch( fdwReason )
 	{
 		case DLL_PROCESS_ATTACH:
@@ -55,5 +65,16 @@ BOOL WINAPI DllMain(
 	return( TRUE );
 }
 
-#endif
+/* Function that indicates the library is a DLL
+ * Returns 1
+ */
+int libnsfdb_is_dll(
+     void )
+{
+	return( 1 );
+}
+
+#endif /* defined( WINAPI ) && defined( HAVE_DLLMAIN ) */
+
+#endif /* !defined( HAVE_LOCAL_LIBNSFDB ) */
 
