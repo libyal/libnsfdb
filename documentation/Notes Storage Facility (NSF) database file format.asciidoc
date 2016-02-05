@@ -185,7 +185,7 @@ The word signatures (WSIG) is 4 bytes of size and consists of:
 | 2 | 2 | | Structure size
 |===
 
-1.3.3.  Long signature
+==== Long signature
 The long signatures (LSIG) is 4 bytes of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -219,7 +219,74 @@ header.
 [yellow-background]*TODO: migrate remaining documentation.*
 
 == [[record_relocation_vector_bucket]]Record Relocation Vector bucket
-[yellow-background]*TODO: migrate remaining documentation.*
+The Record Relocation Vector (RRV) bucket consists:
+
+* RRV (container) bucket header
+* an array of RRV entries
+
+The RRV bucket is 4096 bytes of size.
+
+=== RRV (container) bucket header
+The RRV bucket header is 32 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+4+|_Byte signature (BSIG)_
+| 0 | 1 | 0x06 | Signature
+| 1 | 1 | 0x20 | Header size +
+Includes the size of the signature and size value
+4+| _RRV bucket header data_
+| 2 | 4 | | [yellow-background]*Unknown*
+| 6 | 4 | | Initial RRV identifier
+| 10 | 6 | | [yellow-background]*Unknown*
+| 16 | 2 | | [yellow-background]*Unknown (block size)*
+| 18 | 4 | | Checksum +
+32-bit XOR of the RRV entry data
+| 22 | 10 | | [yellow-background]*Unknown*
+|===
+
+=== RRV entry
+There are two types of RRV entries:
+
+* a basic RRV entry
+* a BSID RRV entry
+
+After format version 21 (0x15) the RRV was extended, instead of a file position 
+the RRV also can consists of a bucket slot identifier (BSID).
+
+[yellow-background]*Unused entries contain 0xffffffff (-1) for both A and B and/or 0?*
+
+==== Basic RRV entry
+The basic RRV entry is 4 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0.0  | 32 bits | | File position +
+See section: <<nsf_file_position,NSF file position>>
+|===
+
+After format version 21 (0x15) the basic RRV entry is stored in 8 bytes.
+
+[yellow-background]*Points to ODS type 0x07?*
+
+==== BSID RRV entry – format version 22 and later
+The BSID RRV entry is 8 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| 0.0  | 24 bits | | Bucket identifier +
+Where 1 represents the first bucket
+| 3.0  | 4 bits | | [yellow-background]*Unknown*
+| 3.4 | 3 bits | | Upper 3 bits of NONSUM
+| 3.7 | 1 bit | | [yellow-background]*Unknown (Extended RRV flag)*
+| 4.0  | 11 bits | | Slot identifier +
+Where 1 represents the first slot
+| 5.3 | 21 bits | | Lower 21 bits of NONSUM
+|===
+
+The BSID RRV entry requires the Extended RRV flag to be set.
 
 == [[allocation_bitmap]]Allocation bitmap
 The bitmap is 2048 bytes of size. Each bit signifies a block of 256 bytes.
@@ -230,9 +297,70 @@ Universal identifier (UNID)
 [yellow-background]*TODO: add text*
 
 == The bucket
-[yellow-background]*TODO: migrate remaining documentation.*
+Data is stored in buckets ranges from 4 to 32 KiB in size. The bucket is used 
+for both summary and non-summary data.
+
+A bucket consist of:
+
+* bucket header
+* bucket entries
+* bucket index
+* [yellow-background]*bucket trailing data*
+
+=== The bucket header
+The bucket header is 66 bytes of size and consist of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+4+|_Byte signature (BSIG)_
+| 0 | 1 | 0x02 | Signature
+| 1 | 1 | 0x42 | Record size +
+Includes the size of the signature and size value
+4+| _Bucket header data_
+| 2 | 4 | | [yellow-background]*Unknown (Bucket identifier?)*
+| 6 | 4 | | Bucket size
+| 10 | 8 | | Modification date and time +
+Value consists of a NSF date and time +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 18 | 20 | | [yellow-background]*Unknown (Empty values)*
+| 38 | 2 | | [yellow-background]*Unknown*
+| 40 | 4 | | Checksum
+| 44 | 4 | | Number of slots
+| 48 | 2 | | [yellow-background]*Unknown (Empty values)*
+| 50 | 4 | | [yellow-background]*Unknown (Bucket footer size)*
+| 54 | 4 | | [yellow-background]*Unknown*
+| 58 | 4 | | [yellow-background]*Unknown*
+| 62 | 4 | | [yellow-background]*Unknown*
+|===
+
+=== Bucket index
+Index entries stored from back to front.
+
+==== Bucket index entry
+The bucket index entry is 4 bytes of size and consist of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 | | Start offset of the slot entry +
+The value is relative to the start of the bucket
+| 2 | 2 | | Size of the slot entry
+|===
 
 == The note
+The note contains:
+
+* The note (body) header
+** non-summary
+** attachments
+* (note) item descriptors
+* (note) item values
+** Summary-item values 
+** Response entries or overhead 
+** Non-summary-item values
+
+=== The note header
 [yellow-background]*TODO: migrate remaining documentation.*
 
 == Compression
