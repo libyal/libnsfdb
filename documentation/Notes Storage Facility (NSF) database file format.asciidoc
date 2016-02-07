@@ -174,7 +174,7 @@ The byte signatures (BSIG) is 2 bytes of size and consists of:
 | 1 | 1 | | Structure size
 |===
 
-1.3.2.  Word signature
+==== Word signature
 The word signatures (WSIG) is 4 bytes of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -210,6 +210,146 @@ Notes/Domino considers the file header a long-signature (LSIG) of the database
 header.
 
 == The database header
+The database header contains the following values:
+
+* database information
+** database identifier (DBID)
+** flags
+* replication information
+* database information buffer
+** title
+** categories
+** class
+** design class (template name)
+* special note identifiers
+* padding
+* database information 2
+* database information 3
+* database information 4
+* database information 5
+* padding
+
+* database instance identifier (DBIID)
+* replication history
+
+* [yellow-background]*TODO: user activity log*
+* [yellow-background]*TODO: UNID index*
+
+=== Database information
+The database information (DBINFO) is 178 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Format version +
+on-disk structure (ODS) version +
+See section: <<format_version,Format version>>
+| 4 | 8 | | Database identifier (DBID) +
+Value consists an NSF date and time but is considered as an identifier +
+See section: <<nsf_date_and_time,NSF date and time>> +
+[yellow-background]*Also used as creation date and time?*
+| 12 | 2 | | Application version
+| 14 | 4 | | Non-data Record Relocation Vector (RRV) bucket position +
+See section: <<nsf_file_position,NSF file position>>
+| 18 | 4 | | (Next) available non-data Record Relocation Vector (RRV) identifier
+| 22 | 2 | | Number of available non-data Record Relocation Vectors (RRVs)
+| 24 | 4 | | Activity log offset
+| 28 | 8 | | Bucket (last) modification date and time +
+Value consists of an NSF date and time +
+See section: <<nsf_date_and_time,NSF date and time>> +
+[yellow-background]*Also used as modification date and time?*
+| 36 | 2 | | Database class +
+[yellow-background]*TODO: add description*
+| 38 | 2 | | Database flags +
+See section: <<database_flags,Database flags>>
+| 40 | 4 | | Bucket Descriptor Block (BDB) size
+| 44 | 4 | | Bucket Descriptor Block (BDB) position +
+See section: <<nsf_file_position,NSF file position>>
+| 48 | 2 | | Bucket Descriptor Table (BDT) size
+| 50 | 4 | | Bucket Descriptor Table (BDT) [yellow-background]*position?*
+| 54 | 2 | | Bucket Descriptor Table (BDT) [yellow-background]*bitmaps?*
+| 56 | 4 | | Data Record Relocation Vector (RRV) bucket position +
+See section: <<nsf_file_position,NSF file position>>
+| 60 | 4 | | First data Record Relocation Vector (RRV) identifier +
+[yellow-background]*Probably the first defined RRV not the first used*
+| 64 | 4 | | (Next) available data Record Relocation Vector (RRV) identifier
+| 68 | 2 | | Number of available data Record Relocation Vectors (RRVs)
+| 70 | 2 | | Record Relocation Vector (RRV) bucket size
+| 72 | 2 | | Summary bucket size
+| 74 | 2 | | Bitmap size
+| 76 | 2 | | Allocation granularity
+| 78 | 4 | | Extension granularity
+| 82 | 4 | | File size +
+The value contains 256 byte increments +
+[yellow-background]*If version >= 0x15?*
+| 86 | 4 | | Number of file truncations
+| 90 | 4 | | Delivery sequence number
+| 94 | 4 | | Number of Bucket Descriptor Block (BDB) replacements
+| 98 | 4 | | Number of allocated Record Relocation Vectors (RRVs)
+| 102 | 4 | | Number of de-allocations
+| 106 | 4 | | Number of non-bucket allocations
+| 110 | 4 | | Number of bucket allocations
+| 114 | 8 | | Folder (last) modification date and time +
+Value consists of an NSF date and time +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 122 | 4 | | Data note identifier table [yellow-background]*position?*
+| 126 | 4 | | Data note identifier table size
+| 134 | 8 | | Data (last) modification date and time +
+Value consists of an NSF date and time +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 142 | 8 | | Next purge date and time +
+Value consists of an NSF date and time +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 150 | 4 | | Version 3 named object hash [yellow-background]*position?*
+| 154 | 4 | | Named object hash [yellow-background]*position?*
+| 158 | 8 | | [yellow-background]*Private* (last) modification date and time +
+Value consists of an NSF date and time +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 166 | 2 | | Maximum number of [yellow-background]*privates?*
+| 168 | 2 | | named object hash version +
+[yellow-background]*Format version < 0x1c*
+| 170 | 8 | | Non-data (last) modification date and time +
+Value consists of a NSF date and time but is considered as an identifier +
+See section: <<nsf_date_and_time,NSF date and time>>
+|===
+
+==== [[format_version]]Format version
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 16 | | Notes 1.x, 2x
+| 17 | | Notes 3.x
+| 20 | | Notes 4.x
+| 41 | | Notes 5.x
+| 43 | | Notes 6, 7 and 8
+| 48 | | Notes 8
+| 51 | | Notes 8.5
+|===
+
+==== [[database_flags]]Database flags
+[yellow-background]*TODO: add text*
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| | DBFLAG_FIXUP | 
+| | DBFLAG_CORRUPT | 
+| | DBFLAG_SPARSE_RRVS | 
+| | DBFLAG_PURGE_ON | 
+| | DBFLAG_REPLFORMULA | 
+| | DBFLAG_FULL_FOLDER_REPL | 
+| | DBFLAG_FOLDERS_CONVERTED | 
+| | DBFLAG_MAX_SPECIFIED | 
+| | DBFLAG_FIXUP_FOLDERS | 
+| | DBFLAG_DELSEQ_CORRECTED | 
+| | DBFLAG_DEFERRED_UNIDINDEX | 
+| | DBFLAG_FIXUP_CLEAR_LSN | 
+| | DBFLAG_IS_A_BACKUP | 
+| | DBFLAG_UNLOGGED_CHANGE_INPROGR | 
+| | DBFLAG_DESIGN_IN_NAMOBJ |
+|===
+
 [yellow-background]*TODO: migrate remaining documentation.*
 
 == Superblock
@@ -364,13 +504,162 @@ The note contains:
 [yellow-background]*TODO: migrate remaining documentation.*
 
 == Compression
-[yellow-background]*TODO: migrate remaining documentation.*
+[yellow-background]*TODO: add text*
+
+=== [[compression_type]]Compression type
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0 | COMPRESS_NONE | No compression
+| 1 | COMPRESS_HUFF | CX compression (Huffman encoding)
+| 2 | COMPRESS_LZ1 | LZ1 compression
+|===
+
+=== CX compression
+[yellow-background]*TODO: add text*
+
+[yellow-background]*First byte contains initial tag bit position?*
+
+....
+If first tag bit = 0 followed by uncompressed byte
+if first tag bit = 1 followed by a compression tuple
+
+If compression tuple tag bit = 0 followed by compression size - 2
+If compression tuple tag bit = 1 followed by compression offset
+
+If the compression size tag bit = 0 followed by extended compression offset
+If the compression size tag bit = 1 followed by compression offset
+
+The extended compression offset contains the upper bits (> 8) of the compression offset. The compression offset point backwards relative from the end of the uncompressed data.
+
+In the compression tuple the number of 0 bits after a tag bit represent the size in bits of either compression size or (extended) offset.
+....
+
+=== LZ1 compression
+[yellow-background]*TODO: add text*
+
+Introduced in Notes 6
 
 == The access control list
-[yellow-background]*TODO: migrate remaining documentation.*
+[yellow-background]*TODO: add text*
 
 == Notes
-[yellow-background]*TODO: migrate remaining documentation.*
+=== Replication history
+
+[cols="1,1,1,5",options="header"]
+|===
+| 0 | 8 | | [yellow-background]*Replication date and time*
+| 8 | 2 | | [yellow-background]*Access level*
+| 10 | 2 | | [yellow-background]*Access flags*
+| 12 | 2 | | [yellow-background]*Replication direction*
+| 14 | 4 | 30 | [yellow-background]*Server name offset (in packed data?)*
+| 18 | 2 | | [yellow-background]*Server name size (in packed data?)*
+| 20 | 2 | | [yellow-background]*Filename size (in packed data?)*
+| 22 | 2 | | [yellow-background]*Unknown (MoreInfo)* +
+[yellow-background]*includes complete replication flag*
+| 24 | 2 | | [yellow-background]*Reserved (wSpare)*
+| 26 | 4 | | [yellow-background]*Reserved (dwSpare)*
+| 30 | ...  | | [yellow-background]*Server name* +
+[yellow-background]*NUL-terminated*
+| ... | 2 | "!!" | [yellow-background]*Separator*
+| ... | ... | | [yellow-background]*Filename* +
+[yellow-background]*NUL-terminated*
+|===
+
+==== Replication direction
+
+[cols="1,1,5",options="header"]
+|===
+| 0 | DIRECTION_NEVER | Never
+| 1 | DIRECTION_SEND | Send
+| 2 | DIRECTION_RECEIVE | Receive
+|===
+
+=== Encryption levels
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0 | DBCREATE_ENCRYPT_NONE | None
+| 1 | DBCREATE_ENCRYPT_SIMPLE | Simple
+| 2 | DBCREATE_ENCRYPT_MEDIUM | Medium
+| 3 | DBCREATE_ENCRYPT_STRONG | Strong
+|===
+
+=== User activity records
+....
+typedef struct { 
+        WORD DataReads;                                 /* # of data notes read */ 
+        WORD DataAdds;                                  /* # of data notes added */ 
+        WORD DataUpdates;                               /* # of data notes updated */ 
+        WORD DataDeletes;                               /* # of data notes deleted */ 
+        WORD NonDataReads;                              /* # of nondata notes read */ 
+        WORD NonDataAdds;                               /* # of nondata notes added */ 
+        WORD NonDataUpdates;                    /* # of nondata notes updated */ 
+        WORD NonDataDeletes;                    /* # of nondata notes deleted */ 
+} ACTIVITY_ENTRY_DETAILS_DUP; 
+
+typedef struct { 
+        TIMEDATE First;                         /* Beginning of reporting period */ 
+        TIMEDATE Last;                          /* End of reporting period */ 
+        DWORD Uses;                                     /* # of uses in reporting period */ 
+        DWORD Reads;                            /* # of reads in reporting period */ 
+        DWORD Writes;                           /* # of writes in reporting period */ 
+        DWORD PrevDayUses;                      /* # of uses in previous 24 hours */ 
+        DWORD PrevDayReads;                     /* # of reads in previous 24 hours */ 
+        DWORD PrevDayWrites;            /* # of writes in previous 24 hours */ 
+        DWORD PrevWeekUses;                     /* # of uses in previous week */ 
+        DWORD PrevWeekReads;            /* # of reads in previous week */ 
+        DWORD PrevWeekWrites;           /* # of writes in previous week */ 
+        DWORD PrevMonthUses;            /* # of uses in previous month */ 
+        DWORD PrevMonthReads;           /* # of reads in previous month */ 
+        DWORD PrevMonthWrites;          /* # of writes in previous month */ 
+} DBACTIVITY; 
+
+typedef struct { 
+        TIMEDATE First;                         /* Beginning of reporting period */ 
+        TIMEDATE Last;                          /* End of reporting period */ 
+        DWORD Uses;                                     /* # of uses in reporting period */ 
+        DWORD Reads;                            /* # of reads in reporting period */ 
+        DWORD Writes;                           /* # of writes in reporting period */ 
+        DWORD Adds; 
+        DWORD Updates; 
+        DWORD Deletes; 
+        DWORD PrevDayUses;                      /* # of uses in previous 24 hours */ 
+        DWORD PrevDayReads;                     /* # of reads in previous 24 hours */ 
+        DWORD PrevDayAdds; 
+        DWORD PrevDayUpdates; 
+        DWORD PrevDayDeletes; 
+        DWORD PrevWeekUses;                     /* # of uses in previous week */ 
+        DWORD PrevWeekReads;            /* # of reads in previous week */ 
+        DWORD PrevWeekAdds; 
+        DWORD PrevWeekUpdates; 
+        DWORD PrevWeekDeletes; 
+        DWORD PrevMonthUses;            /* # of uses in previous month */ 
+        DWORD PrevMonthReads;           /* # of reads in previous month */ 
+        DWORD PrevMonthAdds; 
+        DWORD PrevMonthUpdates; 
+        DWORD PrevMonthDeletes; 
+} DBACTIVITYEXTENDED; 
+
+typedef struct { 
+        TIMEDATE Time;                          /* Time of record */ 
+        WORD Reads;                                     /* # of data notes read */ 
+        WORD Writes;                            /* # of data notes written */ 
+        DWORD UserNameOffset;           /* Offset of the user name from the beginning 
+                                                                   of this memory block */ 
+                                                                /* User names follow -- '\0' terminated */ 
+} DBACTIVITY_ENTRY; 
+
+typedef struct { 
+        TIMEDATE Time;                          /* Time of record */ 
+        ACTIVITY_ENTRY_DETAILS_DUP AEDetails; 
+        DWORD UserNameOffset;           /* Offset of the user name from the beginning 
+                                                                   of this memory block */ 
+                                                                /* User names follow -- '\0' terminated */ 
+} DBACTIVITY_ENTRY_EXTENDED; 
+....
 
 :numbered!:
 [appendix]
