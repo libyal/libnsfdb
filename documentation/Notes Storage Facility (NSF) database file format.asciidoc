@@ -439,11 +439,229 @@ LAST ACCESSED TIMES MAINTAINED
 |====
 
 === Database information 2
-The database information (DBINFO2) is [yellow-background]*124?* bytes of size and consists of:
+The database information (DBINFO2) is [yellow-background]*124?* bytes of size 
+and consists of:
 
-[yellow-background]*TODO: migrate remaining documentation.*
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 8 | | Last fix-up date and time +
+Value consists of an NSF date and time +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 8 | 4 | | Database quota limit
+| 12 | 4 | | Database quota warn threshold
+| 16 | 8 | | [yellow-background]*Unknown (FoldersCleanAsOf)* +
+Value consists of an NSF date and time +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 24 | 8 | | [yellow-background]*Unknown (LastPurgedNoteTime)* +
+Value consists of an NSF date and time +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 32 | 8 | | Object store replica identifier +
+Value consists an NSF date and time but is considered as an identifier +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 40 | 4 | | Superblock 1 position +
+See section: <<nsf_file_position,NSF file position>>
+| 44 | 4 | | Superblock 1 size
+| 48 | 4 | | Superblock 2 position +
+See section: <<nsf_file_position,NSF file position>>
+| 52 | 4 | | Superblock 2 size
+| 56 | 4 | | Superblock 3 position +
+See section: <<nsf_file_position,NSF file position>>
+| 60 | 4 | | Superblock 3 size
+| 64 | 4 | | Superblock 4 position +
+See section: <<nsf_file_position,NSF file position>>
+| 68 | 4 | | Superblock 5 size
+| 72 | 4 | | Maximum extension granularity
+| 76 | 2 | | Summary bucket granularity
+| 78 | 2 | | Non-summary bucket granularity
+| 80 | 4 | | Minimum summary bucket size
+| 84 | 4 | | Minimum non-summary bucket size
+| 88 | 4 | | Maximum summary bucket size
+| 92 | 4 | | Maximum non-summary bucket size
+| 96 | 2 | | Non-summary append size
+| 98 | 2 | | Non-summary append factor
+| 100 | 2 | | Summary bucket fill factor
+| 102 | 2 | | Non-summary bucket fill factor
+| 104 | 4 | | Bucket Descriptor Block (BDB) 1 size
+| 108 | 4 | | Bucket Descriptor Block (BDB) 1 position +
+See section: <<nsf_file_position,NSF file position>>
+| 112 | 4 | | Bucket Descriptor Block (BDB) 2 size
+| 116 | 4 | | Bucket Descriptor Block (BDB) 2 position +
+See section: <<nsf_file_position,NSF file position>>
+| 120 | 4 | | [yellow-background]*Unknown*
+|===
+
+=== Database information 3
+The database information (DBINFO3) is [yellow-background]*44?* bytes of size 
+and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 | | [yellow-background]*Unknown (ExpirationDays)*
+| 2 | 1 | | [yellow-background]*Unknown (LSECSetupState)*
+| 3 | 3 | | [yellow-background]*Unknown (LSECFlags)*
+| 6 | 12 | | [yellow-background]*Unknown (LSECEncKeyDataLen)*
+| 18 | 8 | | [yellow-background]*Unknown (LSECKeyCreationTime)*
+| 26 | 4 | | [yellow-background]*Unknown (LSECEncKeyDataPos)*
+| 30 | 4 | | [yellow-background]*Unknown (LSECExtKeyDataPos)*
+| 34 | 4 | | [yellow-background]*Unknown (LSECExtKeyDataLen)*
+| 38 | 6 | | [yellow-background]*Unknown (VirtualOffset)*
+|===
+
+==== States
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| | LSEC_STATE_NONE | 
+| | LSEC_STATE_DONE | 
+| | LSEC_STATE_NEXTENCRYPT | 
+| | LSEC_STATE_NEXTDECRYPT |
+|===
+
+==== Flags
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| | LSEC_PUBLICKEY | 
+| | LSEC_SECRETKEY | 
+| | LSEC_INTERNATIONAL | 
+| | LSEC_USEBKOBJECT | 
+|===
+
+=== Database information 4
+The database information (DBINFO4) is  [yellow-background]*X?* bytes of size 
+and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 14 | | [yellow-background]*Unknown*
+| 662 | 4 | | [yellow-background]*Unknown (NextVirtualRRV)*
+| 666 | 2 | | [yellow-background]*Unknown (BackupTag)*
+| 668 | 4 | | [yellow-background]*Unknown (HighestFolderValidityID)*
+| 672 | 16 | | [yellow-background]*Unknown (DbOptions)*
+| 688 | 8 | | [yellow-background]*Unknown (DBIID (unique random number))*
+| 696 | 8 | | [yellow-background]*Unknown (DBIID Creation)*
+| 704 | 8 | | [yellow-background]*Unknown (Last successful backup)*
+| 712 | 8 | | [yellow-background]*Unknown (LastSBWriteCount)*
+| 720 | 8 | | [yellow-background]*Unknown (LastBackupTimeLSN)*
+| 728 | 4 | | [yellow-background]*Unknown (LogNum)*
+| 732 | 36 | | [yellow-background]*Unknown*
+|===
+
+=== Database information 5
+The database information (DBINFO5) is [yellow-background]*168?* bytes of size 
+and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 x 8 | | [yellow-background]*Unknown (LogID)*
+| 16 | 8 | | [yellow-background]*Unknown (LastFullCompactionTime)*
+| 24 | 4 | | [yellow-background]*Unknown (SizeSCOSLow)*
+| 28 | 4 | | [yellow-background]*Unknown (SizeSCOSHigh)*
+| 32 | 2 | | [yellow-background]*Unknown (DollarRevisionsLimit)*
+| 34 | 2 | | [yellow-background]*Unknown (DollarUpdatedByLimit)*
+| 36 | 4 | | [yellow-background]*Unknown (InboxRRV)*
+| 40 | 2 | | [yellow-background]*Unknown (SoftDeleteRetainDuration)*
+| 42 | 2 | | [yellow-background]*Unknown (BackupFlags)*
+| 44 | 8 | | [yellow-background]*Unknown (Start time of last backup)*
+| 52 | 2 | | [yellow-background]*Unknown (Flags5)*
+| 54 | 4 | | [yellow-background]*Unknown (UsedSpace)*
+| 58 | 8 | | [yellow-background]*Unknown (UsedSpaceRecalcTime)*
+| 66 | 8 | | [yellow-background]*Unknown (DesignModified)*
+| 74 | 8 | | [yellow-background]*Unknown (LastCloseLSN)*
+| 82 | 4 | | [yellow-background]*Unknown (MarkCorruptLine)*
+| 86 | 12 | | [yellow-background]*Unknown (MarkCorruptFile)*
+| 98 | 8 | | [yellow-background]*Unknown (UnreadLogModified)*
+| 106 | 8 | | [yellow-background]*Unknown (RefreshDesignModTime)*
+| 114 | 8 | | [yellow-background]*Unknown (ProfileModified)*
+| 122 | 8 | | [yellow-background]*Unknown (LastCompactionTime)*
+| 130 | 4 | | [yellow-background]*Unknown (DAOSObjectRefCt)*
+| 134 | 4 | | [yellow-background]*Unknown (DAOSSizeLow)*
+| 138 | 4 | | [yellow-background]*Unknown (DAOSSizeHigh)*
+| 142 | 8 | | [yellow-background]*Unknown (SBLastCloseLSN)*
+| 150 | 8 | | [yellow-background]*Unknown (BDBLastCloseLSN)*
+| 158 | 8 | | [yellow-background]*Unknown (DAOSSyncPoint)*
+| 164 | 4 | | [yellow-background]*Unknown*
+|===
+
+==== Notes
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 784 | 8 | | [yellow-background]*Unknown* +
+Value consists of an NSF date and time +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 792 | 34 | | [yellow-background]*Unknown*
+| 826 | 8 | | [yellow-background]*Unknown* +
+Value consists of an NSF date and time +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 834 | 8 | | [yellow-background]*Unknown* +
+Value consists of an NSF date and time +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 842 | 24 | | [yellow-background]*Unknown*
+| 866 | 8 | | [yellow-background]*Unknown* +
+Value consists of an NSF date and time +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 874 | 150 | | [yellow-background]*Unknown*
+|===
+
+==== Backup flags
+[yellow-background]*TODO: add text*
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| | DBBCKFLAG_IS_A_BACKUP | 
+| | DBBCKFLAG_CLEAR_FIXUP | 
+|===
+
+==== Flags 5
+[yellow-background]*TODO: add text*
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| | DBFLAG5_DESTROY_UNLOGGED_CONTV | 
+| | DBFLAG5_NAMED_OBJECT_NEW_HASH | 
+| | DBFLAG5_MODNOTELOG_HAS_DESIGN | 
+| | DBFLAG5_CONVERTED_REFNOTE | 
+| | DBFLAG5_HAS_PROT_ATTACHMENTS | 
+| | DBFLAG5_DESTROY_UNLOGGED_CONT | 
+| | DBFLAG5_FULL_UNREAD_REPL_NEEDED | 
+| | DBFLAG5_FULL_DESIGN_REPL_NEEDED | 
+| | DBFLAG5_DB2NSF | 
+| | DBFLAG5_AUTOFIXUP_DISABLED | 
+|===
+
+=== Padding
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 90 | | [yellow-background]*Unknown (Filler2)*
+|===
 
 == Superblock
+The database information 2 contains the location and size of 4 superblocks.
+
+Most of the time an NSF file contains two superblocks. The offset of these 
+superblocks is stored in the database header. Most often the first superblock 
+is stored at offset 0x0400 and the second superblock at offset 0x8400. Both 
+superblock are stored in 'container' which is a 0x8000 bytes of size.
+
+The superblock consists of:
+
+* Superblock header
+* Superblock data
+* Superblock footer
+
+=== Superblock header
 [yellow-background]*TODO: migrate remaining documentation.*
 
 == Bucket Descriptor Block
