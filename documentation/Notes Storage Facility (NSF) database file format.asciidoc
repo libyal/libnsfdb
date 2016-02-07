@@ -350,6 +350,97 @@ See section: <<nsf_date_and_time,NSF date and time>>
 | | DBFLAG_DESIGN_IN_NAMOBJ |
 |===
 
+=== Database replication information
+The database replication information (DBREPLICAINFO) is 20 bytes of size and 
+consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 8 | | Replication identifier +
+Value consists of a NSF date and time (in local time) but is considered as an identifier +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 8 | 2 | | Replication flags +
+See section: <<replication_flags,Replication flags>>
+| 10 | 2 | | Replication cutoff interval +
+Value in days
+| 12 | 8 | | Replication cutoff date and time +
+Value consists of a NSF date and time +
+See section: <<nsf_date_and_time,NSF date and time>>
+|===
+
+==== [[replication_flags]]Replication flags
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x0001 | | [yellow-background]*spare was COPY_ACL*
+| 0x0002 | | [yellow-background]*spare*
+| 0x0004 | REPLFLG_DISABLE | Disable replication
+| 0x0008 | REPLFLG_UNREADIFFNEW | Mark unread only if newer note
+| 0x0010 | REPLFLG_IGNORE_DELETES | Don't propagate deleted notes when  replicating from this database
+| 0x0020 | REPLFLG_HIDDEN_DESIGN | UI does not allow perusal of Design
+| 0x0040 | REPLFLG_DO_NOT_CATALOG | Do not list in catalog
+| 0x0080 | REPLFLG_CUTOFF_DELETE | Auto-Delete documents prior to cutoff date
+| 0x0100 | REPLFLG_NEVER_REPLICATE | DB is not to be replicated at all 
+| 0x0200 | REPLFLG_ABSTRACT | Abstract during replication
+| 0x0400 | REPLFLG_DO_NOT_BROWSE | Do not list in database add
+| 0x0800 | REPLFLG_NO_CHRONOS | Do not run chronos on database
+| 0x1000 | REPLFLG_IGNORE_DEST_DELETES | Don't replicate deleted notes into destination database
+| 0x2000 | REPLFLG_MULTIDB_INDEX | Include in Multi Database indexing
+|===
+
+The 2 MSB are used to store the replication priority
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0xc000 | REPLFLG_PRIORITY_LOW | Low priority
+| 0x0000 | REPLFLG_PRIORITY_MED | Medium priority
+| 0x4000 | REPLFLG_PRIORITY_HI | High priority
+|===
+
+=== Database information buffer
+The database information buffer is 128 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | ... | | Database title
+| ... | 1 | 0x0a | Categories separator ("\n")
+| | | | Categories
+| ... | 1 | 0x23 | Class separator ("#")
+| | | | Class
+| ... | 1 | 0x32 | Design class separator ("2")
+| ... | ... | | Database design class (template name)
+| ... | ... | 0x00 | End of database information buffer ("\0")
+| ... | ... | | [yellow-background]*Unknown (Remnant data)*
+|===
+
+=== Special note identifier array
+The special note identifier array is 128 byte of size and contains 48 32-bit 
+note identifier values.
+
+....
+NOTE HIERARCHY DISABLED 
+INDICES ARE COMPRESSED 
+BUCKETS ARE COMPRESSED 
+COMPRESSION PREVIOUSLY ENABLED 
+UNREAD MARKS NOT MAINTAINED 
+LAST ACCESSED TIMES MAINTAINED
+....
+
+=== Padding
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 64 | | [yellow-background]*Unknown (padding)*
+|====
+
+=== Database information 2
+The database information (DBINFO2) is [yellow-background]*124?* bytes of size and consists of:
+
 [yellow-background]*TODO: migrate remaining documentation.*
 
 == Superblock
