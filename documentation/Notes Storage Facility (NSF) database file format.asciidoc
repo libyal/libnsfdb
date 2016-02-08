@@ -662,9 +662,103 @@ The superblock consists of:
 * Superblock footer
 
 === Superblock header
+The superblock header is 100 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 | 0x000e | Signature
+| 2 | 8 | | Last modification date and time +
+Value consists of an NSF date and time +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 10 | 4 | | Uncompressed size +
+The size of the run-time superblock
+| 14 | 4 | | Number of summary buckets
+| 18 | 4 | | Number of non-summary buckets
+| 22 | 4 | | Number of bitmaps
+| 26 | 4 | | Record Relocation Vector (RRV) bucket size
+| 30 | 4 | | Data Record Relocation Vector (RRV) bucket position +
+See section: <<nsf_file_position,NSF file position>>
+| 34 | 4 | | Record Relocation Vector (RRV) container low
+| 38 | 4 | | Record Relocation Vector (RRV) container high
+| 42 | 4 | | Bitmap size
+| 46 | 4 | | Data note identifier table size
+| 50 | 4 | | Modified note log size
+| 54 | 4 | | Folder Directory Object (FDO) size
+| 58 | 2 | | Flags
+| 60 | 4 | | Superblock write count
+| 64 | 4 | | Compressed size +
+The size of the stored superblock
+| 68 | 2 | | Compression type +
+See section: [[compression_type]]Compression type
+| 70 | 4 | | Number of summary bucket descriptor pages
+| 74 | 4 | | Number of non-summary bucket descriptor pages
+4+| [yellow-background]*If format version < 0x1e*
+| 78 | 8 | | [yellow-background]*Unknown (Reserved)*
+4+| [yellow-background]*If format version >= 0x1e*
+| 78 | 4 | | Number of soft deleted note entries
+| 82 | 2 | | Shared template information size
+| 84 | 2 | | [yellow-background]*Unknown (Reserved)*
+4+| [yellow-background]*For all versions*
+| 86 | 2 | | Number of form names
+| 88 | 4 | | Form bitmap size +
+[yellow-background]*What does -1 (0xffffffff) represent?*
+| 92 | 8 | | [yellow-background]*Unknown (StructLSN)*
+|===
+
+Notes/Domino refers to this structure as superblock signature.
+
+=== Superblock data
+The superblock data contains the following values.
+
+* summary bucket descriptors
+* non-summary bucket descriptors
+* bitmap descriptors
+* Initial (current) RRV bucket
+* Initial (current) bitmap
+* data note identifier table
+* modified note log
+* folder directory object
+
+The superblock data is often stored compressed.
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Compressed data block size
+| 4 | ... | | Compressed data block
+|===
+
 [yellow-background]*TODO: migrate remaining documentation.*
 
+==== Modified note log
+[yellow-background]*TODO: add text*
+
+==== Folder Directory Object
+[yellow-background]*TODO: add text*
+
+=== Superblock footer
+The superblock footer is 12 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 8 | | Last modification date and time +
+Value consists of an NSF date and time +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 4 | 4 | | Checksum +
+Value contains a 32-bit XOR of the superblock data (starting a offset 100) with an initial value of 0
+|===
+
+Notes/Domino refers to this structure as superblock trailer.
+
 == Bucket Descriptor Block
+The bucket descriptor block (BDB) consists of:
+
+* Bucket descriptor block header
+* Bucket descriptor block data
+* Bucket descriptor block footer
+
 [yellow-background]*TODO: migrate remaining documentation.*
 
 == [[record_relocation_vector_bucket]]Record Relocation Vector bucket
