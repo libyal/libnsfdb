@@ -976,7 +976,220 @@ The bucket descriptor block (BDB) consists of:
 * Bucket descriptor block data
 * Bucket descriptor block footer
 
-[yellow-background]*TODO: migrate remaining documentation.*
+=== Bucket descriptor block header
+The bucket descriptor block header is 56 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 | 0x0001 | Signature
+| 2 | 2 | | Version
+| 4 | 2 | | Compression type
+| 6 | 4 | | Uncompressed size
+| 10 | 4 | | Write count +
+The number of times the bucket descriptor block was written
+| 14 | 4 | | Compressed size
+| 18 | 8 | | (Last) modification date and time
+| 26 | 4 | | Number of Unique Keys (UNKs)
+| 30 | 4 | | [yellow-background]*Unknown*
+| 34 | 4 | | Unique Key (UNK) text size
+| 38 | 4 | | Number of Record Relocation Vector (RRV) bucket descriptors
+| 42 | 4 | | Number of Unique Key (UNK) hash table entries
+| 46 | 8 | | [yellow-background]*Unknown*
+| 54 | 4 | | Checksum +
+32-bit XOR of the bucket descriptor block header without the checksum itself
+| 48 | 8 | | [yellow-background]*Unknown*
+|===
+
+=== Bucket descriptor block data
+The bucket descriptor block (BDB) data contains:
+
+* Record Relocation Vector bucket descriptors
+* Unique name key table
+* Unique name key hash table
+
+==== Record Relocation Vector bucket descriptors
+The Record Relocation Vector (RRV) bucket descriptor is 12 bytes of size and 
+consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | File position +
+The lower bit is used to signify data or non-data RRV buckets. +
+See section: <<nsf_file_position,NSF file position>>
+| 4 | 4 | | Initial RRV identifier
+|===
+
+The lower bit of the file position is used to signify is the RRV bucket 
+contains data (if the bit is 0) or non-data (if the bit is 1) RRV entries.
+
+==== Unique name key table
+The unique name key (UNK) table consists of unique name key (UNK) table 
+entries. The name strings are stored after the table entries.
+
+===== Unique name key table entry
+The unique name key (UNK) table entry is 10 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Name text offset +
+The offset is relative from the start of the name text
+| 4 | 2 | | Name text length
+| 6 | 1 | | Note item type
+| 7 | 1 | | Note item class
+| 8 | 2 | | [yellow-background]*Unknown*
+|===
+
+===== The note item class
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x00 | CLASS_NOCOMPUTE | [yellow-background]*No compute?*
+| 0x01 | CLASS_ERROR | [yellow-background]*Error?*
+| 0x02 | CLASS_UNAVAILABLE | [yellow-background]*Unavailable?*
+| 0x03 | CLASS_NUMBER | Numeric
+| 0x04 | CLASS_TIME | Date and time
+| 0x05 | CLASS_TEXT | Text
+| 0x06 | CLASS_FORMULA | Formula
+| 0x07 | CLASS_USERID | [yellow-background]*User identifier?*
+|===
+
+===== [[note_item_type]]The note item type
+The note item type is dependent on the note item class.
+
+====== The CLASS_NOCOMPUTE note item types
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x00 | TYPE_INVALID_OR_UNKNOWN | [yellow-background]*Unknown*
+| 0x01 | TYPE_COMPOSITE | [yellow-background]*Unknown*
+| 0x02 | TYPE_COLLATION | [yellow-background]*Unknown*
+| 0x03 | TYPE_OBJECT | [yellow-background]*Unknown*
+| 0x04 | TYPE_NOTEREF_LIST | [yellow-background]*Unknown*
+| 0x05 | TYPE_VIEW_FORMAT | [yellow-background]*Unknown*
+| 0x06 | TYPE_ICON | [yellow-background]*Unknown*
+| 0x07 | TYPE_NOTELINK_LIST | [yellow-background]*Unknown*
+| 0x08 | TYPE_SIGNATURE | [yellow-background]*Unknown*
+| 0x09 | TYPE_SEAL | [yellow-background]*Unknown*
+| 0x0a | TYPE_SEALDATA | [yellow-background]*Unknown*
+| 0x0b | TYPE_SEAL_LIST | [yellow-background]*Unknown*
+| 0x0c | TYPE_HIGHLIGHTS | [yellow-background]*Unknown*
+| 0x0d | TYPE_WORKSHEET_DATA | [yellow-background]*Unknown* +
+[yellow-background]*Only used by Chronicle product*
+| 0x0e | TYPE_USERDATA | [yellow-background]*Unknown*
+| 0x0f | TYPE_QUERY | [yellow-background]*Unknown* +
+[yellow-background]*Saved query CD records*
+| 0x10 | TYPE_ACTION | [yellow-background]*Unknown* +
+[yellow-background]*Saved action CD records*
+| 0x11 | TYPE_ASSISTANT_INFO | [yellow-background]*Unknown* +
+[yellow-background]*Saved assistant info*
+| 0x12 | TYPE_VIEWMAP_DATASET | [yellow-background]*Unknown* +
+[yellow-background]*Saved ViewMap dataset*
+| 0x13 | TYPE_VIEWMAP_LAYOUT | [yellow-background]*Unknown* +
+[yellow-background]*Saved ViewMap layout*
+| 0x14 | TYPE_LSOBJECT | [yellow-background]*Unknown* +
+[yellow-background]*Saved LS Object code for an agent*
+| 0x15 | TYPE_HTML | [yellow-background]*Unknown* +
+[yellow-background]*LMBCS-encoded HTML, >64K handled by more than one item of same name concatenated*
+| 0x16 | TYPE_SCHED_LIST | [yellow-background]*Unknown* +
+[yellow-background]*Busy time schedule entries list*
+| 0x17 | TYPE_CALENDAR_FORMAT | [yellow-background]*Unknown* +
+[yellow-background]*Busy time schedule entries list*
+| 0x18 | TYPE_MIME_PART | [yellow-background]*Unknown* +
+[yellow-background]*MIME body part*
+| | | 
+| 0x1f | TYPE_SEAL2 | [yellow-background]*Unknown*
+|===
+
+====== The CLASS_ERROR note item types
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x00 | TYPE_ERROR | [yellow-background]*Unknown*
+|===
+
+====== The CLASS_UNAVAILABLE note item types
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x00 | TYPE_UNAVAILABLE | [yellow-background]*Unknown*
+|===
+
+====== The CLASS_NUMBER note item types
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x00 | TYPE_NUMBER | Floating point value +
+8 bytes of size
+| 0x01 | TYPE_NUMBER_RANGE | [yellow-background]*Unknown*
+|===
+
+====== The CLASS_TIME note item types
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x00 | TYPE_TIME | NSF date and time value +
+8 bytes of size
+See section: <<nsf_date_and_time,NSF date and time>>
+| 0x01 | TYPE_TIME_RANGE | [yellow-background]*Unknown*
+|===
+
+====== The CLASS_TEXT note item types
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x00 | TYPE_TEXT | Text value +
+Variable of size
+| 0x01 | TYPE_TEXT_LIST | An array of text values +
+Variable of size
+| 0x02 | TYPE_RFC822_TEXT | [yellow-background]*Unknown* +
+[yellow-background]*RFC822( RFC2047) message header*
+|===
+
+====== The CLASS_FORMULA note item types
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x00 | TYPE_FORMULA | [yellow-background]*Unknown*
+|===
+
+====== The CLASS_USERID note item types
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x00 | TYPE_USERID | [yellow-background]*Unknown*
+|===
+
+==== Unique name key hash table
+[yellow-background]*TODO: add text*
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 | | Unique name key hash value
+|===
+
+=== Bucket descriptor block footer
+The bucket descriptor block footer is 12 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 8 | | (Last) modification date and time
+| 8 | 4 | | Checksum +
+32-bit XOR of the bucket descriptor block information
+|===
 
 == [[record_relocation_vector_bucket]]Record Relocation Vector bucket
 The Record Relocation Vector (RRV) bucket consists:
