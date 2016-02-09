@@ -729,7 +729,224 @@ The superblock data is often stored compressed.
 | 4 | ... | | Compressed data block
 |===
 
-[yellow-background]*TODO: migrate remaining documentation.*
+The uncompressed superblock data consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+4+| _If number of summary bucket descriptor pages > 0_
+| 0 | 8206 | | Summary bucket descriptors page +
+[yellow-background]*TODO: add reference*
+4+| _If number of non-summary bucket descriptor pages > 0_
+| 8206 | 8198 | | Non-summary bucket descriptors page +
+[yellow-background]*TODO: add reference*
+4+| _If number of bitmaps > 0_
+| 16404 | 20 x number of bitmaps | | Bitmap descriptors +
+[yellow-background]*TODO: add reference*
+$+| 
+| ... | ... | | Initial RRV bucket +
+See section: <<record_relocation_vector_bucket,Record Relocation Vector bucket>>
+| ... | ...  | | Initial (allocation) bitmap +
+See section: <<allocation_bitmap,Allocation bitmap>>
+| ... | ... | | Data note identifier table +
+[yellow-background]*TODO: add reference*
+| ... | ... | | Modified note log +
+[yellow-background]*TODO: add reference*
+| ... | ... | | Folder Directory Object +
+[yellow-background]*TODO: add reference*
+|===
+
+[yellow-background]*TODO: merge notes with text:*
+....
+soft deleted note entries?
+shared template information?
+form names?
+form bitmap
+....
+
+==== The summary bucket descriptor page
+The summary bucket descriptor page is 8206 of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | [yellow-background]*Unknown*
+| 4 | 10 | | Summary bucket page descriptor +
+[yellow-background]*TODO: add reference*
+| 14 | 10 x 21 (Maximum) | | Summary bucket group descriptors +
+[yellow-background]*TODO: add reference*
+| 224 | 14 x number of summary buckets | | Summary bucket descriptors +
+[yellow-background]*TODO: add reference*
+| ... | ... | | [yellow-background]*Unknown* +
+[yellow-background]*Possible padding contains remnant data*
+|===
+
+[yellow-background]*TODO: merge notes with text:*
+....
+Number of summary bucket group descriptors? How many descriptors per group?
+A max of 21 group descriptors per page ? A max of 570 descriptors per page?
+
+1 descriptor => 1 group
+12 descriptor => 1 group
+18 descriptor => 1 group
+26 descriptor => 1 group
+40 descriptors => 2 groups
+45 descriptors => 2 groups
+62 descriptors => 3 groups
+
+256 / 14 = 18 max descriptors per group?
+....
+
+===== The summary bucket page descriptor
+The summary bucket page descriptor is 10 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 8 | | Last modification date and time +
+Value consists of an NSF date and time +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 8 | 1 | | Largest number of free bytes
+| 9 | 1 | | Second largest number of free bytes
+|===
+
+===== The summary bucket group descriptor
+The summary bucket group descriptor is 10 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 8 | | Last modification date and time +
+Value consists of an NSF date and time +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 8 | 1 | | Largest number of free bytes
+| 9 | 1 | | Second largest number of free bytes
+|===
+
+===== The summary bucket descriptor
+The summary bucket descriptor is 14 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | File position +
+See section: <<nsf_file_position,NSF file position>>
+| 4 | 8 | | Last modification date and time +
+Value consists of an NSF date and time +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 12 | 1 | | Largest number of free bytes
+| 13 | 1 | | Second largest number of free bytes
+|===
+
+[yellow-background]*TODO: merge notes with text:*
+....
+bucket size
+bucket free space
+....
+
+==== The non-summary bucket descriptor page
+The non-summary bucket descriptor page is 8198 of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | [yellow-background]*Unknown*
+| 4 | 2 | | Non-summary bucket page descriptor +
+[yellow-background]*TODO: add reference*
+| 6 | 2 x 32 (Maximum) | | Non-summary bucket group descriptors +
+[yellow-background]*TODO: add reference*
+| 70 | 6 x number of non-summary buckets | | Non-summary bucket descriptors +
+[yellow-background]*TODO: add reference*
+| ... | ... | | [yellow-background]*Unknown* +
+[yellow-background]*Possible padding contains remnant data*
+|===
+
+[yellow-background]*TODO: merge notes with text:*
+....
+Number of non-summary bucket group descriptors? How many descriptors per group?
+A max of 32 group descriptors per page ? A max of 812 descriptors per page?
+
+1 descriptor => 1 group
+29 descriptor => 1 group
+32 descriptor => 1 group
+62 descriptor => 2 groups
+100 descriptors => 3 groups
+132 descriptors => 4 groups
+
+256 / 6 = 42 max descriptors per group?
+....
+
+===== The non-summary bucket page descriptor
+The non-summary bucket page descriptor is 2 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 1 | | Largest number of free bytes
+| 1 | 1 | | Second largest number of free bytes
+|===
+
+===== The non-summary bucket group descriptor
+The non-summary bucket group descriptor is 2 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 1 | | Largest number of free bytes
+| 1 | 1 | | Second largest number of free bytes
+|===
+
+===== The non-summary bucket descriptor
+The non-summary bucket descriptor is 6 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | File position +
+See section: <<nsf_file_position,NSF file position>>
+| 4 | 1 | | Largest number of free bytes
+| 5 | 1 | | Second largest number of free bytes
+|===
+
+[yellow-background]*TODO: merge notes with text:*
+....
+bucket size
+bucket free space
+....
+
+==== Bitmap descriptors
+The bitmap descriptors contain one or more bitmap descriptor entries.
+
+The bitmap descriptor entry is 20 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | [yellow-background]*File position of bitmap*
+| 4 | 4 | | [yellow-background]*Unknown (BucketMaxFree)*
+| 8 | 4 | | [yellow-background]*Unknown (BucketNonMaxFree)*
+| 12 | 4 | | [yellow-background]*Unknown (NonBucketBegin)*
+| 16 | 4 | | [yellow-background]*Unknown (NonBucketEnd)*
+|===
+
+==== Data note identifier table
+[yellow-background]*TODO: Contains the recently viewed/accessed notes?*
+
+The data note identifier table is variable of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | 0x00000004 | Signature
+| 4 | 2 | | [yellow-background]*Unknown*
+| 6 | 2 | | Number of data note identifier entries
+| 8 | 8 | | [yellow-background]*Unknown*
+| 16 | 2 | | [yellow-background]*Unknown (Empty value)*
+4+| _Data note identifier entries_
+| 18 | 1 | | [yellow-background]*Unknown*
+| 19 | 4 | | Note identifier +
+Contains a data RRV identifier
+|===
 
 ==== Modified note log
 [yellow-background]*TODO: add text*
