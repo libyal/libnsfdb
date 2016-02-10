@@ -1042,7 +1042,7 @@ The offset is relative from the start of the name text
 | 8 | 2 | | [yellow-background]*Unknown*
 |===
 
-===== The note item class
+===== Note item class
 
 [cols="1,1,5",options="header"]
 |===
@@ -1057,7 +1057,7 @@ The offset is relative from the start of the name text
 | 0x07 | CLASS_USERID | [yellow-background]*User identifier?*
 |===
 
-===== [[note_item_type]]The note item type
+===== [[note_item_type]]Note item type
 The note item type is dependent on the note item class.
 
 ====== The CLASS_NOCOMPUTE note item types
@@ -1334,7 +1334,290 @@ The note contains:
 ** Non-summary-item values
 
 === The note header
-[yellow-background]*TODO: migrate remaining documentation.*
+The note (body) header contains:
+
+* [yellow-background]*database handle (rrv?)*
+* note identifier
+* originator identifier
+* note class
+* last modification time
+* pre version 3 privileges mask
+* note flags
+* last access time
+
+The note header is 100 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+4+ | _Long signature (LSIG)_
+| 0 | 2 | 0x0004 | Signature
+| 2 | 4 | | Size +
+Includes the size of the signature and size value
+4+| _Note identifier (NOTEID)_ +
+[yellow-background]*Or Note global instance identifier (GLOBALINSTANCEID)?*
+| 6 | 4 | | RRV identifier
+4+| _Originator identifier (ORIGINATORID)_
+| 10 | 8 | | File identifier (OID.File) +
+Value consists of a NSF date and time but is considered as an identifier +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 18 | 8 | | Note identifier (OID.Note) +
+[yellow-background]*Value consists of a NSF date and time but is considered as an identifier?* +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 26 | 4 | | Sequence number (OID.Sequence)
+| 30 | 8 | | Sequence date and time (OID.SequenceTime) +
+Value consists of a NSF date and time +
+See section: <<nsf_date_and_time,NSF date and time>>
+4+| _Note header data_
+| 38 | 2 | | Status flags +
+See section: <<note_status_flags,Note status flags>>
+| 40 | 2 | | Note class +
+See section: <<note_class,Note class>>
+| 42 | 8 | | Last modification date and time +
+Value consists of a NSF date and time +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 50 | 2 | | Number of note items
+| 52 | 2 | | [yellow-background]*Unknown (Pre-V3 Privileges mask or note Flags)*
+| 54 | 2 | | Number of responses
+| 56 | 4 | | Non-summary data identifier +
+[yellow-background]*TODO: add reference*
+| 60 | 4 | | Non-summary data size
+| 64 | 8 | | Last access date and time +
+Value consists of a NSF date and time +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 72 | 8 | | Creation date and time +
+The date and time the note was added to the database file +
+Value consists of a NSF date and time +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 80 | 4 | | Parent note identifier +
+[yellow-background]*Contains a data RRV identifier?*
+| 84 | 2 | | [yellow-background]*Unknown* +
+[yellow-background]*Seen: 0x0002, 0x0003*
+| 86 | 4 | | Folder reference count
+| 90 | 4 | | [yellow-background]*Unknown (response table identifier?)* +
+[yellow-background]*Seen" 0x00000003*
+| 94 | 4 | | Folder note identifier +
+Contains a non-data RRV identifier
+| 98 | 2 | | [yellow-background]*Unknown*
+|===
+
+[yellow-background]*TODO: what about Secondary status flags?*
+
+....
+Pre-V3 privileges mask (16-bit)
+
+Obsolete in Notes 3.0 [Notes 2.X: Get/set the Access Control List (ACL) 
+privileges associated with manipulating this Note(WORD). Only the low order 5 
+bits of the WORD used in Notes 2.X.
+
+bit 0 = privilege 1
+bit 1 = privilege 2
+bit 2 = privilege 3
+bit 3 = privilege 4
+bit 4 = privilege 5
+
+Note flags (16-bit ?) (as of V3)
+....
+
+....
+* Response count (32-bit)
+Get the number of immediate response notes for this note (DWORD).
+* Responses ?
+Get a handle to the ID Table of Note IDs of the immediate responses of this 
+note (HANDLE). If a note has no responses, NULLHANDLE is returned. There is no 
+ordering of the response Note IDs in the table. The OPEN_RESPONSE_ID_TABLE flag 
+must be specified when the note is opened in order to obtain a valid ID Table 
+handle. If the OPEN_RESPONSE_ID_TABLE flag is not specified when the note is 
+opened, NULLHANDLE will be returned as the value of the ID Table handle. Do not 
+explicityly deallocate the ID Table. It will be deallocated by NSFNoteClose().
+* added-to-file date and time?
+  In file creation date and time
+* object store database handle?
+DBHANDLE of object store used by linked items.
+....
+
+==== [[note_class]Note class
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x0001 | NOTE_CLASS_DOCUMENT +
+NOTE_CLASS_DATA | Document or data note
+| 0x0002 | NOTE_CLASS_INFO | Help-About (File information) note
+| 0x0004 | NOTE_CLASS_FORM | Form note
+| 0x0008 | NOTE_CLASS_VIEW | View note
+| 0x0010 | NOTE_CLASS_ICON | Icon note
+| 0x0020 | NOTE_CLASS_DESIGN | Design note collection
+| 0x0040 | NOTE_CLASS_ACL | Access control list note
+| 0x0080 | NOTE_CLASS_HELP_INDEX | Notes product help index note
+| 0x0100 | NOTE_CLASS_HELP | Designer's help note
+| 0x0200 | NOTE_CLASS_FILTER | Filter note
+| 0x0400 | NOTE_CLASS_FIELD | Shared Field note
+| 0x0800 | NOTE_CLASS_REPLFORMULA | Replication formula
+| 0x1000 | NOTE_CLASS_PRIVATE | Private design note +
+[yellow-background]*use $PrivateDesign view to locate/classify?*
+| | | 
+| 0x8000 | NOTE_CLASS_DEFAULT | [yellow-background]*MODIFIER - default version of each?*
+|===
+
+==== [[note_status_flags]]Note status flags
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x0001 | NOTE_FLAG_READONLY | The note is read-only
+| 0x0002 | NOTE_FLAG_ABSTRACTED | [yellow-background]*The note is missing data?*
+| 0x0004 | NOTE_FLAG_INCREMENTAL | Incremental note (has placeholders)
+| 0x0008 | | 
+| 0x0010 | | 
+| 0x0020 | NOTE_FLAG_LINKED | The note contains linked items or linked objects
+| 0x0040 | NOTE_FLAG_INCREMENTAL_FULL | Full incremental note (has no placeholders)
+| 0x0080 | | 
+| 0x0100 | | 
+| 0x0200 | [yellow-background]*NOTE_FLAG_DELETED?* | [yellow-background]*Notes with this flag seem to be ignored as valid notes, possible that this is the (soft) deletion flag?*
+| 0x0400 | | 
+| 0x0800 | | 
+| 0x1000 | | 
+| | | 
+| 0x4000 | NOTE_FLAG_CANONICAL | Canonical note
+|===
+
+[yellow-background]*TODO: merge notes with text:*
+....
+DELETED 
+UPDATED 
+OBJECTS 
+PROTECTED 
+0x40 GHOST
+RESPONSEOBJ 
+NAMED 
+UNAMBIGUOUS 
+APPT 
+NOPURGE 
+NONSUMMARYAPPEND 
+PUBLICACCESS 
+SOFT_DELETED 
+....
+
+==== Secondary note status flags
+[yellow-background]*TODO: The note should have secondary note status flags?*
+
+....
+HASREADERSLIST 
+REFERENCE 
+
+NOTE_FLAG2_NO_UPDATE
+NOTE_FLAG2_NO_CHANGE
+....
+
+==== Non-summary data identifier
+[yellow-background]*TODO: verify the following text*
+
+The non-summary data identifier contains either a file position or non-summary 
+bucket slot-identifier (BSID).
+
+The non-summary data identifier BSID is 4 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0.0  | 24 bits | | Bucket identifier +
+Where 1 represents the first bucket
+| 3.0  | 7 bits | | Slot identifier +
+Where 1 represents the first slot
+| 3.7 | 1 bit | | [yellow-background]*Extended flag must be set?*
+|===
+
+=== Note item entry
+The note item entry is 8 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 | | Unique name key table index
+| 2 | 2 | | Field flags
+| 4 | 2 | | Data size
+| 6 | 2 | | [yellow-background]*Unknown*
+|===
+
+The summary data is stored after the last note item entry. Summary data is 
+identifier by the ITEM_SUMMARY note item field flag. Non-summary data is stored 
+in separate location which can be retrieved using the non-summary data 
+identifier.
+
+==== Note item field flags
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x0001 | ITEM_SIGN | The field will be signed if requested
+| 0x0002 | ITEM_SEAL | The field will be encrypted (sealed) if requested
+| 0x0004 | ITEM_SUMMARY | The field can be referenced in a formula +
+Also the field is stored in the note data not in the non-summary data
+| 0x0008 | | [yellow-background]*Unknown, set if data is store ind the note item data*
+| | | 
+| 0x0020 | ITEM_READWRITERS | The field identifies a subset of users that have read/write access
+| 0x0040 | ITEM_NAMES | The field contains user/group names
+| | | 
+| 0x0100 | ITEM_PLACEHOLDER | Add this item to "item name table", but do not store
+| 0x0200 | ITEM_PROTECTED | The field cannot be modified except by its owner
+| 0x0400 | ITEM_READERS | The field identifies subset of users that have read access
+| | | 
+| 0x1000 | ITEM_UNCHANGED | The item is unchanged (similar to the one on-disk)
+|===
+
+==== Summary note item data
+The contents of the summary note item data is dependent on the note item type. 
+See section: <<note_item_type,Note item type>>.
+
+If the data size is 0 the value is empty.
+
+===== The TYPE_TEXT_LIST note item type
+The TYPE_TEXT_LIST note item type is variable of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 | | Number of entries
+| 2 | (2 x number of entries) | | Entry size
+| ... | ... | | Entry data
+|===
+
+==== Non-summary note item data
+[yellow-background]*TODO: add text*
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+4+| _Long signature (LSIG)_
+| 0 | 2 | 0x0010 | Signature
+| 2 | 4 | | Size +
+Includes the size of the signature and size value
+4+| _Note identifier (NOTEID)_ +
+[yellow-background]*Or Note global instance identifier (GLOBALINSTANCEID)?*
+| 6 | 4 | | RRV identifier
+4+| _Originator identifier (ORIGINATORID)_
+| 10 | 8 | | File identifier (OID.File) +
+Value consists of a NSF date and time but is considered as an identifier +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 18 | 8 | | Note identifier (OID.Note) +
+[yellow-background]*Value consists of a NSF date and time but is considered as an identifier?* +
+See section: <<nsf_date_and_time,NSF date and time>>
+| 26 | 4 | | Sequence number (OID.Sequence)
+| 30 | 8 | | Sequence date and time (OID.SequenceTime) +
+Value consists of a NSF date and time +
+See section: <<nsf_date_and_time,NSF date and time>>
+4+| _Note header data_
+| 38 | 8 | | [yellow-background]*Date and time value?*
+| 46 | 4 | | [yellow-background]*Size (same as offset 2?)*
+| 50 | 8 | | [yellow-background]*Unknown*
+| 58 | 4 | | [yellow-background]*Unknown*
+| 62 | 2 | | [yellow-background]*Unknown*
+|===
+
+=== Trailing data
+The note sometimes contains several bytes of trailing data, which probably 
+contain remnant data.
 
 == Compression
 [yellow-background]*TODO: add text*
