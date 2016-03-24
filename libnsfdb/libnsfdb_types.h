@@ -41,9 +41,9 @@ typedef struct libnsfdb_note {}		libnsfdb_note_t;
 typedef intptr_t libnsfdb_file_t;
 typedef intptr_t libnsfdb_note_t;
 
-#endif
+#endif /* defined( HAVE_DEBUG_OUTPUT ) && !defined( WINAPI ) */
 
-#endif
+#endif /* defined( HAVE_LOCAL_LIBNSFDB ) */
 
-#endif
+#endif /* !defined( _LIBNSFDB_INTERNAL_TYPES_H ) */
 

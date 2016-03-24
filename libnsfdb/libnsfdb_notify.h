@@ -53,11 +53,11 @@ LIBNSFDB_EXTERN \
 int libnsfdb_notify_stream_close(
      libcerror_error_t **error );
 
-#endif
+#endif /* !defined( HAVE_LOCAL_LIBNSFDB ) */
 
 #if defined( __cplusplus )
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBNSFDB_NOTIFY_H ) */
 

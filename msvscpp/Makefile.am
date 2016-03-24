@@ -16,6 +16,7 @@ MSVSCPP_FILES = \
 	libfvalue/libfvalue.vcproj \
 	libnsfdb/libnsfdb.vcproj \
 	libuna/libuna.vcproj \
+	nsfdb_test_open_close/nsfdb_test_open_close.vcproj \
 	nsfdbexport/nsfdbexport.vcproj \
 	nsfdbinfo/nsfdbinfo.vcproj \
 	libnsfdb.sln
