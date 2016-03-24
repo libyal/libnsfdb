@@ -29,7 +29,7 @@ check_SCRIPTS = \
 EXTRA_DIST = \
 	$(check_SCRIPTS)
 
-check_PROGRAMS =  \
+check_PROGRAMS = \
 	nsfdb_test_open_close
 
 nsfdb_test_open_close_SOURCES = \

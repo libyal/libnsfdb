@@ -68,6 +68,7 @@ distinguishable elements:
 ** non-summary buckets
 
 An NSF database can contain various types data stored in notes:
+
 * access control list note
 * icon note
 ** design note
@@ -436,7 +437,7 @@ LAST ACCESSED TIMES MAINTAINED
 |===
 | Offset | Size | Value | Description
 | 0 | 64 | | [yellow-background]*Unknown (padding)*
-|====
+|===
 
 === Database information 2
 The database information (DBINFO2) is [yellow-background]*124?* bytes of size 
