@@ -63,9 +63,8 @@ void usage_fprint(
 
 	fprintf( stream, "\t-h:     shows this help\n" );
 	fprintf( stream, "\t-l:     logs information about the exported items\n" );
-	fprintf( stream, "\t-t:     specify the basename of the target directory to export to\n"
-	                 "\t        (default is the source filename) nsfdbexport will add the following\n"
-	                 "\t        suffixes to the basename: .export\n" );
+	fprintf( stream, "\t-t:     specify the target directory to export to\n"
+	                 "\t        (default is the source filename followed by .export)\n" );
 	fprintf( stream, "\t-v:     verbose output to stderr\n" );
 	fprintf( stream, "\t-V:     print version\n" );
 }
