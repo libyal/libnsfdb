@@ -16,27 +16,38 @@ AM_CPPFLAGS = \
 	@LIBNSFDB_DLL_IMPORT@
 
 TESTS = \
-	test_open_close.sh \
+	test_api_functions.sh \
 	test_nsfdbinfo.sh \
 	test_nsfdbexport.sh
 
 check_SCRIPTS = \
+	test_api_functions.sh \
 	test_nsfdbexport.sh \
 	test_nsfdbinfo.sh \
-	test_open_close.sh \
 	test_runner.sh
 
 EXTRA_DIST = \
 	$(check_SCRIPTS)
 
 check_PROGRAMS = \
+	nsfdb_test_get_version \
 	nsfdb_test_open_close
+
+nsfdb_test_get_version_SOURCES = \
+	nsfdb_test_get_version.c \
+	nsfdb_test_libcstring.h \
+	nsfdb_test_libnsfdb.h \
+	nsfdb_test_unused.h
+
+nsfdb_test_get_version_LDADD = \
+	../libnsfdb/libnsfdb.la \
+	@LIBCSTRING_LIBADD@
 
 nsfdb_test_open_close_SOURCES = \
 	nsfdb_test_libcerror.h \
-	nsfdb_test_libnsfdb.h \
 	nsfdb_test_libcstring.h \
 	nsfdb_test_libcsystem.h \
+	nsfdb_test_libnsfdb.h \
 	nsfdb_test_open_close.c
 
 nsfdb_test_open_close_LDADD = \

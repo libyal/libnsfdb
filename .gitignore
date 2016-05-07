@@ -120,6 +120,7 @@ stamp-h[1-9]
 /nsfdbtools/nsfdbinfo
 /pynsfdb/setup.py
 /tests/input
+/tests/nsfdb_test_get_version
 /tests/nsfdb_test_open_close
 /tests/tmp*
 
