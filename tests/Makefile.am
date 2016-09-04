@@ -30,13 +30,26 @@ EXTRA_DIST = \
 	$(check_SCRIPTS)
 
 check_PROGRAMS = \
+	nsfdb_test_error \
 	nsfdb_test_get_version \
 	nsfdb_test_open_close
+
+nsfdb_test_error_SOURCES = \
+	nsfdb_test_error.c \
+	nsfdb_test_libcstring.h \
+	nsfdb_test_libnsfdb.h \
+	nsfdb_test_macros.h \
+	nsfdb_test_unused.h
+
+nsfdb_test_error_LDADD = \
+	../libnsfdb/libnsfdb.la \
+	@LIBCSTRING_LIBADD@
 
 nsfdb_test_get_version_SOURCES = \
 	nsfdb_test_get_version.c \
 	nsfdb_test_libcstring.h \
 	nsfdb_test_libnsfdb.h \
+	nsfdb_test_macros.h \
 	nsfdb_test_unused.h
 
 nsfdb_test_get_version_LDADD = \

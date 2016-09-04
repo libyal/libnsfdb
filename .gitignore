@@ -1,10 +1,13 @@
 # Files to ignore by git
 #
-# Version: 20151228
+# Version: 20160507
 
 # Generic auto-generated build files
 *~
 *.a
+*.gcda
+*.gcno
+*.gcov
 *.la
 *.lai
 *.lib
@@ -120,6 +123,7 @@ stamp-h[1-9]
 /nsfdbtools/nsfdbinfo
 /pynsfdb/setup.py
 /tests/input
+/tests/nsfdb_test_error
 /tests/nsfdb_test_get_version
 /tests/nsfdb_test_open_close
 /tests/tmp*
