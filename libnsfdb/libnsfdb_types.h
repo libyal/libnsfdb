@@ -34,8 +34,8 @@
 /* The following type definitions hide internal data structures
  */
 #if defined( HAVE_DEBUG_OUTPUT ) && !defined( WINAPI )
-typedef struct libnsfdb_file {}		libnsfdb_file_t;
-typedef struct libnsfdb_note {}		libnsfdb_note_t;
+typedef struct libnsfdb_file {}	libnsfdb_file_t;
+typedef struct libnsfdb_note {}	libnsfdb_note_t;
 
 #else
 typedef intptr_t libnsfdb_file_t;

@@ -1,7 +1,6 @@
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/common \
-	@LIBCSTRING_CPPFLAGS@ \
 	@LIBCERROR_CPPFLAGS@ \
 	@LIBCDATA_CPPFLAGS@ \
 	@LIBCLOCALE_CPPFLAGS@ \
@@ -32,7 +31,6 @@ nsfdbexport_SOURCES = \
 	nsfdbtools_libclocale.h \
 	nsfdbtools_libcnotify.h \
 	nsfdbtools_libcpath.h \
-	nsfdbtools_libcstring.h \
 	nsfdbtools_libcsystem.h \
 	nsfdbtools_libfdatetime.h \
 	nsfdbtools_libnsfdb.h \
@@ -48,7 +46,6 @@ nsfdbexport_LDADD = \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
-	@LIBCSTRING_LIBADD@ \
 	@LIBINTL@
 
 nsfdbinfo_SOURCES = \
@@ -56,7 +53,6 @@ nsfdbinfo_SOURCES = \
 	nsfdbtools_libcerror.h \
 	nsfdbtools_libclocale.h \
 	nsfdbtools_libcnotify.h \
-	nsfdbtools_libcstring.h \
 	nsfdbtools_libcsystem.h \
 	nsfdbtools_libfdatetime.h \
 	nsfdbtools_libnsfdb.h \
@@ -68,7 +64,6 @@ nsfdbinfo_LDADD = \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
-	@LIBCSTRING_LIBADD@ \
 	@LIBINTL@
 
 MAINTAINERCLEANFILES = \

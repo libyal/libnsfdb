@@ -7,7 +7,6 @@ MSVSCPP_FILES = \
 	libcnotify/libcnotify.vcproj \
 	libcpath/libcpath.vcproj \
 	libcsplit/libcsplit.vcproj \
-	libcstring/libcstring.vcproj \
 	libcsystem/libcsystem.vcproj \
 	libcthreads/libcthreads.vcproj \
 	libfcache/libfcache.vcproj \
@@ -17,8 +16,10 @@ MSVSCPP_FILES = \
 	libnsfdb/libnsfdb.vcproj \
 	libuna/libuna.vcproj \
 	nsfdb_test_error/nsfdb_test_error.vcproj \
-	nsfdb_test_get_version/nsfdb_test_get_version.vcproj \
+	nsfdb_test_file/nsfdb_test_file.vcproj \
+	nsfdb_test_note/nsfdb_test_note.vcproj \
 	nsfdb_test_open_close/nsfdb_test_open_close.vcproj \
+	nsfdb_test_support/nsfdb_test_support.vcproj \
 	nsfdbexport/nsfdbexport.vcproj \
 	nsfdbinfo/nsfdbinfo.vcproj \
 	libnsfdb.sln

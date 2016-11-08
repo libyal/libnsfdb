@@ -1,5 +1,5 @@
 /*
- * Library get version test program
+ * Library note type testing program
  *
  * Copyright (C) 2010-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -20,46 +20,60 @@
  */
 
 #include <common.h>
+#include <file_stream.h>
+#include <types.h>
 
 #if defined( HAVE_STDLIB_H ) || defined( WINAPI )
 #include <stdlib.h>
 #endif
 
-#include "nsfdb_test_libcstring.h"
+#include "nsfdb_test_libcerror.h"
 #include "nsfdb_test_libnsfdb.h"
 #include "nsfdb_test_macros.h"
+#include "nsfdb_test_memory.h"
 #include "nsfdb_test_unused.h"
 
-/* Tests retrieving the library version
+/* Tests the libnsfdb_note_free function
  * Returns 1 if successful or 0 if not
  */
-int nsfdb_test_get_version(
+int nsfdb_test_note_free(
      void )
 {
-	const char *version_string = NULL;
-	int result                 = 0;
+	libcerror_error_t *error = NULL;
+	int result               = 0;
 
-	version_string = libnsfdb_get_version();
-
-	result = libcstring_narrow_string_compare(
-	          version_string,
-	          LIBNSFDB_VERSION_STRING,
-	          9 );
+	/* Test error cases
+	 */
+	result = libnsfdb_note_free(
+	          NULL,
+	          &error );
 
 	NSFDB_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
-	 0 );
+	 -1 );
+
+        NSFDB_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
 
 	return( 1 );
 
 on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
 	return( 0 );
 }
 
 /* The main program
  */
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 int wmain(
      int argc NSFDB_TEST_ATTRIBUTE_UNUSED,
      wchar_t * const argv[] NSFDB_TEST_ATTRIBUTE_UNUSED )
@@ -73,8 +87,8 @@ int main(
 	NSFDB_TEST_UNREFERENCED_PARAMETER( argv )
 
 	NSFDB_TEST_RUN(
-	 "libnsfdb_get_version",
-	 nsfdb_test_get_version() )
+	 "libnsfdb_note_free",
+	 nsfdb_test_note_free );
 
 	return( EXIT_SUCCESS );
 

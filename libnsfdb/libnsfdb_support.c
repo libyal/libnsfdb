@@ -21,14 +21,15 @@
 
 #include <common.h>
 #include <memory.h>
+#include <narrow_string.h>
 #include <types.h>
+#include <wide_string.h>
 
 #include "libnsfdb_definitions.h"
 #include "libnsfdb_io_handle.h"
 #include "libnsfdb_libbfio.h"
 #include "libnsfdb_libcerror.h"
 #include "libnsfdb_libclocale.h"
-#include "libnsfdb_libcstring.h"
 #include "libnsfdb_support.h"
 
 #if !defined( HAVE_LOCAL_LIBNSFDB )
@@ -126,7 +127,7 @@ int libnsfdb_check_file_signature(
 
 		return( -1 );
 	}
-	filename_length = libcstring_narrow_string_length(
+	filename_length = narrow_string_length(
 	                   filename );
 
 	if( filename_length == 0 )
@@ -233,7 +234,7 @@ int libnsfdb_check_file_signature_wide(
 
 		return( -1 );
 	}
-	filename_length = libcstring_wide_string_length(
+	filename_length = wide_string_length(
 	                   filename );
 
 	if( filename_length == 0 )

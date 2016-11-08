@@ -1,6 +1,6 @@
 # Files to ignore by git
 #
-# Version: 20160507
+# Version: 20161030
 
 # Generic auto-generated build files
 *~
@@ -57,6 +57,7 @@ stamp-h[1-9]
 /test-driver
 /ylwrap
 /m4/codeset.m4
+/m4/extern-inline.m4
 /m4/fcntl-o.m4
 /m4/gettext.m4
 /m4/glibc2.m4
@@ -124,8 +125,10 @@ stamp-h[1-9]
 /pynsfdb/setup.py
 /tests/input
 /tests/nsfdb_test_error
-/tests/nsfdb_test_get_version
+/tests/nsfdb_test_file
+/tests/nsfdb_test_note
 /tests/nsfdb_test_open_close
+/tests/nsfdb_test_support
 /tests/tmp*
 
 # Local library dependencies specific files
@@ -137,7 +140,6 @@ stamp-h[1-9]
 /libcnotify
 /libcpath
 /libcsplit
-/libcstring
 /libcsystem
 /libcthreads
 /libfcache

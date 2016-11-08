@@ -118,5 +118,5 @@ enum LIBNSFDB_CODEPAGES
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBNSFDB_CODEPAGE_H ) */
 

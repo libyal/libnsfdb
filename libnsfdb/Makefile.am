@@ -1,7 +1,6 @@
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/common \
-	@LIBCSTRING_CPPFLAGS@ \
 	@LIBCERROR_CPPFLAGS@ \
 	@LIBCTHREADS_CPPFLAGS@ \
 	@LIBCDATA_CPPFLAGS@ \
@@ -37,7 +36,6 @@ libnsfdb_la_SOURCES = \
 	libnsfdb_libcerror.h \
 	libnsfdb_libclocale.h \
 	libnsfdb_libcnotify.h \
-	libnsfdb_libcstring.h \
 	libnsfdb_libfcache.h \
 	libnsfdb_libfdata.h \
 	libnsfdb_libfdatetime.h \
@@ -64,7 +62,6 @@ libnsfdb_la_SOURCES = \
 	nsfdb_superblock.h
 
 libnsfdb_la_LIBADD = \
-	@LIBCSTRING_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
 	@LIBCTHREADS_LIBADD@ \
 	@LIBCDATA_LIBADD@ \

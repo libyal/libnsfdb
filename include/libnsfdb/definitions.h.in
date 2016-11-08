@@ -73,5 +73,5 @@ enum LIBNSFDB_NOTE_ITEM_CLASSES
 	LIBNSFDB_NOTE_ITEM_CLASS_USERID				= 7
 };
 
-#endif
+#endif /* !defined( _LIBNSFDB_DEFINITIONS_H ) */
 

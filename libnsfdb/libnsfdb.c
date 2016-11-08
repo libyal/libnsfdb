@@ -1,5 +1,5 @@
 /*
- * Library to access the Notes Storage Facility (NSF) datbase file format
+ * Library to access the Notes Storage Facility (NSF) database file format
  *
  * Copyright (C) 2010-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -51,7 +51,7 @@ BOOL WINAPI DllMain(
 		case DLL_PROCESS_ATTACH:
 			DisableThreadLibraryCalls(
 			 hinstDLL );
-		break;
+			break;
 
 		case DLL_THREAD_ATTACH:
 			break;

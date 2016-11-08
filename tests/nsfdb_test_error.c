@@ -20,6 +20,8 @@
  */
 
 #include <common.h>
+#include <file_stream.h>
+#include <types.h>
 
 #if defined( HAVE_STDLIB_H ) || defined( WINAPI )
 #include <stdlib.h>
@@ -108,7 +110,7 @@ int nsfdb_test_error_backtrace_sprint(
 
 /* The main program
  */
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 int wmain(
      int argc NSFDB_TEST_ATTRIBUTE_UNUSED,
      wchar_t * const argv[] NSFDB_TEST_ATTRIBUTE_UNUSED )
@@ -123,23 +125,23 @@ int main(
 
 	NSFDB_TEST_RUN(
 	 "libnsfdb_error_free",
-	 nsfdb_test_error_free() )
+	 nsfdb_test_error_free );
 
 	NSFDB_TEST_RUN(
 	 "libnsfdb_error_fprint",
-	 nsfdb_test_error_fprint() )
+	 nsfdb_test_error_fprint );
 
 	NSFDB_TEST_RUN(
 	 "libnsfdb_error_sprint",
-	 nsfdb_test_error_sprint() )
+	 nsfdb_test_error_sprint );
 
 	NSFDB_TEST_RUN(
 	 "libnsfdb_error_backtrace_fprint",
-	 nsfdb_test_error_backtrace_fprint() )
+	 nsfdb_test_error_backtrace_fprint );
 
 	NSFDB_TEST_RUN(
 	 "libnsfdb_error_backtrace_sprint",
-	 nsfdb_test_error_backtrace_sprint() )
+	 nsfdb_test_error_backtrace_sprint );
 
 	return( EXIT_SUCCESS );
 

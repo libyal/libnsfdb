@@ -27,7 +27,6 @@
 #include "libnsfdb_libcdata.h"
 #include "libnsfdb_libcerror.h"
 #include "libnsfdb_libcnotify.h"
-#include "libnsfdb_libcstring.h"
 #include "libnsfdb_note_item_class.h"
 #include "libnsfdb_unique_name_key.h"
 #include "libnsfdb_unique_name_key_table.h"

@@ -24,6 +24,10 @@
 
 #include <common.h>
 
+/* Define HAVE_LOCAL_LIBNSFDB for local use of libnsfdb
+ */
+#if !defined( HAVE_LOCAL_LIBNSFDB )
+
 /* If libtool DLL support is enabled set LIBNSFDB_DLL_EXPORT
  * before including libnsfdb/extern.h
  */
@@ -33,5 +37,10 @@
 
 #include <libnsfdb/extern.h>
 
+#else
+#define LIBNSFDB_EXTERN	extern
+
 #endif
+
+#endif /* !defined( _LIBNSFDB_INTERNAL_EXTERN_H ) */
 
