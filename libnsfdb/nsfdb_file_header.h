@@ -49,5 +49,5 @@ struct nsfdb_file_header
 }
 #endif
 
-#endif
+#endif /* !defined( _NSFDB_FILE_HEADER_H ) */
 

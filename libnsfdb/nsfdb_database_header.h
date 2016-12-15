@@ -527,5 +527,5 @@ struct nsfdb_database_information4
 }
 #endif
 
-#endif
+#endif /* !defined( _NSFDB_DATABASE_HEADER_H ) */
 

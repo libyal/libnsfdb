@@ -41,5 +41,5 @@ void nsfdboutput_version_fprint(
 }
 #endif
 
-#endif
+#endif /* !defined( _NSFDBOUTPUT_H ) */
 

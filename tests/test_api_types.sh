@@ -1,7 +1,7 @@
 #!/bin/bash
 # Library API type testing script
 #
-# Version: 20161105
+# Version: 20161110
 
 EXIT_SUCCESS=0;
 EXIT_FAILURE=1;
@@ -11,13 +11,13 @@ TEST_PREFIX=`dirname ${PWD}`;
 TEST_PREFIX=`basename ${TEST_PREFIX} | sed 's/^lib\([^-]*\).*$/\1/'`;
 
 TEST_PROFILE="lib${TEST_PREFIX}";
-TEST_TYPES="file note";
-TEST_TYPES_WITH_INPUT="";
+TEST_TYPES="bucket io_handle note note_item_class note_item_type note_value rrv_bucket rrv_bucket_descriptor rrv_value unique_name_key";
+TEST_TYPES_WITH_INPUT="file";
 OPTION_SETS="";
 
 TEST_TOOL_DIRECTORY=".";
 INPUT_DIRECTORY="input";
-INPUT_GLOB="*";
+INPUT_GLOB="*.[nN][sS][fF]";
 
 test_api_type()
 {
@@ -96,8 +96,14 @@ fi
 
 for TEST_TYPE in ${TEST_TYPES_WITH_INPUT};
 do
-	test_api_type_with_input "${TEST_TYPE}";
-	RESULT=$?;
+	if test -d ${INPUT_DIRECTORY};
+	then
+		test_api_type_with_input "${TEST_TYPE}";
+		RESULT=$?;
+	else
+		test_api_type "${TEST_TYPE}";
+		RESULT=$?;
+	fi
 
 	if test ${RESULT} -ne ${EXIT_SUCCESS};
 	then

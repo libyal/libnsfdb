@@ -42,5 +42,5 @@ int libnsfdb_compression_cx_decompress(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBNSFDB_COMPRESSION_H ) */
 

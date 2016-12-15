@@ -104,5 +104,5 @@ int libnsfdb_rrv_value_set_file_position(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBNSFDB_RRV_VALUE_H ) */
 

@@ -59,5 +59,5 @@ int libnsfdb_debug_print_read_offsets(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBNSFDB_DEBUG_H ) */
 

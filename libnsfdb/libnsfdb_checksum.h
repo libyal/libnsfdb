@@ -42,5 +42,5 @@ int libnsfdb_checksum_calculate_little_endian_xor32(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBNSFDB_CHECKSUM_H ) */
 

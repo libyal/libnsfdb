@@ -185,5 +185,5 @@ struct nsfdb_note_item
 }
 #endif
 
-#endif
+#endif /* !defined( _NSFDB_NOTE_H ) */
 

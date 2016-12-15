@@ -18,7 +18,7 @@ OPTION_SETS="";
 TEST_TOOL_DIRECTORY="../${TEST_PREFIX}tools";
 TEST_TOOL="${TEST_PREFIX}${TEST_SUFFIX}";
 INPUT_DIRECTORY="input";
-INPUT_GLOB="*";
+INPUT_GLOB="*.[nN][sS][fF]";
 
 if ! test -z ${SKIP_TOOLS_TESTS};
 then

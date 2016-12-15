@@ -38,9 +38,9 @@
 #include <libnsfdb/extern.h>
 
 #else
-#define LIBNSFDB_EXTERN	extern
+#define LIBNSFDB_EXTERN	/* extern */
 
-#endif
+#endif /* !defined( HAVE_LOCAL_LIBNSFDB ) */
 
 #endif /* !defined( _LIBNSFDB_INTERNAL_EXTERN_H ) */
 

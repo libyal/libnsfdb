@@ -27,11 +27,11 @@
 /* If Cygwin libtool DLL support is enabled set LIBNSFDB_DLL_IMPORT
  * before including libnsfdb.h
  */
-#if defined( _WIN32 ) && defined( DLL_EXPORT )
+#if defined( _WIN32 ) && defined( DLL_IMPORT ) && !defined( HAVE_STATIC_EXECUTABLES )
 #define LIBNSFDB_DLL_IMPORT
 #endif
 
 #include <libnsfdb.h>
 
-#endif
+#endif /* !defined( _NSFDBTOOLS_LIBNSFDB_H ) */
 

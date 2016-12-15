@@ -81,5 +81,5 @@ struct nsfdb_rrv_bucket_header
 }
 #endif
 
-#endif
+#endif /* !defined( _NSFDB_RRV_BUCKET_H ) */
 

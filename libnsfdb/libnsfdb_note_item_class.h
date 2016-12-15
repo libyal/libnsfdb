@@ -60,5 +60,5 @@ const char *libnsfdb_note_item_class_get_description(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBNSFDB_NOTE_ITEM_CLASS_H ) */
 

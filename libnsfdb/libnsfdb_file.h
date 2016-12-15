@@ -155,5 +155,5 @@ int libnsfdb_file_get_note_by_identifier(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBNSFDB_INTERNAL_FILE_H ) */
 

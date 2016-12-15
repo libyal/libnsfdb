@@ -73,5 +73,5 @@ int libnsfdb_note_value_set_data(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBNSFDB_NOTE_VALUE_H ) */
 

@@ -66,5 +66,5 @@ int libnsfdb_rrv_bucket_descriptor_free(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBNSFDB_RRV_BUCKET_DESCRIPTOR_H ) */
 

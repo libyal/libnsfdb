@@ -44,5 +44,5 @@ ssize_t libnsfdb_unique_name_key_table_read(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBNSFDB_UNIQUE_NAME_KEY_TABLE_H ) */
 

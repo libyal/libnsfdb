@@ -125,5 +125,5 @@ int libnsfdb_note_get_number_of_values(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBNSFDB_INTERNAL_NOTE_H ) */
 

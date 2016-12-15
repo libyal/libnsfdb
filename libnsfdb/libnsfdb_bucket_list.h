@@ -47,5 +47,5 @@ int libnsfdb_bucket_list_get_bucket_by_index(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBNSFDB_BUCKET_LIST_H ) */
 

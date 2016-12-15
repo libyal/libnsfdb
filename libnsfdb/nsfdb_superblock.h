@@ -187,5 +187,5 @@ struct nsfdb_superblock_footer
 }
 #endif
 
-#endif
+#endif /* !defined( _NSFDB_SUPERBLOCK_H ) */
 

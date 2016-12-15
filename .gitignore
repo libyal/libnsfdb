@@ -124,11 +124,20 @@ stamp-h[1-9]
 /nsfdbtools/nsfdbinfo
 /pynsfdb/setup.py
 /tests/input
+/tests/nsfdb_test_bucket
 /tests/nsfdb_test_error
 /tests/nsfdb_test_file
+/tests/nsfdb_test_io_handle
 /tests/nsfdb_test_note
-/tests/nsfdb_test_open_close
+/tests/nsfdb_test_note_item_class
+/tests/nsfdb_test_note_item_type
+/tests/nsfdb_test_note_value
+/tests/nsfdb_test_notify
+/tests/nsfdb_test_rrv_bucket
+/tests/nsfdb_test_rrv_bucket_descriptor
+/tests/nsfdb_test_rrv_value
 /tests/nsfdb_test_support
+/tests/nsfdb_test_unique_name_key
 /tests/tmp*
 
 # Local library dependencies specific files

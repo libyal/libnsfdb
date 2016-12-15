@@ -118,5 +118,5 @@ struct nsfdb_bucket_footer
 }
 #endif
 
-#endif
+#endif /* !defined( _NSFDB_BUCKET_H ) */
 

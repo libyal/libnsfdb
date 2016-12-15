@@ -1,5 +1,5 @@
 /*
- * Library file type testing program
+ * Library file type test program
  *
  * Copyright (C) 2010-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -30,15 +30,15 @@
 #include <stdlib.h>
 #endif
 
+#include "nsfdb_test_getopt.h"
 #include "nsfdb_test_libcerror.h"
 #include "nsfdb_test_libclocale.h"
-#include "nsfdb_test_libcsystem.h"
 #include "nsfdb_test_libnsfdb.h"
 #include "nsfdb_test_libuna.h"
 #include "nsfdb_test_macros.h"
 #include "nsfdb_test_memory.h"
 
-#if SIZEOF_WCHAR_T != 2 && SIZEOF_WCHAR_T != 4
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER ) && SIZEOF_WCHAR_T != 2 && SIZEOF_WCHAR_T != 4
 #error Unsupported size of wchar_t
 #endif
 
@@ -256,8 +256,8 @@ int nsfdb_test_file_get_wide_source(
      libcerror_error_t **error )
 {
 	static char *function   = "nsfdb_test_file_get_wide_source";
-	size_t wide_source_size = 0;
 	size_t source_length    = 0;
+	size_t wide_source_size = 0;
 
 #if !defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	int result              = 0;
@@ -584,11 +584,17 @@ int nsfdb_test_file_close_source(
 int nsfdb_test_file_initialize(
      void )
 {
-	libcerror_error_t *error = NULL;
-	libnsfdb_file_t *file      = NULL;
-	int result               = 0;
+	libcerror_error_t *error        = NULL;
+	libnsfdb_file_t *file           = NULL;
+	int result                      = 0;
 
-	/* Test libnsfdb_file_initialize
+#if defined( HAVE_NSFDB_TEST_MEMORY )
+	int number_of_malloc_fail_tests = 1;
+	int number_of_memset_fail_tests = 1;
+	int test_number                 = 0;
+#endif
+
+	/* Test regular cases
 	 */
 	result = libnsfdb_file_initialize(
 	          &file,
@@ -664,79 +670,89 @@ int nsfdb_test_file_initialize(
 
 #if defined( HAVE_NSFDB_TEST_MEMORY )
 
-	/* Test libnsfdb_file_initialize with malloc failing
-	 */
-	nsfdb_test_malloc_attempts_before_fail = 0;
-
-	result = libnsfdb_file_initialize(
-	          &file,
-	          &error );
-
-	if( nsfdb_test_malloc_attempts_before_fail != -1 )
+	for( test_number = 0;
+	     test_number < number_of_malloc_fail_tests;
+	     test_number++ )
 	{
-		nsfdb_test_malloc_attempts_before_fail = -1;
+		/* Test libnsfdb_file_initialize with malloc failing
+		 */
+		nsfdb_test_malloc_attempts_before_fail = test_number;
 
-		if( file != NULL )
+		result = libnsfdb_file_initialize(
+		          &file,
+		          &error );
+
+		if( nsfdb_test_malloc_attempts_before_fail != -1 )
 		{
-			libnsfdb_file_free(
-			 &file,
-			 NULL );
+			nsfdb_test_malloc_attempts_before_fail = -1;
+
+			if( file != NULL )
+			{
+				libnsfdb_file_free(
+				 &file,
+				 NULL );
+			}
+		}
+		else
+		{
+			NSFDB_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 -1 );
+
+			NSFDB_TEST_ASSERT_IS_NULL(
+			 "file",
+			 file );
+
+			NSFDB_TEST_ASSERT_IS_NOT_NULL(
+			 "error",
+			 error );
+
+			libcerror_error_free(
+			 &error );
 		}
 	}
-	else
+	for( test_number = 0;
+	     test_number < number_of_memset_fail_tests;
+	     test_number++ )
 	{
-		NSFDB_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
+		/* Test libnsfdb_file_initialize with memset failing
+		 */
+		nsfdb_test_memset_attempts_before_fail = test_number;
 
-		NSFDB_TEST_ASSERT_IS_NULL(
-		 "file",
-		 file );
+		result = libnsfdb_file_initialize(
+		          &file,
+		          &error );
 
-		NSFDB_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
-
-		libcerror_error_free(
-		 &error );
-	}
-	/* Test libnsfdb_file_initialize with memset failing
-	 */
-	nsfdb_test_memset_attempts_before_fail = 0;
-
-	result = libnsfdb_file_initialize(
-	          &file,
-	          &error );
-
-	if( nsfdb_test_memset_attempts_before_fail != -1 )
-	{
-		nsfdb_test_memset_attempts_before_fail = -1;
-
-		if( file != NULL )
+		if( nsfdb_test_memset_attempts_before_fail != -1 )
 		{
-			libnsfdb_file_free(
-			 &file,
-			 NULL );
+			nsfdb_test_memset_attempts_before_fail = -1;
+
+			if( file != NULL )
+			{
+				libnsfdb_file_free(
+				 &file,
+				 NULL );
+			}
 		}
-	}
-	else
-	{
-		NSFDB_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
+		else
+		{
+			NSFDB_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 -1 );
 
-		NSFDB_TEST_ASSERT_IS_NULL(
-		 "file",
-		 file );
+			NSFDB_TEST_ASSERT_IS_NULL(
+			 "file",
+			 file );
 
-		NSFDB_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
+			NSFDB_TEST_ASSERT_IS_NOT_NULL(
+			 "error",
+			 error );
 
-		libcerror_error_free(
-		 &error );
+			libcerror_error_free(
+			 &error );
+		}
 	}
 #endif /* defined( HAVE_NSFDB_TEST_MEMORY ) */
 
@@ -795,7 +811,7 @@ on_error:
 	return( 0 );
 }
 
-/* Tests the libnsfdb_file_open functions
+/* Tests the libnsfdb_file_open function
  * Returns 1 if successful or 0 if not
  */
 int nsfdb_test_file_open(
@@ -804,7 +820,7 @@ int nsfdb_test_file_open(
 	char narrow_source[ 256 ];
 
 	libcerror_error_t *error = NULL;
-	libnsfdb_file_t *file      = NULL;
+	libnsfdb_file_t *file    = NULL;
 	int result               = 0;
 
 	/* Initialize test
@@ -858,21 +874,28 @@ int nsfdb_test_file_open(
          "error",
          error );
 
-	/* Clean up
+	/* Test error cases
 	 */
-	result = libnsfdb_file_close(
+	result = libnsfdb_file_open(
 	          file,
+	          narrow_source,
+	          LIBNSFDB_OPEN_READ,
 	          &error );
 
 	NSFDB_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
-	 0 );
+	 -1 );
 
-        NSFDB_TEST_ASSERT_IS_NULL(
+        NSFDB_TEST_ASSERT_IS_NOT_NULL(
          "error",
          error );
 
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
 	result = libnsfdb_file_free(
 	          &file,
 	          &error );
@@ -909,7 +932,7 @@ on_error:
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
 
-/* Tests the libnsfdb_file_open_wide functions
+/* Tests the libnsfdb_file_open_wide function
  * Returns 1 if successful or 0 if not
  */
 int nsfdb_test_file_open_wide(
@@ -918,7 +941,7 @@ int nsfdb_test_file_open_wide(
 	wchar_t wide_source[ 256 ];
 
 	libcerror_error_t *error = NULL;
-	libnsfdb_file_t *file      = NULL;
+	libnsfdb_file_t *file    = NULL;
 	int result               = 0;
 
 	/* Initialize test
@@ -972,21 +995,28 @@ int nsfdb_test_file_open_wide(
          "error",
          error );
 
-	/* Clean up
+	/* Test error cases
 	 */
-	result = libnsfdb_file_close(
+	result = libnsfdb_file_open_wide(
 	          file,
+	          wide_source,
+	          LIBNSFDB_OPEN_READ,
 	          &error );
 
 	NSFDB_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
-	 0 );
+	 -1 );
 
-        NSFDB_TEST_ASSERT_IS_NULL(
+        NSFDB_TEST_ASSERT_IS_NOT_NULL(
          "error",
          error );
 
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
 	result = libnsfdb_file_free(
 	          &file,
 	          &error );
@@ -1023,20 +1053,198 @@ on_error:
 
 #endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
-/* Tests the libnsfdb_file_get_number_of_notes functions
+/* Tests the libnsfdb_file_close function
  * Returns 1 if successful or 0 if not
  */
-int nsfdb_test_file_get_number_of_notes(
+int nsfdb_test_file_close(
+     void )
+{
+	libcerror_error_t *error = NULL;
+	int result               = 0;
+
+	/* Test error cases
+	 */
+	result = libnsfdb_file_close(
+	          NULL,
+	          &error );
+
+	NSFDB_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        NSFDB_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libnsfdb_file_open and libnsfdb_file_close functions
+ * Returns 1 if successful or 0 if not
+ */
+int nsfdb_test_file_open_close(
+     const system_character_t *source )
+{
+	libcerror_error_t *error = NULL;
+	libnsfdb_file_t *file    = NULL;
+	int result               = 0;
+
+	/* Initialize test
+	 */
+	result = libnsfdb_file_initialize(
+	          &file,
+	          &error );
+
+	NSFDB_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        NSFDB_TEST_ASSERT_IS_NOT_NULL(
+         "file",
+         file );
+
+        NSFDB_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test open and close
+	 */
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
+	result = libnsfdb_file_open_wide(
+	          file,
+	          source,
+	          LIBNSFDB_OPEN_READ,
+	          &error );
+#else
+	result = libnsfdb_file_open(
+	          file,
+	          source,
+	          LIBNSFDB_OPEN_READ,
+	          &error );
+#endif
+
+	NSFDB_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        NSFDB_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	result = libnsfdb_file_close(
+	          file,
+	          &error );
+
+	NSFDB_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 0 );
+
+        NSFDB_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test open and close a second time to validate clean up on close
+	 */
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
+	result = libnsfdb_file_open_wide(
+	          file,
+	          source,
+	          LIBNSFDB_OPEN_READ,
+	          &error );
+#else
+	result = libnsfdb_file_open(
+	          file,
+	          source,
+	          LIBNSFDB_OPEN_READ,
+	          &error );
+#endif
+
+	NSFDB_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        NSFDB_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	result = libnsfdb_file_close(
+	          file,
+	          &error );
+
+	NSFDB_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 0 );
+
+        NSFDB_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Clean up
+	 */
+	result = libnsfdb_file_free(
+	          &file,
+	          &error );
+
+	NSFDB_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        NSFDB_TEST_ASSERT_IS_NULL(
+         "file",
+         file );
+
+        NSFDB_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( file != NULL )
+	{
+		libnsfdb_file_free(
+		 &file,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libnsfdb_file_signal_abort function
+ * Returns 1 if successful or 0 if not
+ */
+int nsfdb_test_file_signal_abort(
      libnsfdb_file_t *file )
 {
 	libcerror_error_t *error = NULL;
-	int number_of_notes    = 0;
 	int result               = 0;
 
-	result = libnsfdb_file_get_number_of_notes(
+	/* Test regular cases
+	 */
+	result = libnsfdb_file_signal_abort(
 	          file,
-	          LIBNSFDB_NOTE_TYPE_ALL,
-	          &number_of_notes,
 	          &error );
 
 	NSFDB_TEST_ASSERT_EQUAL_INT(
@@ -1050,45 +1258,7 @@ int nsfdb_test_file_get_number_of_notes(
 
 	/* Test error cases
 	 */
-	result = libnsfdb_file_get_number_of_notes(
-	          NULL,
-	          LIBNSFDB_NOTE_TYPE_ALL,
-	          &number_of_notes,
-	          &error );
-
-	NSFDB_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
-
-        NSFDB_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
-
-	libcerror_error_free(
-	 &error );
-
-	result = libnsfdb_file_get_number_of_notes(
-	          file,
-	          0xff,
-	          NULL,
-	          &error );
-
-	NSFDB_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
-
-        NSFDB_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
-
-	libcerror_error_free(
-	 &error );
-
-	result = libnsfdb_file_get_number_of_notes(
-	          file,
-	          LIBNSFDB_NOTE_TYPE_ALL,
+	result = libnsfdb_file_signal_abort(
 	          NULL,
 	          &error );
 
@@ -1128,12 +1298,12 @@ int main(
 #endif
 {
 	libcerror_error_t *error   = NULL;
+	libnsfdb_file_t *file      = NULL;
 	system_character_t *source = NULL;
-	libnsfdb_file_t *file        = NULL;
 	system_integer_t option    = 0;
 	int result                 = 0;
 
-	while( ( option = libcsystem_getopt(
+	while( ( option = nsfdb_test_getopt(
 	                   argc,
 	                   argv,
 	                   _SYSTEM_STRING( "" ) ) ) != (system_integer_t) -1 )
@@ -1193,7 +1363,14 @@ int main(
 
 #endif /* defined( LIBNSFDB_HAVE_BFIO ) */
 
-		/* TODO add test for libnsfdb_file_close */
+		NSFDB_TEST_RUN(
+		 "libnsfdb_file_close",
+		 nsfdb_test_file_close );
+
+		NSFDB_TEST_RUN_WITH_ARGS(
+		 "libnsfdb_file_open_close",
+		 nsfdb_test_file_open_close,
+		 source );
 
 		/* Initialize test
 		 */
@@ -1216,9 +1393,21 @@ int main(
 	         error );
 
 		NSFDB_TEST_RUN_WITH_ARGS(
-		 "libnsfdb_file_get_number_of_notes",
-		 nsfdb_test_file_get_number_of_notes,
+		 "libnsfdb_file_signal_abort",
+		 nsfdb_test_file_signal_abort,
 		 file );
+
+#if defined( __GNUC__ )
+
+		/* TODO: add tests for libnsfdb_file_open_read */
+
+#endif /* defined( __GNUC__ ) */
+
+		/* TODO: add tests for libnsfdb_file_get_number_of_notes */
+
+		/* TODO: add tests for libnsfdb_file_get_note */
+
+		/* TODO: add tests for libnsfdb_file_get_note_by_identifier */
 
 		/* Clean up
 		 */

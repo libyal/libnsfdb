@@ -139,5 +139,5 @@ int libnsfdb_bucket_get_slot(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBNSFDB_BUCKET_H ) */
 

@@ -252,5 +252,5 @@ struct nsfdb_non_summary_bucket_descriptor
 }
 #endif
 
-#endif
+#endif /* !defined( _NSFDB_BUCKET_DESCRIPTOR_BLOCK_H ) */
 

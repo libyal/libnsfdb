@@ -77,5 +77,5 @@ int libnsfdb_rrv_bucket_get_value_by_identifier(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBNSFDB_RRV_BUCKET_H ) */
 

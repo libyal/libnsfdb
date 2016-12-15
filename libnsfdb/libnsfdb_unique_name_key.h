@@ -67,5 +67,5 @@ int libnsfdb_unique_name_key_free(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBNSFDB_UNIQUE_NAME_KEY_H ) */
 

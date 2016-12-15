@@ -200,5 +200,5 @@ int libnsfdb_io_handle_get_rrv_value_by_identifier(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBNSFDB_IO_HANDLE_H ) */
 

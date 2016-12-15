@@ -1,5 +1,5 @@
 /*
- * Library note type testing program
+ * Library note type test program
  *
  * Copyright (C) 2010-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -32,6 +32,8 @@
 #include "nsfdb_test_macros.h"
 #include "nsfdb_test_memory.h"
 #include "nsfdb_test_unused.h"
+
+#include "../libnsfdb/libnsfdb_note.h"
 
 /* Tests the libnsfdb_note_free function
  * Returns 1 if successful or 0 if not
@@ -71,6 +73,10 @@ on_error:
 	return( 0 );
 }
 
+#if defined( __GNUC__ )
+
+#endif /* defined( __GNUC__ ) */
+
 /* The main program
  */
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
@@ -86,9 +92,25 @@ int main(
 	NSFDB_TEST_UNREFERENCED_PARAMETER( argc )
 	NSFDB_TEST_UNREFERENCED_PARAMETER( argv )
 
+#if defined( __GNUC__ )
+
+	/* TODO: add tests for libnsfdb_note_initialize */
+
+#endif /* defined( __GNUC__ ) */
+
 	NSFDB_TEST_RUN(
 	 "libnsfdb_note_free",
 	 nsfdb_test_note_free );
+
+#if defined( __GNUC__ )
+
+	/* TODO: add tests for libnsfdb_note_clone */
+
+	/* TODO: add tests for libnsfdb_note_get_number_of_values */
+
+	/* TODO: add tests for libnsfdb_note_read */
+
+#endif /* defined( __GNUC__ ) */
 
 	return( EXIT_SUCCESS );
 
