@@ -1,5 +1,5 @@
 /*
- * The file header definition of a Notes Storage Facility (NSF) database file
+ * Signal handling functions
  *
  * Copyright (C) 2010-2017, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,35 +19,54 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _NSFDB_FILE_HEADER_H )
-#define _NSFDB_FILE_HEADER_H
+#if !defined( _NSFDBTOOLS_SIGNAL_H )
+#define _NSFDBTOOLS_SIGNAL_H
 
 #include <common.h>
 #include <types.h>
+
+#include "nsfdbtools_libcerror.h"
 
 #if defined( __cplusplus )
 extern "C" {
 #endif
 
-typedef struct nsfdb_file_header nsfdb_file_header_t;
+#if !defined( HAVE_SIGNAL_H ) && !defined( WINAPI )
+#error missing signal functions
+#endif
 
-struct nsfdb_file_header
-{
-	/* The signature
-	 * Consists of 2 bytes
-	 * Contains: 0x1a 0x00
-	 */
-	uint8_t signature[ 2 ];
+#if defined( WINAPI )
+typedef unsigned long nsfdbtools_signal_t;
 
-	/* The database header size
-	 * Consists of 4 bytes
-	 */
-	uint8_t database_header_size[ 4 ];
-};
+#else
+typedef int nsfdbtools_signal_t;
+
+#endif /* defined( WINAPI ) */
+
+#if defined( WINAPI )
+
+BOOL WINAPI nsfdbtools_signal_handler(
+             nsfdbtools_signal_t signal );
+
+#if defined( _MSC_VER )
+
+void nsfdbtools_signal_initialize_memory_debug(
+      void );
+
+#endif /* defined( _MSC_VER ) */
+
+#endif /* defined( WINAPI ) */
+
+int nsfdbtools_signal_attach(
+     void (*signal_handler)( nsfdbtools_signal_t ),
+     libcerror_error_t **error );
+
+int nsfdbtools_signal_detach(
+     libcerror_error_t **error );
 
 #if defined( __cplusplus )
 }
 #endif
 
-#endif /* !defined( _NSFDB_FILE_HEADER_H ) */
+#endif /* !defined( _NSFDBTOOLS_SIGNAL_H ) */
 

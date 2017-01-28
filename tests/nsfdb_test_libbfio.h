@@ -1,7 +1,7 @@
 /*
  * The libbfio header wrapper
  *
- * Copyright (C) 2010-2016, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2010-2017, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -19,8 +19,8 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _NFSDB_TEST_LIBBFIO_H )
-#define _NFSDB_TEST_LIBBFIO_H
+#if !defined( _NSFDB_TEST_LIBBFIO_H )
+#define _NSFDB_TEST_LIBBFIO_H
 
 #include <common.h>
 
@@ -54,5 +54,5 @@
 
 #endif /* defined( HAVE_LOCAL_LIBBFIO ) */
 
-#endif /* !defined( _NFSDB_TEST_LIBBFIO_H ) */
+#endif /* !defined( _NSFDB_TEST_LIBBFIO_H ) */
 

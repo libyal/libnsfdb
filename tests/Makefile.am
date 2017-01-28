@@ -19,14 +19,12 @@ AM_CPPFLAGS = \
 	@LIBNSFDB_DLL_IMPORT@
 
 TESTS = \
-	test_api_functions.sh \
-	test_api_types.sh \
+	test_library.sh \
 	test_nsfdbinfo.sh \
 	test_nsfdbexport.sh
 
 check_SCRIPTS = \
-	test_api_functions.sh \
-	test_api_types.sh \
+	test_library.sh \
 	test_nsfdbexport.sh \
 	test_nsfdbinfo.sh \
 	test_runner.sh

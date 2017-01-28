@@ -1,7 +1,7 @@
 /*
  * Shows information obtained from a Notes Storage Facility (NSF) database file
  *
- * Copyright (C) 2010-2016, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2010-2017, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -34,12 +34,14 @@
 #include <stdlib.h>
 #endif
 
-#include "nsfdboutput.h"
+#include "nsfdbtools_getopt.h"
 #include "nsfdbtools_libcerror.h"
 #include "nsfdbtools_libclocale.h"
 #include "nsfdbtools_libcnotify.h"
-#include "nsfdbtools_libcsystem.h"
 #include "nsfdbtools_libnsfdb.h"
+#include "nsfdbtools_output.h"
+#include "nsfdbtools_signal.h"
+#include "nsfdbtools_unused.h"
 
 /* Prints the executable usage information
  */
@@ -135,13 +137,13 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
-	if( libcsystem_initialize(
+	if( nsfdbtools_output_initialize(
              _IONBF,
              &error ) != 1 )
 	{
 		fprintf(
 		 stderr,
-		 "Unable to initialize system values.\n" );
+		 "Unable to initialize output settings.\n" );
 
 		goto on_error;
 	}
@@ -149,7 +151,7 @@ int main( int argc, char * const argv[] )
 	 stdout,
 	 program );
 
-	while( ( option = libcsystem_getopt(
+	while( ( option = nsfdbtools_getopt(
 	                   argc,
 	                   argv,
 	                   _SYSTEM_STRING( "hvV" ) ) ) != (system_integer_t) -1 )

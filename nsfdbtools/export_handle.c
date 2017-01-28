@@ -1,7 +1,7 @@
 /*
  * Export handle
  *
- * Copyright (C) 2010-2016, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2010-2017, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -33,7 +33,6 @@
 #include "nsfdbtools_libcfile.h"
 #include "nsfdbtools_libcnotify.h"
 #include "nsfdbtools_libcpath.h"
-#include "nsfdbtools_libcsystem.h"
 #include "nsfdbtools_libfdatetime.h"
 #include "nsfdbtools_libnsfdb.h"
 

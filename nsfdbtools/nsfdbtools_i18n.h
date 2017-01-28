@@ -1,5 +1,5 @@
 /*
- * The internal libcnotify header
+ * Internationalization (i18n) functions
  *
  * Copyright (C) 2010-2017, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,32 +19,30 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBNSFDB_LIBCNOTIFY_H )
-#define _LIBNSFDB_LIBCNOTIFY_H
+#if !defined( _NSFDBTOOLS_I18N_H )
+#define _NSFDBTOOLS_I18N_H
 
 #include <common.h>
 
-/* Define HAVE_LOCAL_LIBCNOTIFY for local use of libcnotify
- */
-#if defined( HAVE_LOCAL_LIBCNOTIFY )
-
-#include <libcnotify_definitions.h>
-#include <libcnotify_print.h>
-#include <libcnotify_stream.h>
-#include <libcnotify_verbose.h>
-
-#else
-
-/* If libtool DLL support is enabled set LIBCNOTIFY_DLL_IMPORT
- * before including libcnotify.h
- */
-#if defined( _WIN32 ) && defined( DLL_IMPORT )
-#define LIBCNOTIFY_DLL_IMPORT
+#if defined( HAVE_LIBINTL_H )
+#include <libintl.h>
 #endif
 
-#include <libcnotify.h>
+#if defined( __cplusplus )
+extern "C" {
+#endif
 
-#endif /* defined( HAVE_LOCAL_LIBCNOTIFY ) */
+/* TODO for now do nothing i18n-like
+#define	_( string ) \
+	gettext( string )
+*/
 
-#endif /* !defined( _LIBNSFDB_LIBCNOTIFY_H ) */
+#define	_( string ) \
+	string
+
+#if defined( __cplusplus )
+}
+#endif
+
+#endif /* !defined( _NSFDBTOOLS_I18N_H ) */
 

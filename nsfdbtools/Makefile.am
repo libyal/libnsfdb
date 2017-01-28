@@ -13,7 +13,6 @@ AM_CPPFLAGS = \
 	@LIBFCACHE_CPPFLAGS@ \
 	@LIBFDATA_CPPFLAGS@ \
 	@LIBFDATETIME_CPPFLAGS@ \
-	@LIBCSYSTEM_CPPFLAGS@ \
 	@LIBNSFDB_DLL_IMPORT@
 
 AM_LDFLAGS = @STATIC_LDFLAGS@
@@ -26,43 +25,45 @@ nsfdbexport_SOURCES = \
 	export_handle.c export_handle.h \
 	log_handle.c log_handle.h \
 	nsfdbexport.c \
+	nsfdbtools_getopt.c nsfdbtools_getopt.h \
 	nsfdbtools_libcerror.h \
 	nsfdbtools_libcfile.h \
 	nsfdbtools_libclocale.h \
 	nsfdbtools_libcnotify.h \
 	nsfdbtools_libcpath.h \
-	nsfdbtools_libcsystem.h \
 	nsfdbtools_libfdatetime.h \
 	nsfdbtools_libnsfdb.h \
-	nsfdboutput.c nsfdboutput.h
+	nsfdbtools_output.c nsfdbtools_output.h \
+	nsfdbtools_signal.c nsfdbtools_signal.h \
+	nsfdbtools_unused.h
 
 nsfdbexport_LDADD = \
-	@LIBCSYSTEM_LIBADD@ \
 	@LIBFDATETIME_LIBADD@ \
 	@LIBCPATH_LIBADD@ \
 	@LIBCFILE_LIBADD@ \
 	@LIBCSPLIT_LIBADD@ \
-	../libnsfdb/libnsfdb.la \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
+	../libnsfdb/libnsfdb.la \
 	@LIBCERROR_LIBADD@ \
 	@LIBINTL@
 
 nsfdbinfo_SOURCES = \
 	nsfdbinfo.c \
+	nsfdbtools_getopt.c nsfdbtools_getopt.h \
 	nsfdbtools_libcerror.h \
 	nsfdbtools_libclocale.h \
 	nsfdbtools_libcnotify.h \
-	nsfdbtools_libcsystem.h \
 	nsfdbtools_libfdatetime.h \
 	nsfdbtools_libnsfdb.h \
-	nsfdboutput.c nsfdboutput.h
+	nsfdbtools_output.c nsfdbtools_output.h \
+	nsfdbtools_signal.c nsfdbtools_signal.h \
+	nsfdbtools_unused.h
 
 nsfdbinfo_LDADD = \
-	@LIBCSYSTEM_LIBADD@ \
-	../libnsfdb/libnsfdb.la \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
+	../libnsfdb/libnsfdb.la \
 	@LIBCERROR_LIBADD@ \
 	@LIBINTL@
 

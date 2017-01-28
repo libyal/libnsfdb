@@ -1,7 +1,7 @@
 /*
- * Common output functions for the nsfdbtools
+ * The unused definition
  *
- * Copyright (C) 2010-2016, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2010-2017, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -19,27 +19,32 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _NSFDBOUTPUT_H )
-#define _NSFDBOUTPUT_H
+#if !defined( _NSFDBTOOLS_UNUSED_H )
+#define _NSFDBTOOLS_UNUSED_H
 
 #include <common.h>
-#include <file_stream.h>
-#include <types.h>
 
-#if defined( __cplusplus )
-extern "C" {
-#endif
+#if !defined( NSFDBTOOLS_ATTRIBUTE_UNUSED )
 
-void nsfdboutput_copyright_fprint(
-      FILE *stream );
+#if defined( __GNUC__ ) && __GNUC__ >= 3
+#define NSFDBTOOLS_ATTRIBUTE_UNUSED	__attribute__ ((__unused__))
 
-void nsfdboutput_version_fprint(
-      FILE *stream,
-      const char *program );
+#else
+#define NSFDBTOOLS_ATTRIBUTE_UNUSED
 
-#if defined( __cplusplus )
-}
-#endif
+#endif /* defined( __GNUC__ ) && __GNUC__ >= 3 */
 
-#endif /* !defined( _NSFDBOUTPUT_H ) */
+#endif /* !defined( NSFDBTOOLS_ATTRIBUTE_UNUSED ) */
+
+#if defined( _MSC_VER )
+#define NSFDBTOOLS_UNREFERENCED_PARAMETER( parameter ) \
+	UNREFERENCED_PARAMETER( parameter );
+
+#else
+#define NSFDBTOOLS_UNREFERENCED_PARAMETER( parameter ) \
+	/* parameter */
+
+#endif /* defined( _MSC_VER ) */
+
+#endif /* !defined( _NSFDBTOOLS_UNUSED_H ) */
 

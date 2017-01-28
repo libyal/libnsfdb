@@ -1,5 +1,5 @@
 /*
- * The internal libcnotify header
+ * Common output functions for the nsfdbtools
  *
  * Copyright (C) 2010-2017, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,32 +19,33 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBNSFDB_LIBCNOTIFY_H )
-#define _LIBNSFDB_LIBCNOTIFY_H
+#if !defined( _NSFDBTOOLS_OUTPUT_H )
+#define _NSFDBTOOLS_OUTPUT_H
 
 #include <common.h>
+#include <file_stream.h>
+#include <types.h>
 
-/* Define HAVE_LOCAL_LIBCNOTIFY for local use of libcnotify
- */
-#if defined( HAVE_LOCAL_LIBCNOTIFY )
+#include "nsfdbtools_libcerror.h"
 
-#include <libcnotify_definitions.h>
-#include <libcnotify_print.h>
-#include <libcnotify_stream.h>
-#include <libcnotify_verbose.h>
-
-#else
-
-/* If libtool DLL support is enabled set LIBCNOTIFY_DLL_IMPORT
- * before including libcnotify.h
- */
-#if defined( _WIN32 ) && defined( DLL_IMPORT )
-#define LIBCNOTIFY_DLL_IMPORT
+#if defined( __cplusplus )
+extern "C" {
 #endif
 
-#include <libcnotify.h>
+int nsfdbtools_output_initialize(
+     int stdio_mode,
+     libcerror_error_t **error );
 
-#endif /* defined( HAVE_LOCAL_LIBCNOTIFY ) */
+void nsfdboutput_copyright_fprint(
+      FILE *stream );
 
-#endif /* !defined( _LIBNSFDB_LIBCNOTIFY_H ) */
+void nsfdboutput_version_fprint(
+      FILE *stream,
+      const char *program );
+
+#if defined( __cplusplus )
+}
+#endif
+
+#endif /* !defined( _NSFDBTOOLS_OUTPUT_H ) */
 
