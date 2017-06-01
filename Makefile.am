@@ -30,11 +30,10 @@ DPKG_FILES = \
 	dpkg/compat \
 	dpkg/control \
 	dpkg/copyright \
-	dpkg/copyright.in \
 	dpkg/rules \
-	dpkg/libnsfdb-dev.docs \
-	dpkg/libnsfdb.docs \
-	dpkg/libnsfdb-tools.docs \
+	dpkg/libnsfdb-dev.install \
+	dpkg/libnsfdb.install \
+	dpkg/libnsfdb-tools.install \
 	dpkg/source/format
 
 GETTEXT_FILES = \
