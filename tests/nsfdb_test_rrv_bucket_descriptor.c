@@ -35,7 +35,7 @@
 
 #include "../libnsfdb/libnsfdb_rrv_bucket_descriptor.h"
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBNSFDB_DLL_IMPORT )
 
 /* Tests the libnsfdb_rrv_bucket_descriptor_initialize function
  * Returns 1 if successful or 0 if not
@@ -270,7 +270,7 @@ on_error:
 	return( 0 );
 }
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBNSFDB_DLL_IMPORT ) */
 
 /* The main program
  */
@@ -287,7 +287,7 @@ int main(
 	NSFDB_TEST_UNREFERENCED_PARAMETER( argc )
 	NSFDB_TEST_UNREFERENCED_PARAMETER( argv )
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBNSFDB_DLL_IMPORT )
 
 	NSFDB_TEST_RUN(
 	 "libnsfdb_rrv_bucket_descriptor_initialize",
@@ -297,7 +297,7 @@ int main(
 	 "libnsfdb_rrv_bucket_descriptor_free",
 	 nsfdb_test_rrv_bucket_descriptor_free );
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBNSFDB_DLL_IMPORT ) */
 
 	return( EXIT_SUCCESS );
 

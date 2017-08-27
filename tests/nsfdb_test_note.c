@@ -73,9 +73,9 @@ on_error:
 	return( 0 );
 }
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBNSFDB_DLL_IMPORT )
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBNSFDB_DLL_IMPORT ) */
 
 /* The main program
  */
@@ -92,17 +92,17 @@ int main(
 	NSFDB_TEST_UNREFERENCED_PARAMETER( argc )
 	NSFDB_TEST_UNREFERENCED_PARAMETER( argv )
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBNSFDB_DLL_IMPORT )
 
 	/* TODO: add tests for libnsfdb_note_initialize */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBNSFDB_DLL_IMPORT ) */
 
 	NSFDB_TEST_RUN(
 	 "libnsfdb_note_free",
 	 nsfdb_test_note_free );
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBNSFDB_DLL_IMPORT )
 
 	/* TODO: add tests for libnsfdb_note_clone */
 
@@ -110,7 +110,7 @@ int main(
 
 	/* TODO: add tests for libnsfdb_note_read */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBNSFDB_DLL_IMPORT ) */
 
 	return( EXIT_SUCCESS );
 

@@ -48,13 +48,13 @@ int main(
 	NSFDB_TEST_UNREFERENCED_PARAMETER( argc )
 	NSFDB_TEST_UNREFERENCED_PARAMETER( argv )
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBNSFDB_DLL_IMPORT )
 
 	/* TODO: add tests for libnsfdb_note_item_class_get_identifier */
 
 	/* TODO: add tests for libnsfdb_note_item_class_get_description */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBNSFDB_DLL_IMPORT ) */
 
 	return( EXIT_SUCCESS );
 
