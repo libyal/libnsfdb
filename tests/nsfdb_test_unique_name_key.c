@@ -64,13 +64,13 @@ int nsfdb_test_unique_name_key_initialize(
 	 result,
 	 1 );
 
-        NSFDB_TEST_ASSERT_IS_NOT_NULL(
-         "unique_name_key",
-         unique_name_key );
+	NSFDB_TEST_ASSERT_IS_NOT_NULL(
+	 "unique_name_key",
+	 unique_name_key );
 
-        NSFDB_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	NSFDB_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libnsfdb_unique_name_key_free(
 	          &unique_name_key,
@@ -81,13 +81,13 @@ int nsfdb_test_unique_name_key_initialize(
 	 result,
 	 1 );
 
-        NSFDB_TEST_ASSERT_IS_NULL(
-         "unique_name_key",
-         unique_name_key );
+	NSFDB_TEST_ASSERT_IS_NULL(
+	 "unique_name_key",
+	 unique_name_key );
 
-        NSFDB_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	NSFDB_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -100,9 +100,9 @@ int nsfdb_test_unique_name_key_initialize(
 	 result,
 	 -1 );
 
-        NSFDB_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	NSFDB_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -118,9 +118,9 @@ int nsfdb_test_unique_name_key_initialize(
 	 result,
 	 -1 );
 
-        NSFDB_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	NSFDB_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -252,9 +252,9 @@ int nsfdb_test_unique_name_key_free(
 	 result,
 	 -1 );
 
-        NSFDB_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	NSFDB_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );

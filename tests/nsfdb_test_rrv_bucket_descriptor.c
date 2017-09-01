@@ -64,13 +64,13 @@ int nsfdb_test_rrv_bucket_descriptor_initialize(
 	 result,
 	 1 );
 
-        NSFDB_TEST_ASSERT_IS_NOT_NULL(
-         "rrv_bucket_descriptor",
-         rrv_bucket_descriptor );
+	NSFDB_TEST_ASSERT_IS_NOT_NULL(
+	 "rrv_bucket_descriptor",
+	 rrv_bucket_descriptor );
 
-        NSFDB_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	NSFDB_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libnsfdb_rrv_bucket_descriptor_free(
 	          &rrv_bucket_descriptor,
@@ -81,13 +81,13 @@ int nsfdb_test_rrv_bucket_descriptor_initialize(
 	 result,
 	 1 );
 
-        NSFDB_TEST_ASSERT_IS_NULL(
-         "rrv_bucket_descriptor",
-         rrv_bucket_descriptor );
+	NSFDB_TEST_ASSERT_IS_NULL(
+	 "rrv_bucket_descriptor",
+	 rrv_bucket_descriptor );
 
-        NSFDB_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	NSFDB_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -100,9 +100,9 @@ int nsfdb_test_rrv_bucket_descriptor_initialize(
 	 result,
 	 -1 );
 
-        NSFDB_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	NSFDB_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -118,9 +118,9 @@ int nsfdb_test_rrv_bucket_descriptor_initialize(
 	 result,
 	 -1 );
 
-        NSFDB_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	NSFDB_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -252,9 +252,9 @@ int nsfdb_test_rrv_bucket_descriptor_free(
 	 result,
 	 -1 );
 
-        NSFDB_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	NSFDB_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );

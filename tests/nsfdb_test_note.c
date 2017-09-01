@@ -55,9 +55,9 @@ int nsfdb_test_note_free(
 	 result,
 	 -1 );
 
-        NSFDB_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	NSFDB_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
