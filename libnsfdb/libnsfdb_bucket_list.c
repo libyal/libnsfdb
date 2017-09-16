@@ -25,6 +25,7 @@
 #include "libnsfdb_bucket.h"
 #include "libnsfdb_libbfio.h"
 #include "libnsfdb_libcerror.h"
+#include "libnsfdb_libfcache.h"
 #include "libnsfdb_libfdata.h"
 
 /* Retrieves a specific summary or non summary bucket
