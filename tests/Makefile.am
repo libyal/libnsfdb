@@ -71,6 +71,7 @@ nsfdb_test_error_LDADD = \
 
 nsfdb_test_file_SOURCES = \
 	nsfdb_test_file.c \
+	nsfdb_test_functions.c nsfdb_test_functions.h \
 	nsfdb_test_getopt.c nsfdb_test_getopt.h \
 	nsfdb_test_libcerror.h \
 	nsfdb_test_libclocale.h \
@@ -78,10 +79,15 @@ nsfdb_test_file_SOURCES = \
 	nsfdb_test_libnsfdb.h \
 	nsfdb_test_libuna.h \
 	nsfdb_test_macros.h \
-	nsfdb_test_memory.c nsfdb_test_memory.h
+	nsfdb_test_memory.c nsfdb_test_memory.h \
+	nsfdb_test_unused.h
 
 nsfdb_test_file_LDADD = \
+	@LIBBFIO_LIBADD@ \
+	@LIBCPATH_LIBADD@ \
+	@LIBCFILE_LIBADD@ \
 	@LIBUNA_LIBADD@ \
+	@LIBCSPLIT_LIBADD@ \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
 	@LIBCDATA_LIBADD@ \
@@ -151,13 +157,15 @@ nsfdb_test_note_value_LDADD = \
 	@LIBCERROR_LIBADD@
 
 nsfdb_test_notify_SOURCES = \
+	nsfdb_test_libcerror.h \
 	nsfdb_test_libnsfdb.h \
 	nsfdb_test_macros.h \
 	nsfdb_test_notify.c \
 	nsfdb_test_unused.h
 
 nsfdb_test_notify_LDADD = \
-	../libnsfdb/libnsfdb.la
+	../libnsfdb/libnsfdb.la \
+	@LIBCERROR_LIBADD@
 
 nsfdb_test_rrv_bucket_SOURCES = \
 	nsfdb_test_libcerror.h \
@@ -196,6 +204,7 @@ nsfdb_test_rrv_value_LDADD = \
 	@LIBCERROR_LIBADD@
 
 nsfdb_test_support_SOURCES = \
+	nsfdb_test_functions.c nsfdb_test_functions.h \
 	nsfdb_test_getopt.c nsfdb_test_getopt.h \
 	nsfdb_test_libbfio.h \
 	nsfdb_test_libcerror.h \
@@ -204,7 +213,9 @@ nsfdb_test_support_SOURCES = \
 	nsfdb_test_libnsfdb.h \
 	nsfdb_test_libuna.h \
 	nsfdb_test_macros.h \
-	nsfdb_test_support.c
+	nsfdb_test_memory.c nsfdb_test_memory.h \
+	nsfdb_test_support.c \
+	nsfdb_test_unused.h
 
 nsfdb_test_support_LDADD = \
 	@LIBBFIO_LIBADD@ \
