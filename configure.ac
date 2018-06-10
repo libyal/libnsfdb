@@ -2,7 +2,7 @@ AC_PREREQ( 2.59 )
 
 AC_INIT(
  [libnsfdb],
- [20180425],
+ [20180610],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(

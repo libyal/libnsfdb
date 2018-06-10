@@ -270,6 +270,134 @@ on_error:
 	return( 0 );
 }
 
+/* Tests the libnsfdb_io_handle_clear function
+ * Returns 1 if successful or 0 if not
+ */
+int nsfdb_test_io_handle_clear(
+     void )
+{
+	libcerror_error_t *error        = NULL;
+	libnsfdb_io_handle_t *io_handle = NULL;
+	int result                      = 0;
+
+	/* Initialize test
+	 */
+	result = libnsfdb_io_handle_initialize(
+	          &io_handle,
+	          &error );
+
+	NSFDB_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	NSFDB_TEST_ASSERT_IS_NOT_NULL(
+	 "io_handle",
+	 io_handle );
+
+	NSFDB_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test regular cases
+	 */
+	result = libnsfdb_io_handle_clear(
+	          io_handle,
+	          &error );
+
+	NSFDB_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	NSFDB_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test error cases
+	 */
+	result = libnsfdb_io_handle_clear(
+	          NULL,
+	          &error );
+
+	NSFDB_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	NSFDB_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+#if defined( HAVE_NSFDB_TEST_MEMORY )
+
+	/* Test libnsfdb_io_handle_clear with memset failing
+	 */
+	nsfdb_test_memset_attempts_before_fail = 0;
+
+	result = libnsfdb_io_handle_clear(
+	          io_handle,
+	          &error );
+
+	if( nsfdb_test_memset_attempts_before_fail != -1 )
+	{
+		nsfdb_test_memset_attempts_before_fail = -1;
+	}
+	else
+	{
+		NSFDB_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		NSFDB_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+#endif /* defined( HAVE_NSFDB_TEST_MEMORY ) */
+
+	/* Clean up
+	 */
+	result = libnsfdb_io_handle_free(
+	          &io_handle,
+	          &error );
+
+	NSFDB_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	NSFDB_TEST_ASSERT_IS_NULL(
+	 "io_handle",
+	 io_handle );
+
+	NSFDB_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( io_handle != NULL )
+	{
+		libnsfdb_io_handle_free(
+		 &io_handle,
+		 NULL );
+	}
+	return( 0 );
+}
+
 #endif /* defined( __GNUC__ ) && !defined( LIBNSFDB_DLL_IMPORT ) */
 
 /* The main program
@@ -297,7 +425,9 @@ int main(
 	 "libnsfdb_io_handle_free",
 	 nsfdb_test_io_handle_free );
 
-	/* TODO: add tests for libnsfdb_io_handle_clear */
+	NSFDB_TEST_RUN(
+	 "libnsfdb_io_handle_clear",
+	 nsfdb_test_io_handle_clear );
 
 	/* TODO: add tests for libnsfdb_io_handle_read_file_header */
 
