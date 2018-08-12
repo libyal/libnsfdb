@@ -28,17 +28,13 @@
  */
 #if !defined( HAVE_LOCAL_LIBNSFDB )
 
-/* If libtool DLL support is enabled set LIBNSFDB_DLL_EXPORT
- * before including libnsfdb/extern.h
- */
-#if defined( _WIN32 ) && defined( DLL_EXPORT )
-#define LIBNSFDB_DLL_EXPORT
-#endif
-
 #include <libnsfdb/extern.h>
 
+#define LIBNSFDB_EXTERN_VARIABLE	LIBNSFDB_EXTERN
+
 #else
-#define LIBNSFDB_EXTERN	/* extern */
+#define LIBNSFDB_EXTERN		/* extern */
+#define LIBNSFDB_EXTERN_VARIABLE	extern
 
 #endif /* !defined( HAVE_LOCAL_LIBNSFDB ) */
 

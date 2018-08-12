@@ -24,13 +24,6 @@
 
 #include <common.h>
 
-/* If Cygwin libtool DLL support is enabled and do not want to create static
- * executables set LIBNSFDB_DLL_IMPORT before including libnsfdb.h
- */
-#if defined( _WIN32 ) && defined( DLL_EXPORT ) && !defined( HAVE_STATIC_EXECUTABLES )
-#define LIBNSFDB_DLL_IMPORT
-#endif
-
 #include <libnsfdb.h>
 
 #endif /* !defined( _NSFDB_TEST_LIBNSFDB_H ) */
