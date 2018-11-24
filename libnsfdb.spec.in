@@ -8,25 +8,25 @@ Source: %{name}-%{version}.tar.gz
 URL: https://github.com/libyal/libnsfdb
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 @libnsfdb_spec_requires@ @ax_libbfio_spec_requires@ @ax_libcdata_spec_requires@ @ax_libcerror_spec_requires@ @ax_libcfile_spec_requires@ @ax_libclocale_spec_requires@ @ax_libcnotify_spec_requires@ @ax_libcpath_spec_requires@ @ax_libcsplit_spec_requires@ @ax_libcthreads_spec_requires@ @ax_libfcache_spec_requires@ @ax_libfdata_spec_requires@ @ax_libfdatetime_spec_requires@ @ax_libfvalue_spec_requires@ @ax_libuna_spec_requires@
-@libnsfdb_spec_build_requires@ @ax_libbfio_spec_build_requires@ @ax_libcdata_spec_build_requires@ @ax_libcerror_spec_build_requires@ @ax_libcfile_spec_build_requires@ @ax_libclocale_spec_build_requires@ @ax_libcnotify_spec_build_requires@ @ax_libcpath_spec_build_requires@ @ax_libcsplit_spec_build_requires@ @ax_libcthreads_spec_build_requires@ @ax_libfcache_spec_build_requires@ @ax_libfdata_spec_build_requires@ @ax_libfdatetime_spec_build_requires@ @ax_libfvalue_spec_build_requires@ @ax_libuna_spec_build_requires@
+BuildRequires: gcc @ax_libbfio_spec_build_requires@ @ax_libcdata_spec_build_requires@ @ax_libcerror_spec_build_requires@ @ax_libcfile_spec_build_requires@ @ax_libclocale_spec_build_requires@ @ax_libcnotify_spec_build_requires@ @ax_libcpath_spec_build_requires@ @ax_libcsplit_spec_build_requires@ @ax_libcthreads_spec_build_requires@ @ax_libfcache_spec_build_requires@ @ax_libfdata_spec_build_requires@ @ax_libfdatetime_spec_build_requires@ @ax_libfvalue_spec_build_requires@ @ax_libuna_spec_build_requires@
 
-%description
+%description -n libnsfdb
 Library to access the Notes Storage Facility (NSF) database file format
 
-%package devel
+%package -n libnsfdb-devel
 Summary: Header files and libraries for developing applications for libnsfdb
 Group: Development/Libraries
 Requires: libnsfdb = %{version}-%{release}
 
-%description devel
+%description -n libnsfdb-devel
 Header files and libraries for developing applications for libnsfdb.
 
-%package tools
+%package -n libnsfdb-tools
 Summary: Several tools for reading Notes Storage Facility (NSF) database files
 Group: Applications/System
 Requires: libnsfdb = %{version}-%{release}
 
-%description tools
+%description -n libnsfdb-tools
 Several tools for reading Notes Storage Facility (NSF) database files
 
 %prep
@@ -47,13 +47,13 @@ rm -rf %{buildroot}
 
 %postun -p /sbin/ldconfig
 
-%files
+%files -n libnsfdb
 %defattr(644,root,root,755)
 %license COPYING
 %doc AUTHORS README
 %attr(755,root,root) %{_libdir}/*.so.*
 
-%files devel
+%files -n libnsfdb-devel
 %defattr(644,root,root,755)
 %license COPYING
 %doc AUTHORS README ChangeLog
@@ -64,7 +64,7 @@ rm -rf %{buildroot}
 %{_includedir}/*
 %{_mandir}/man3/*
 
-%files tools
+%files -n libnsfdb-tools
 %defattr(644,root,root,755)
 %license COPYING
 %doc AUTHORS README
