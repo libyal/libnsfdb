@@ -1,7 +1,7 @@
 /*
  * Common output functions for the nsfdbtools
  *
- * Copyright (C) 2010-2018, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2010-2019, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -36,10 +36,10 @@ int nsfdbtools_output_initialize(
      int stdio_mode,
      libcerror_error_t **error );
 
-void nsfdboutput_copyright_fprint(
+void nsfdbtools_output_copyright_fprint(
       FILE *stream );
 
-void nsfdboutput_version_fprint(
+void nsfdbtools_output_version_fprint(
       FILE *stream,
       const char *program );
 

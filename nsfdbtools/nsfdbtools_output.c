@@ -1,7 +1,7 @@
 /*
  * Common output functions for the nsfdbtools
  *
- * Copyright (C) 2010-2018, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2010-2019, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -91,7 +91,7 @@ int nsfdbtools_output_initialize(
 
 /* Prints the copyright information
  */
-void nsfdboutput_copyright_fprint(
+void nsfdbtools_output_copyright_fprint(
       FILE *stream )
 {
 	if( stream == NULL )
@@ -102,7 +102,7 @@ void nsfdboutput_copyright_fprint(
 	 */
 	fprintf(
 	 stream,
-	 _( "Copyright (C) 2010-2018, %s.\n" ),
+	 _( "Copyright (C) 2010-2019, %s.\n" ),
 	 _( "Joachim Metz" ) );
 
 	fprintf(
@@ -123,7 +123,7 @@ void nsfdboutput_copyright_fprint(
 
 /* Prints the version information
  */
-void nsfdboutput_version_fprint(
+void nsfdbtools_output_version_fprint(
       FILE *stream,
       const char *program )
 {

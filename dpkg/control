@@ -9,6 +9,8 @@ Homepage: https://github.com/libyal/libnsfdb
 Package: libnsfdb
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Conflicts: libnsfdb1
+Replaces: libnsfdb1
 Suggests: libnsfdb-dbg
 Description: Library to access the Notes Storage Facility (NSF) database file format
  libnsfdb is a library to access the Notes Storage Facility (NSF) database file format.
@@ -31,6 +33,8 @@ Package: libnsfdb-tools
 Section: utils
 Architecture: any
 Depends: libnsfdb (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Conflicts: libnsfdb-utils
+Replaces: libnsfdb-utils
 Description: Several tools for reading Notes Storage Facility (NSF) database files
  Several tools for reading Notes Storage Facility (NSF) database files.
 

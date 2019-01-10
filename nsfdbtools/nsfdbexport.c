@@ -1,7 +1,7 @@
 /*
  * Extracts items from a Notes Storage Facility (NSF) database file
  *
- * Copyright (C) 2010-2018, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2010-2019, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -163,7 +163,7 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
-	nsfdboutput_version_fprint(
+	nsfdbtools_output_version_fprint(
 	 stdout,
 	 program );
 
@@ -208,7 +208,7 @@ int main( int argc, char * const argv[] )
 				break;
 
 			case (system_integer_t) 'V':
-				nsfdboutput_copyright_fprint(
+				nsfdbtools_output_copyright_fprint(
 				 stdout );
 
 				return( EXIT_SUCCESS );
