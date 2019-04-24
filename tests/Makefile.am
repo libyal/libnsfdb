@@ -25,6 +25,7 @@ TESTS = \
 
 check_SCRIPTS = \
 	test_library.sh \
+	test_manpage.sh \
 	test_nsfdbexport.sh \
 	test_nsfdbinfo.sh \
 	test_runner.sh
