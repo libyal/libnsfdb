@@ -46,6 +46,8 @@ int libnsfdb_checksum_calculate_little_endian_xor32(
 	uint8_t *buffer_iterator                    = NULL;
 	static char *function                       = "libnsfdb_checksum_calculate_little_endian_xor32";
 	libnsfdb_aligned_t value_aligned            = 0;
+	uint32_t big_endian_value_32bit             = 0;
+	uint32_t safe_checksum_value                = 0;
 	uint32_t value_32bit                        = 0;
 	uint8_t alignment_count                     = 0;
 	uint8_t alignment_size                      = 0;
@@ -86,7 +88,7 @@ int libnsfdb_checksum_calculate_little_endian_xor32(
 
 		return( -1 );
 	}
-	*checksum_value = initial_value;
+	safe_checksum_value = initial_value;
 
 	buffer_iterator = (uint8_t *) buffer;
 
@@ -100,44 +102,48 @@ int libnsfdb_checksum_calculate_little_endian_xor32(
 		 */
 		alignment_size = (uint8_t) ( (intptr_t) buffer_iterator % sizeof( libnsfdb_aligned_t ) );
 
-		byte_size = alignment_size;
-
-		while( byte_size != 0 )
+		if( alignment_size > 0 )
 		{
-			value_32bit = 0;
-			byte_count  = 1;
+			byte_size = sizeof( libnsfdb_aligned_t ) - alignment_size;
 
-			if( byte_size >= 4 )
+			/* Align the buffer iterator in 4-byte steps
+			 */
+			while( byte_size != 0 )
 			{
-				value_32bit |= buffer_iterator[ 3 ];
-				value_32bit <<= 8;
+				value_32bit = 0;
+				byte_count  = 1;
 
-				byte_count++;
+				if( byte_size >= 4 )
+				{
+					value_32bit |= buffer_iterator[ 3 ];
+					value_32bit <<= 8;
+
+					byte_count++;
+				}
+				if( byte_size >= 3 )
+				{
+					value_32bit |= buffer_iterator[ 2 ];
+					value_32bit <<= 8;
+
+					byte_count++;
+				}
+				if( byte_size >= 2 )
+				{
+					value_32bit |= buffer_iterator[ 1 ];
+					value_32bit <<= 8;
+
+					byte_count++;
+				}
+				value_32bit |= buffer_iterator[ 0 ];
+
+				buffer_iterator += byte_count;
+				byte_size       -= byte_count;
+
+				safe_checksum_value ^= value_32bit;
 			}
-			if( byte_size >= 3 )
-			{
-				value_32bit |= buffer_iterator[ 2 ];
-				value_32bit <<= 8;
-
-				byte_count++;
-			}
-			if( byte_size >= 2 )
-			{
-				value_32bit |= buffer_iterator[ 1 ];
-				value_32bit <<= 8;
-
-				byte_count++;
-			}
-			value_32bit |= buffer_iterator[ 0 ];
-
-			buffer_iterator += byte_count;
-			byte_size       -= byte_count;
-
-			*checksum_value ^= value_32bit;
+			size -= byte_count;
 		}
 		aligned_buffer_iterator = (libnsfdb_aligned_t *) buffer_iterator;
-
-		size -= alignment_size;
 
 		if( *buffer_iterator != (uint8_t) ( *aligned_buffer_iterator & 0xff ) )
 		{
@@ -147,7 +153,7 @@ int libnsfdb_checksum_calculate_little_endian_xor32(
 		{
 			byte_order = _BYTE_STREAM_ENDIAN_LITTLE;
 		}
-		/* Determine the aligned XOR value
+		/* Calculate the XOR value using the aligned buffer iterator
 		 */
 		while( size > sizeof( libnsfdb_aligned_t ) )
 		{
@@ -161,18 +167,25 @@ int libnsfdb_checksum_calculate_little_endian_xor32(
 		 */
 		if( alignment_size > 0 )
 		{
-			byte_count     = ( alignment_size % 4 ) * 8;
+			byte_count      = ( alignment_size % 4 ) * 8;
 			alignment_count = ( sizeof( libnsfdb_aligned_t ) - alignment_size ) * 8;
 
 			if( byte_order == _BYTE_STREAM_ENDIAN_BIG )
 			{
 				/* Shift twice to set unused bytes to 0
 				 */
-				value_32bit = (uint32_t) ( ( value_aligned >> alignment_count ) << byte_count );
+				big_endian_value_32bit = (uint32_t) ( ( value_aligned >> alignment_count ) << byte_count );
+
+				/* Change big-endian into little-endian
+				 */
+				value_32bit = ( ( big_endian_value_32bit & 0x000000ffUL ) << 24 )
+				            | ( ( big_endian_value_32bit & 0x0000ff00UL ) << 8 )
+				            | ( ( big_endian_value_32bit >> 8 ) & 0x0000ff00UL )
+				            | ( ( big_endian_value_32bit >> 24 ) & 0x000000ffUL );
 
 				/* Strip-off the used part of the aligned value
 				 */
-				value_aligned <<= byte_count;
+				value_aligned <<= alignment_count;
 			}
 			else if( byte_order == _BYTE_STREAM_ENDIAN_LITTLE )
 			{
@@ -182,7 +195,7 @@ int libnsfdb_checksum_calculate_little_endian_xor32(
 				 */
 				value_aligned >>= alignment_count;
 			}
-			*checksum_value ^= value_32bit;
+			safe_checksum_value ^= value_32bit;
 		}
 		/* Update the 32-bit XOR value with the aligned XOR value
 		 */
@@ -194,16 +207,14 @@ int libnsfdb_checksum_calculate_little_endian_xor32(
 
 			if( byte_order == _BYTE_STREAM_ENDIAN_BIG )
 			{
-				value_32bit = (uint32_t) ( value_aligned >> byte_count );
+				big_endian_value_32bit = (uint32_t) ( ( value_aligned >> byte_count ) & 0xffffffffUL );
 
 				/* Change big-endian into little-endian
 				 */
-				value_32bit = ( ( value_32bit & 0x00ff ) << 24 )
-				            | ( ( value_32bit & 0xff00 ) << 8 )
-				            | ( ( value_32bit >> 8 ) & 0xff00 )
-				            | ( ( value_32bit >> 24 ) & 0x00ff );
-
-				value_aligned <<= byte_count;
+				value_32bit = ( ( big_endian_value_32bit & 0x000000ffUL ) << 24 )
+				            | ( ( big_endian_value_32bit & 0x0000ff00UL ) << 8 )
+				            | ( ( big_endian_value_32bit >> 8 ) & 0x0000ff00UL )
+				            | ( ( big_endian_value_32bit >> 24 ) & 0x000000ffUL );
 			}
 			else if( byte_order == _BYTE_STREAM_ENDIAN_LITTLE )
 			{
@@ -213,7 +224,7 @@ int libnsfdb_checksum_calculate_little_endian_xor32(
 			}
 			byte_size -= 4;
 
-			*checksum_value ^= value_32bit;
+			safe_checksum_value ^= value_32bit;
 		}
 		/* Re-align the buffer iterator
 		 */
@@ -241,7 +252,7 @@ int libnsfdb_checksum_calculate_little_endian_xor32(
 			buffer_iterator += byte_size;
 			size            -= byte_size;
 
-			*checksum_value ^= value_32bit;
+			safe_checksum_value ^= value_32bit;
 		}
 	}
 	while( size > 0 )
@@ -275,8 +286,10 @@ int libnsfdb_checksum_calculate_little_endian_xor32(
 		buffer_iterator += byte_count;
 		size            -= byte_count;
 
-		*checksum_value ^= value_32bit;
+		safe_checksum_value ^= value_32bit;
 	}
+	*checksum_value = safe_checksum_value;
+
 	return( 1 );
 }
 
