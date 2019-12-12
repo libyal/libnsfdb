@@ -57,19 +57,19 @@ rm -rf %{buildroot}
 
 %files -n libnsfdb
 %defattr(644,root,root,755)
-%license COPYING
+%license COPYING COPYING.LESSER
 %doc AUTHORS README
 %attr(755,root,root) %{_libdir}/*.so.*
 
 %files -n libnsfdb-static
 %defattr(644,root,root,755)
-%license COPYING
+%license COPYING COPYING.LESSER
 %doc AUTHORS README
 %attr(755,root,root) %{_libdir}/*.a
 
 %files -n libnsfdb-devel
 %defattr(644,root,root,755)
-%license COPYING
+%license COPYING COPYING.LESSER
 %doc AUTHORS README
 %{_libdir}/*.la
 %{_libdir}/*.so
@@ -79,7 +79,7 @@ rm -rf %{buildroot}
 
 %files -n libnsfdb-tools
 %defattr(644,root,root,755)
-%license COPYING
+%license COPYING COPYING.LESSER
 %doc AUTHORS README
 %attr(755,root,root) %{_bindir}/*
 %{_mandir}/man1/*
