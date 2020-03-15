@@ -2375,7 +2375,7 @@ int libnsfdb_io_handle_read_database_header(
 		     (intptr_t *) io_handle,
 		     NULL,
 		     NULL,
-		     (int (*)(intptr_t *, intptr_t *, libfdata_vector_t *, libfcache_cache_t *, int, int, off64_t, size64_t, uint32_t, uint8_t, libcerror_error_t **)) &libnsfdb_io_handle_read_rrv_bucket,
+		     (int (*)(intptr_t *, intptr_t *, libfdata_vector_t *, libfdata_cache_t *, int, int, off64_t, size64_t, uint32_t, uint8_t, libcerror_error_t **)) &libnsfdb_io_handle_read_rrv_bucket,
 		     NULL,
 		     LIBFDATA_DATA_HANDLE_FLAG_NON_MANAGED,
 		     error ) != 1 )
@@ -4948,7 +4948,7 @@ int libnsfdb_io_handle_read_rrv_bucket(
 	if( libfdata_vector_set_element_value_by_index(
 	     vector,
 	     (intptr_t *) file_io_handle,
-	     cache,
+	     (libfdata_cache_t *) cache,
 	     element_index,
 	     (intptr_t *) rrv_bucket,
 	     (int (*)(intptr_t **, libcerror_error_t **)) &libnsfdb_rrv_bucket_free,
@@ -5043,7 +5043,7 @@ int libnsfdb_io_handle_read_bucket(
 	if( libfdata_list_element_set_element_value(
 	     list_element,
 	     (intptr_t *) file_io_handle,
-	     cache,
+	     (libfdata_cache_t *) cache,
 	     (intptr_t *) bucket,
 	     (int (*)(intptr_t **, libcerror_error_t **)) &libnsfdb_bucket_free,
 	     LIBFDATA_LIST_ELEMENT_VALUE_FLAG_MANAGED,
@@ -5184,7 +5184,7 @@ int libnsfdb_io_handle_get_number_of_rrv_values(
 		if( libfdata_vector_get_element_value_at_offset(
 		     io_handle->rrv_bucket_vector,
 		     (intptr_t *) file_io_handle,
-		     io_handle->rrv_bucket_cache,
+		     (libfdata_cache_t *) io_handle->rrv_bucket_cache,
 		     rrv_bucket_descriptor->file_offset,
 		     &element_data_offset,
 		     (intptr_t **) &rrv_bucket,
@@ -5333,7 +5333,7 @@ int libnsfdb_io_handle_get_rrv_value_by_index(
 		if( libfdata_vector_get_element_value_at_offset(
 		     io_handle->rrv_bucket_vector,
 		     (intptr_t *) file_io_handle,
-		     io_handle->rrv_bucket_cache,
+		     (libfdata_cache_t *) io_handle->rrv_bucket_cache,
 		     rrv_bucket_descriptor->file_offset,
 		     &element_data_offset,
 		     (intptr_t **) &rrv_bucket,
@@ -5505,7 +5505,7 @@ int libnsfdb_io_handle_get_rrv_value_by_identifier(
 			if( libfdata_vector_get_element_value_at_offset(
 			     io_handle->rrv_bucket_vector,
 			     (intptr_t *) file_io_handle,
-			     io_handle->rrv_bucket_cache,
+			     (libfdata_cache_t *) io_handle->rrv_bucket_cache,
 			     rrv_bucket_descriptor->file_offset,
 			     &element_data_offset,
 			     (intptr_t **) &rrv_bucket,
@@ -5540,7 +5540,7 @@ int libnsfdb_io_handle_get_rrv_value_by_identifier(
 			if( libfdata_vector_get_element_value_at_offset(
 			     io_handle->rrv_bucket_vector,
 			     (intptr_t *) file_io_handle,
-			     io_handle->rrv_bucket_cache,
+			     (libfdata_cache_t *) io_handle->rrv_bucket_cache,
 			     last_rrv_bucket_descriptor->file_offset,
 			     &element_data_offset,
 			     (intptr_t **) &rrv_bucket,
@@ -5577,7 +5577,7 @@ int libnsfdb_io_handle_get_rrv_value_by_identifier(
 		if( libfdata_vector_get_element_value_at_offset(
 		     io_handle->rrv_bucket_vector,
 		     (intptr_t *) file_io_handle,
-		     io_handle->rrv_bucket_cache,
+		     (libfdata_cache_t *) io_handle->rrv_bucket_cache,
 		     last_rrv_bucket_descriptor->file_offset,
 		     &element_data_offset,
 		     (intptr_t **) &rrv_bucket,

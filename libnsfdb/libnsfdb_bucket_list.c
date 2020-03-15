@@ -56,7 +56,7 @@ int libnsfdb_bucket_list_get_bucket_by_index(
 	if( libfdata_list_get_element_value_by_index(
 	     bucket_list,
 	     (intptr_t *) file_io_handle,
-	     bucket_cache,
+	     (libfdata_cache_t *) bucket_cache,
 	     (int) bucket_index - 1,
 	     (intptr_t **) bucket,
 	     0,
