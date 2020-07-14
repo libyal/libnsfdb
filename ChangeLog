@@ -7,12 +7,11 @@ TODO
 * add dpgk files
 * update msvscpp files
 * nsfdbinfo:
-  - refactor to info handle
+  - refactor to use info handle
 * code clean up
   - remove intptr_t free/clone functions
   - check if already set in initialize
   - use goto
-  - create info handle
 * integrate libfvalue
 * superblock
   - non-summary bucket descriptors

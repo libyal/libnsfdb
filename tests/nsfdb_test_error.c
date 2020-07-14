@@ -27,7 +27,6 @@
 #include <stdlib.h>
 #endif
 
-#include "nsfdb_test_libcerror.h"
 #include "nsfdb_test_libnsfdb.h"
 #include "nsfdb_test_macros.h"
 #include "nsfdb_test_unused.h"

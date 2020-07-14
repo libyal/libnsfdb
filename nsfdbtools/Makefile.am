@@ -49,6 +49,7 @@ nsfdbexport_LDADD = \
 	@LIBINTL@
 
 nsfdbinfo_SOURCES = \
+	info_handle.c info_handle.h \
 	nsfdbinfo.c \
 	nsfdbtools_getopt.c nsfdbtools_getopt.h \
 	nsfdbtools_libcerror.h \
