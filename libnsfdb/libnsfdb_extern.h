@@ -30,7 +30,11 @@
 
 #include <libnsfdb/extern.h>
 
+#if defined( __CYGWIN__ )
+#define LIBNSFDB_EXTERN_VARIABLE	extern
+#else
 #define LIBNSFDB_EXTERN_VARIABLE	LIBNSFDB_EXTERN
+#endif
 
 #else
 #define LIBNSFDB_EXTERN		/* extern */
