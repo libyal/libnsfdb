@@ -409,25 +409,11 @@ int libnsfdb_io_handle_read_file_header(
 	}
 #endif
 
-	if( libbfio_handle_seek_offset(
-	     file_io_handle,
-	     0,
-	     SEEK_SET,
-	     error ) == -1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_SEEK_FAILED,
-		 "%s: unable to seek file header offset: 0.",
-		 function );
-
-		return( -1 );
-	}
-	read_count = libbfio_handle_read_buffer(
+	read_count = libbfio_handle_read_buffer_at_offset(
 	              file_io_handle,
 	              (uint8_t *) &file_header,
 	              sizeof( nsfdb_file_header_t ),
+	              0,
 	              error );
 
 	if( read_count != (ssize_t) sizeof( nsfdb_file_header_t ) )
@@ -436,7 +422,7 @@ int libnsfdb_io_handle_read_file_header(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_IO,
 		 LIBCERROR_IO_ERROR_READ_FAILED,
-		 "%s: unable to read file header.",
+		 "%s: unable to read file header at offset: 0 (0x00000000).",
 		 function );
 
 		return( -1 );
@@ -716,25 +702,11 @@ int libnsfdb_io_handle_read_database_header(
 		 function );
 	}
 #endif
-	if( libbfio_handle_seek_offset(
-	     file_io_handle,
-	     6,
-	     SEEK_SET,
-	     error ) == -1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_SEEK_FAILED,
-		 "%s: unable to seek database header offset: 6.",
-		 function );
-
-		goto on_error;
-	}
-	read_count = libbfio_handle_read_buffer(
+	read_count = libbfio_handle_read_buffer_at_offset(
 	              file_io_handle,
 	              (uint8_t *) &database_information,
 	              sizeof( nsfdb_database_information_t ),
+	              6,
 	              error );
 
 	if( read_count != (ssize_t) sizeof( nsfdb_database_information_t ) )
@@ -743,7 +715,7 @@ int libnsfdb_io_handle_read_database_header(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_IO,
 		 LIBCERROR_IO_ERROR_READ_FAILED,
-		 "%s: unable to read database information.",
+		 "%s: unable to read database information at offset: 6 (0x00000006).",
 		 function );
 
 		goto on_error;
@@ -2511,26 +2483,11 @@ int libnsfdb_io_handle_read_superblock(
 		 superblock_offset );
 	}
 #endif
-	if( libbfio_handle_seek_offset(
-	     file_io_handle,
-	     superblock_offset,
-	     SEEK_SET,
-	     error ) == -1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_SEEK_FAILED,
-		 "%s: unable to seek superblock offset: %" PRIi64 ".",
-		 function,
-		 superblock_offset );
-
-		goto on_error;
-	}
-	read_count = libbfio_handle_read_buffer(
+	read_count = libbfio_handle_read_buffer_at_offset(
 	              file_io_handle,
 	              (uint8_t *) &superblock_header,
 	              sizeof( nsfdb_superblock_header_t ),
+	              superblock_offset,
 	              error );
 
 	if( read_count != (ssize_t) sizeof( nsfdb_superblock_header_t ) )
@@ -2539,8 +2496,10 @@ int libnsfdb_io_handle_read_superblock(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_IO,
 		 LIBCERROR_IO_ERROR_READ_FAILED,
-		 "%s: unable to read superblock header.",
-		 function );
+		 "%s: unable to read superblock header at offset: %" PRIi64 " (0x%08" PRIx64 ").",
+		 function,
+		 superblock_offset,
+		 superblock_offset );
 
 		goto on_error;
 	}
@@ -4034,26 +3993,11 @@ int libnsfdb_io_handle_read_bucket_descriptor_block(
 		 bucket_descriptor_block_offset );
 	}
 #endif
-	if( libbfio_handle_seek_offset(
-	     file_io_handle,
-	     bucket_descriptor_block_offset,
-	     SEEK_SET,
-	     error ) == -1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_SEEK_FAILED,
-		 "%s: unable to seek bucket descriptor block offset: %" PRIi64 ".",
-		 function,
-		 bucket_descriptor_block_offset );
-
-		goto on_error;
-	}
-	read_count = libbfio_handle_read_buffer(
+	read_count = libbfio_handle_read_buffer_at_offset(
 	              file_io_handle,
 	              (uint8_t *) &bucket_descriptor_block_header,
 	              sizeof( nsfdb_bucket_descriptor_block_header_t ),
+	              bucket_descriptor_block_offset,
 	              error );
 
 	if( read_count != (ssize_t) sizeof( nsfdb_bucket_descriptor_block_header_t ) )
@@ -4062,8 +4006,10 @@ int libnsfdb_io_handle_read_bucket_descriptor_block(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_IO,
 		 LIBCERROR_IO_ERROR_READ_FAILED,
-		 "%s: unable to read bucket descriptor block header.",
-		 function );
+		 "%s: unable to read bucket descriptor block header at offset: %" PRIi64 " (0x%08" PRIx64 ").",
+		 function,
+		 bucket_descriptor_block_offset,
+		 bucket_descriptor_block_offset );
 
 		goto on_error;
 	}
@@ -4855,32 +4801,6 @@ int libnsfdb_io_handle_read_rrv_bucket(
 
 		return( -1 );
 	}
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
-	{
-		libcnotify_printf(
-		 "%s: reading RRV bucket offset: %" PRIi64 " (0x%08" PRIx64 ")\n",
-		 function,
-		 element_offset,
-		 element_offset );
-	}
-#endif
-	if( libbfio_handle_seek_offset(
-	     file_io_handle,
-	     element_offset,
-	     SEEK_SET,
-	     error ) == -1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_SEEK_FAILED,
-		 "%s: unable to seek RRV bucket offset: %" PRIi64 ".",
-		 function,
-		 element_offset );
-
-		goto on_error;
-	}
 	rrv_bucket_data = (uint8_t *) memory_allocate(
 	                               sizeof( uint8_t ) * (size_t) element_size );
 
@@ -4895,10 +4815,21 @@ int libnsfdb_io_handle_read_rrv_bucket(
 
 		goto on_error;
 	}
-	read_count = libbfio_handle_read_buffer(
+#if defined( HAVE_DEBUG_OUTPUT )
+	if( libcnotify_verbose != 0 )
+	{
+		libcnotify_printf(
+		 "%s: reading RRV bucket at offset: %" PRIi64 " (0x%08" PRIx64 ")\n",
+		 function,
+		 element_offset,
+		 element_offset );
+	}
+#endif
+	read_count = libbfio_handle_read_buffer_at_offset(
 	              file_io_handle,
 	              rrv_bucket_data,
 	              (size_t) element_size,
+	              element_offset,
 	              error );
 
 	if( read_count != (ssize_t) element_size )
@@ -4907,8 +4838,10 @@ int libnsfdb_io_handle_read_rrv_bucket(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_IO,
 		 LIBCERROR_IO_ERROR_READ_FAILED,
-		 "%s: unable to read RRV bucket data.",
-		 function );
+		 "%s: unable to read RRV bucket data at offset: %" PRIi64 " (0x%08" PRIx64 ").",
+		 function,
+		 element_offset,
+		 element_offset );
 
 		goto on_error;
 	}
