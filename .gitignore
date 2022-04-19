@@ -25,6 +25,7 @@
 *.swp
 *.Tpo
 *.trs
+*.user
 /*.egg-info/
 .deps
 .dirstamp
@@ -109,6 +110,7 @@ stamp-h[1-9]
 /po/Rules-quot
 /test-driver
 /ylwrap
+msvscpp/**/Release
 
 # Project specific files
 /common/config.h
@@ -159,3 +161,6 @@ stamp-h[1-9]
 /libfdatetime
 /libfvalue
 /libuna
+
+# Visual Studio 2017+
+.vs
