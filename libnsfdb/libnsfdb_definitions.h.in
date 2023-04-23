@@ -154,10 +154,10 @@ enum LIBNSFDB_NOTE_ITEM_FIELD_FLAGS
 	LIBNSFDB_NOTE_ITEM_FIELD_FLAG_UNCHANGED			= 0x1000
 };
 
-/* The maximum number of cache entries defintions
+/* The maximum number of cache entries definitions
  */
 #define LIBNSFDB_MAXIMUM_CACHE_ENTRIES_RRV_BUCKETS		128
 #define LIBNSFDB_MAXIMUM_CACHE_ENTRIES_BUCKETS			1024
 
-#endif
+#endif /* !defined( _LIBNSFDB_INTERNAL_DEFINITIONS_H ) */
 
