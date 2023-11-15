@@ -40,7 +40,7 @@ void (*nsfdbtools_signal_signal_handler)( nsfdbtools_signal_t ) = NULL;
 /* Signal handler for Ctrl+C or Ctrl+Break signals
  */
 BOOL WINAPI nsfdbtools_signal_handler(
-             unsigned long signal )
+             nsfdbtools_signal_t signal )
 {
 	static char *function = "nsfdbtools_signal_handler";
 
@@ -112,7 +112,7 @@ int nsfdbtools_signal_attach(
 	nsfdbtools_signal_signal_handler = signal_handler;
 
 	if( SetConsoleCtrlHandler(
-	     nsfdbtools_signal_handler,
+	     (PHANDLER_ROUTINE) nsfdbtools_signal_handler,
 	     TRUE ) == 0 )
 	{
 		libcerror_error_set(
@@ -179,7 +179,7 @@ int nsfdbtools_signal_detach(
 	static char *function = "nsfdbtools_signal_detach";
 
 	if( SetConsoleCtrlHandler(
-	     nsfdbtools_signal_handler,
+	     (PHANDLER_ROUTINE) nsfdbtools_signal_handler,
 	     FALSE ) == 0 )
 	{
 		libcerror_error_set(

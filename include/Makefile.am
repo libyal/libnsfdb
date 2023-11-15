@@ -19,9 +19,9 @@ MAINTAINERCLEANFILES = \
 	Makefile.in
 
 distclean: clean
-	/bin/rm -f libnsfdb.h
-	/bin/rm -f libnsfdb/definitions.h
-	/bin/rm -f libnsfdb/features.h
-	/bin/rm -f libnsfdb/types.h
-	/bin/rm -f Makefile
+	-rm -f libnsfdb.h
+	-rm -f libnsfdb/definitions.h
+	-rm -f libnsfdb/features.h
+	-rm -f libnsfdb/types.h
+	-rm -f Makefile
 

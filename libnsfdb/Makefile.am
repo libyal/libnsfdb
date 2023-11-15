@@ -90,11 +90,13 @@ MAINTAINERCLEANFILES = \
 	Makefile.in
 
 distclean: clean
-	/bin/rm -f libnsfdb_definitions.h
-	/bin/rm -f libnsfdb.rc
-	/bin/rm -f Makefile
+	-rm -f libnsfdb_definitions.h
+	-rm -f libnsfdb.rc
+	-rm -f Makefile
 
-splint:
+sources-local: $(BUILT_SOURCES)
+
+splint-local:
 	@echo "Running splint on libnsfdb ..."
 	-splint -preproc -redef $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(libnsfdb_la_SOURCES)
 

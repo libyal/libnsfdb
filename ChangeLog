@@ -65,26 +65,12 @@ Tools
 Deployment
 * check local library functions in configure
 
-20160107
-* 2016 update
-
-20150106
-* 2015 update
-
-20141207
-* code clean up
-
-20141026
-* changes for deployment
-
-20141019
-* changes for deployment
-
 20141012
 * removed README.macosx
 * updated dependencies
 * worked on utility scripts
 * changes for project site move
+* see `git log' for more recent change log
 
 20140318
 * Code clean up
