@@ -1,7 +1,7 @@
 /*
  * Internationalization (i18n) functions
  *
- * Copyright (C) 2010-2023, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2010-2024, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -19,8 +19,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#if !defined( _NSFDBTOOLS_I18N_H )
-#define _NSFDBTOOLS_I18N_H
+#if !defined( _NFSDBTOOLS_I18N_H )
+#define _NFSDBTOOLS_I18N_H
 
 #include <common.h>
 
@@ -44,5 +44,5 @@ extern "C" {
 }
 #endif
 
-#endif /* !defined( _NSFDBTOOLS_I18N_H ) */
+#endif /* !defined( _NFSDBTOOLS_I18N_H ) */
 

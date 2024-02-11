@@ -26,6 +26,8 @@ nsfdbexport_SOURCES = \
 	log_handle.c log_handle.h \
 	nsfdbexport.c \
 	nsfdbtools_getopt.c nsfdbtools_getopt.h \
+	nsfdbtools_i18n.h \
+	nsfdbtools_libbfio.h \
 	nsfdbtools_libcerror.h \
 	nsfdbtools_libcfile.h \
 	nsfdbtools_libclocale.h \
@@ -33,6 +35,7 @@ nsfdbexport_SOURCES = \
 	nsfdbtools_libcpath.h \
 	nsfdbtools_libfdatetime.h \
 	nsfdbtools_libnsfdb.h \
+	nsfdbtools_libuna.h \
 	nsfdbtools_output.c nsfdbtools_output.h \
 	nsfdbtools_signal.c nsfdbtools_signal.h \
 	nsfdbtools_unused.h
@@ -52,11 +55,14 @@ nsfdbinfo_SOURCES = \
 	info_handle.c info_handle.h \
 	nsfdbinfo.c \
 	nsfdbtools_getopt.c nsfdbtools_getopt.h \
+	nsfdbtools_i18n.h \
+	nsfdbtools_libbfio.h \
 	nsfdbtools_libcerror.h \
 	nsfdbtools_libclocale.h \
 	nsfdbtools_libcnotify.h \
 	nsfdbtools_libfdatetime.h \
 	nsfdbtools_libnsfdb.h \
+	nsfdbtools_libuna.h \
 	nsfdbtools_output.c nsfdbtools_output.h \
 	nsfdbtools_signal.c nsfdbtools_signal.h \
 	nsfdbtools_unused.h

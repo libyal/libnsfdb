@@ -218,6 +218,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\nsfdbtools\nsfdbtools_i18n.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\nsfdbtools\nsfdbtools_libbfio.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\nsfdbtools\nsfdbtools_libcerror.h"
 				>
 			</File>
@@ -243,6 +251,10 @@
 			</File>
 			<File
 				RelativePath="..\..\nsfdbtools\nsfdbtools_libnsfdb.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\nsfdbtools\nsfdbtools_libuna.h"
 				>
 			</File>
 			<File
