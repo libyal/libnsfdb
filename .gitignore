@@ -132,6 +132,7 @@ stamp-h[1-9]
 /nsfdbtools/nsfdbinfo
 /tests/*.exe
 /tests/input
+/tests/notify_stream.log
 /tests/nsfdb_test_bucket
 /tests/nsfdb_test_error
 /tests/nsfdb_test_file
