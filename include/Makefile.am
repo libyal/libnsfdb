@@ -15,13 +15,11 @@ EXTRA_DIST = \
 	libnsfdb/features.h.in \
 	libnsfdb/types.h.in
 
-MAINTAINERCLEANFILES = \
+DISTCLEANFILES = \
+	libnsfdb.h \
+	libnsfdb/definitions.h \
+	libnsfdb/features.h \
+	libnsfdb/types.h \
+	Makefile \
 	Makefile.in
-
-distclean: clean
-	-rm -f libnsfdb.h
-	-rm -f libnsfdb/definitions.h
-	-rm -f libnsfdb/features.h
-	-rm -f libnsfdb/types.h
-	-rm -f Makefile
 

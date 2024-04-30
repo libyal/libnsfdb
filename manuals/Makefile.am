@@ -6,9 +6,7 @@ EXTRA_DIST = \
 	nsfdbinfo.1 \
 	libnsfdb.3
 
-MAINTAINERCLEANFILES = \
+DISTCLEANFILES = \
+	Makefile \
 	Makefile.in
-
-distclean: clean
-	-rm -f Makefile
 
