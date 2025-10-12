@@ -640,7 +640,7 @@ int export_handle_open_input(
 }
 
 /* Closes the input
- * Returns the 0 if succesful or -1 on error
+ * Returns the 0 if successful or -1 on error
  */
 int export_handle_close_input(
      export_handle_t *export_handle,

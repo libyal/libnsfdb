@@ -1,5 +1,5 @@
 /*
- * Record Relocation Vector (RRV) bucket decriptor functions
+ * Record Relocation Vector (RRV) bucket descriptor functions
  *
  * Copyright (C) 2010-2024, Joachim Metz <joachim.metz@gmail.com>
  *
