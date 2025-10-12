@@ -1033,7 +1033,7 @@ int libnsfdb_io_handle_read_database_header(
 		 value_32bit );
 
 		libcnotify_printf(
-		 "%s: extention granularity\t\t\t\t: %" PRIu32 "\n",
+		 "%s: extension granularity\t\t\t\t: %" PRIu32 "\n",
 		 function,
 		 value_32bit );
 
@@ -2374,7 +2374,7 @@ int libnsfdb_io_handle_read_database_header(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-			 "%s: unable to append segment ot RRV bucket vector.",
+			 "%s: unable to append segment of RRV bucket vector.",
 			 function );
 
 			goto on_error;
