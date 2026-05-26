@@ -46,7 +46,7 @@ int nsfdb_test_memset_attempts_before_fail                           = -1;
 int nsfdb_test_realloc_attempts_before_fail                          = -1;
 
 /* Custom malloc for testing memory error cases
- * Note this function might fail if compiled with optimation
+ * Note this function might fail if compiled with optimization
  * Returns a pointer to newly allocated data or NULL
  */
 void *malloc(
@@ -77,7 +77,7 @@ void *malloc(
 }
 
 /* Custom memcpy for testing memory error cases
- * Note this function might fail if compiled with optimation and as a shared libary
+ * Note this function might fail if compiled with optimization and as a shared library
  * Returns a pointer to newly allocated data or NULL
  */
 void *memcpy(
@@ -110,7 +110,7 @@ void *memcpy(
 }
 
 /* Custom memset for testing memory error cases
- * Note this function might fail if compiled with optimation and as a shared libary
+ * Note this function might fail if compiled with optimization and as a shared library
  * Returns a pointer to newly allocated data or NULL
  */
 void *memset(
@@ -143,7 +143,7 @@ void *memset(
 }
 
 /* Custom realloc for testing memory error cases
- * Note this function might fail if compiled with optimation
+ * Note this function might fail if compiled with optimization
  * Returns a pointer to reallocated data or NULL
  */
 void *realloc(
