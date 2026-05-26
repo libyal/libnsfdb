@@ -31,14 +31,17 @@
  */
 #if defined( LIBNSFDB_DLL_EXPORT )
 #define LIBNSFDB_EXTERN __declspec(dllexport)
+#define LIBNSFDB_EXTERN_VARIABLE extern __declspec(dllexport)
 
 #elif defined( LIBNSFDB_DLL_IMPORT )
-#define LIBNSFDB_EXTERN extern __declspec(dllimport)
+#define LIBNSFDB_EXTERN __declspec(dllimport)
+#define LIBNSFDB_EXTERN_VARIABLE extern __declspec(dllimport)
 
 #else
 #define LIBNSFDB_EXTERN extern
+#define LIBNSFDB_EXTERN_VARIABLE extern
 
-#endif
+#endif /* defined( LIBNSFDB_DLL_EXPORT ) */
 
 #endif /* !defined( _LIBNSFDB_EXTERN_H ) */
 

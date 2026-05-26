@@ -20,7 +20,7 @@
  */
 
 #if !defined( _LIBNSFDB_INTERNAL_NOTE_H )
-#define _LIBNSFDB_NOTE_H
+#define _LIBNSFDB_INTERNAL_NOTE_H
 
 #include <common.h>
 #include <types.h>
