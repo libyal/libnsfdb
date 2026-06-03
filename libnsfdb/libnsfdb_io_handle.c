@@ -358,10 +358,10 @@ int libnsfdb_io_handle_clear(
 		 "%s: unable to clear IO handle.",
 		 function );
 
-		return( -1 );
+		result = -1;
 	}
 */
-	return( 1 );
+	return( result );
 }
 
 /* Reads the file header
@@ -3819,12 +3819,14 @@ int libnsfdb_io_handle_read_superblock(
 
 			goto on_error;
 		}
+#if defined( HAVE_DEBUG_OUTPUT )
 		superblock_data   += rrv_bucket_size;
 		uncompressed_size -= rrv_bucket_size;
+#endif
 	}
+#if defined( HAVE_DEBUG_OUTPUT )
 	if( uncompressed_size >= bitmap_size )
 	{
-#if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
 			libcnotify_printf(
@@ -3835,13 +3837,11 @@ int libnsfdb_io_handle_read_superblock(
 			 bitmap_size,
 			 0 );
 		}
-#endif
 		superblock_data   += bitmap_size;
 		uncompressed_size -= bitmap_size;
 	}
 	if( uncompressed_size >= data_note_identifier_table_size )
 	{
-#if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
 			libcnotify_printf(
@@ -3852,13 +3852,11 @@ int libnsfdb_io_handle_read_superblock(
 			 data_note_identifier_table_size,
 			 0 );
 		}
-#endif
 		superblock_data   += data_note_identifier_table_size;
 		uncompressed_size -= data_note_identifier_table_size;
 	}
 	if( uncompressed_size >= modified_note_log_size )
 	{
-#if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
 			libcnotify_printf(
@@ -3869,13 +3867,11 @@ int libnsfdb_io_handle_read_superblock(
 			 modified_note_log_size,
 			 0 );
 		}
-#endif
 		superblock_data   += modified_note_log_size;
 		uncompressed_size -= modified_note_log_size;
 	}
 	if( uncompressed_size >= folder_directory_object_size )
 	{
-#if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
 			libcnotify_printf(
@@ -3886,13 +3882,11 @@ int libnsfdb_io_handle_read_superblock(
 			 folder_directory_object_size,
 			 0 );
 		}
-#endif
 		superblock_data   += folder_directory_object_size;
 		uncompressed_size -= folder_directory_object_size;
 	}
 	if( uncompressed_size > 0 )
 	{
-#if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
 			libcnotify_printf(
@@ -3903,8 +3897,9 @@ int libnsfdb_io_handle_read_superblock(
 			 uncompressed_size,
 			 0 );
 		}
-#endif
 	}
+#endif /* defined( HAVE_DEBUG_OUTPUT ) */
+
 	memory_free(
 	 uncompressed_data );
 
@@ -4686,10 +4681,10 @@ int libnsfdb_io_handle_read_bucket_descriptor_block(
 
 		goto on_error;
 	}
+#if defined( HAVE_DEBUG_OUTPUT )
 	bucket_descriptor_block_data += read_count;
 	uncompressed_size            -= read_count;
 
-#if defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )
 	{
 		libcnotify_printf(

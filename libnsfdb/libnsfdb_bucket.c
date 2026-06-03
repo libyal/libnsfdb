@@ -390,13 +390,15 @@ int libnsfdb_bucket_read(
      libcerror_error_t **error )
 {
 	libcdata_array_t *bucket_index_array      = NULL;
-	uint8_t *bucket_header_data               = NULL;
+	uint8_t *bucket_data                      = NULL;
 	void *reallocation                        = NULL;
 	static char *function                     = "libnsfdb_bucket_read";
+	size_t bucket_data_size                   = 0;
+	size_t read_size                          = 0;
 	ssize_t read_count                        = 0;
+	uint32_t footer_size                      = 0;
 	uint32_t number_of_slots                  = 0;
 	uint32_t stored_checksum                  = 0;
-	uint32_t footer_size                      = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT )
 	uint8_t nsf_timedate_string[ 32 ];
@@ -426,10 +428,12 @@ int libnsfdb_bucket_read(
 
 		return( -1 );
 	}
-	bucket->data = (uint8_t *) memory_allocate(
-	                            sizeof( nsfdb_bucket_header_t ) );
+	bucket_data_size = sizeof( nsfdb_bucket_header_t );
 
-	if( bucket->data == NULL )
+	bucket_data = (uint8_t *) memory_allocate(
+	                           bucket_data_size );
+
+	if( bucket_data == NULL )
 	{
 		libcerror_error_set(
 		 error,
@@ -452,7 +456,7 @@ int libnsfdb_bucket_read(
 #endif
 	read_count = libbfio_handle_read_buffer_at_offset(
 	              file_io_handle,
-	              bucket->data,
+	              bucket_data,
 	              sizeof( nsfdb_bucket_header_t ),
 	              bucket_offset,
 	              error );
@@ -470,8 +474,6 @@ int libnsfdb_bucket_read(
 
 		goto on_error;
 	}
-	bucket_header_data = bucket->data;
-
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )
 	{
@@ -479,25 +481,25 @@ int libnsfdb_bucket_read(
 		 "%s: bucket header data:\n",
 		 function );
 		libcnotify_print_data(
-		 bucket_header_data,
+		 bucket_data,
 		 sizeof( nsfdb_bucket_header_t ),
 		 0 );
 	}
 #endif
 	byte_stream_copy_to_uint32_little_endian(
-	 ( (nsfdb_bucket_header_t *) bucket_header_data )->size,
-	 bucket->data_size );
+	 ( (nsfdb_bucket_header_t *) bucket_data )->size,
+	 bucket_data_size );
 
 	byte_stream_copy_to_uint32_little_endian(
-	 ( (nsfdb_bucket_header_t *) bucket_header_data )->checksum,
+	 ( (nsfdb_bucket_header_t *) bucket_data )->checksum,
 	 stored_checksum );
 
 	byte_stream_copy_to_uint32_little_endian(
-	 ( (nsfdb_bucket_header_t *) bucket_header_data )->number_of_slots,
+	 ( (nsfdb_bucket_header_t *) bucket_data )->number_of_slots,
 	 number_of_slots );
 
 	byte_stream_copy_to_uint32_little_endian(
-	 ( (nsfdb_bucket_header_t *) bucket_header_data )->footer_size,
+	 ( (nsfdb_bucket_header_t *) bucket_data )->footer_size,
 	 footer_size );
 
 #if defined( HAVE_DEBUG_OUTPUT )
@@ -506,25 +508,25 @@ int libnsfdb_bucket_read(
 		libcnotify_printf(
 		 "%s: signature\t\t\t\t\t\t\t: 0x%02" PRIx8 "\n",
 		 function,
-		 ( (nsfdb_bucket_header_t *) bucket_header_data )->signature );
+		 ( (nsfdb_bucket_header_t *) bucket_data )->signature );
 
 		libcnotify_printf(
 		 "%s: header size\t\t\t\t\t\t: %" PRIu8 "\n",
 		 function,
-		 ( (nsfdb_bucket_header_t *) bucket_header_data )->header_size );
+		 ( (nsfdb_bucket_header_t *) bucket_data )->header_size );
 
 		libcnotify_printf(
 		 "%s: unknown1:\n",
 		 function );
 		libcnotify_print_data(
-		 ( (nsfdb_bucket_header_t *) bucket_header_data )->unknown1,
+		 ( (nsfdb_bucket_header_t *) bucket_data )->unknown1,
 		 4,
 		 0 );
 
 		libcnotify_printf(
-		 "%s: size\t\t\t\t\t\t\t: %" PRIu32 "\n",
+		 "%s: size\t\t\t\t\t\t\t: %" PRIzd "\n",
 		 function,
-		 bucket->data_size );
+		 bucket_data_size );
 
 		if( libfdatetime_nsf_timedate_initialize(
 		     &nsf_timedate,
@@ -541,7 +543,7 @@ int libnsfdb_bucket_read(
 		}
 		if( libfdatetime_nsf_timedate_copy_from_byte_stream(
 		     nsf_timedate,
-		     ( (nsfdb_bucket_header_t *) bucket_header_data )->modification_time,
+		     ( (nsfdb_bucket_header_t *) bucket_data )->modification_time,
 		     8,
 		     LIBFDATETIME_ENDIAN_LITTLE,
 		     error ) != 1 )
@@ -593,7 +595,7 @@ int libnsfdb_bucket_read(
 		 "%s: unknown2:\n",
 		 function );
 		libcnotify_print_data(
-		 ( (nsfdb_bucket_header_t *) bucket_header_data )->unknown2,
+		 ( (nsfdb_bucket_header_t *) bucket_data )->unknown2,
 		 20,
 		 0 );
 
@@ -601,7 +603,7 @@ int libnsfdb_bucket_read(
 		 "%s: unknown3:\n",
 		 function );
 		libcnotify_print_data(
-		 ( (nsfdb_bucket_header_t *) bucket_header_data )->unknown3,
+		 ( (nsfdb_bucket_header_t *) bucket_data )->unknown3,
 		 2,
 		 0 );
 
@@ -619,7 +621,7 @@ int libnsfdb_bucket_read(
 		 "%s: unknown4:\n",
 		 function );
 		libcnotify_print_data(
-		 ( (nsfdb_bucket_header_t *) bucket_header_data )->unknown4,
+		 ( (nsfdb_bucket_header_t *) bucket_data )->unknown4,
 		 2,
 		 0 );
 
@@ -632,13 +634,13 @@ int libnsfdb_bucket_read(
 		 "%s: unknown5:\n",
 		 function );
 		libcnotify_print_data(
-		 ( (nsfdb_bucket_header_t *) bucket_header_data )->unknown5,
+		 ( (nsfdb_bucket_header_t *) bucket_data )->unknown5,
 		 12,
 		 0 );
 	}
-#endif
+#endif /* defined( HAVE_DEBUG_OUTPUT ) */
 
-	if( ( (nsfdb_bucket_header_t *) bucket_header_data )->signature != 0x02 )
+	if( ( (nsfdb_bucket_header_t *) bucket_data )->signature != 0x02 )
 	{
 		libcerror_error_set(
 		 error,
@@ -649,7 +651,7 @@ int libnsfdb_bucket_read(
 
 		goto on_error;
 	}
-	if( ( (nsfdb_bucket_header_t *) bucket_header_data )->header_size != 0x42 )
+	if( ( (nsfdb_bucket_header_t *) bucket_data )->header_size != 0x42 )
 	{
 		libcerror_error_set(
 		 error,
@@ -660,7 +662,8 @@ int libnsfdb_bucket_read(
 
 		goto on_error;
 	}
-	if( bucket->data_size <= (uint32_t) sizeof( nsfdb_bucket_header_t ) )
+	if( ( bucket_data_size <= sizeof( nsfdb_bucket_header_t ) )
+	 || ( bucket_data_size > (size_t) MEMORY_MAXIMUM_ALLOCATION_SIZE ) )
 	{
 		libcerror_error_set(
 		 error,
@@ -672,8 +675,8 @@ int libnsfdb_bucket_read(
 		goto on_error;
 	}
 	reallocation = memory_reallocate(
-	               bucket->data,
-	               bucket->data_size );
+	               bucket_data,
+	               bucket_data_size );
 
 	if( reallocation == NULL )
 	{
@@ -686,15 +689,17 @@ int libnsfdb_bucket_read(
 
 		goto on_error;
 	}
-	bucket->data = (uint8_t *) reallocation;
+	bucket_data = (uint8_t *) reallocation;
+
+	read_size = bucket_data_size - sizeof( nsfdb_bucket_header_t );
 
 	read_count = libbfio_handle_read_buffer(
 	              file_io_handle,
-	              &( bucket->data[ sizeof( nsfdb_bucket_header_t ) ] ),
-	              (size_t) bucket->data_size - sizeof( nsfdb_bucket_header_t ),
+	              &( bucket_data[ sizeof( nsfdb_bucket_header_t ) ] ),
+	              read_size,
 	              error );
 
-	if( read_count != (ssize_t) ( bucket->data_size - sizeof( nsfdb_bucket_header_t ) ) )
+	if( read_count != read_size )
 	{
 		libcerror_error_set(
 		 error,
@@ -726,8 +731,8 @@ int libnsfdb_bucket_read(
 		if( libnsfdb_bucket_read_index(
 		     bucket_index_array,
 		     number_of_slots,
-		     bucket->data,
-		     bucket->data_size - footer_size,
+		     bucket_data,
+		     bucket_data_size - footer_size,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
@@ -744,8 +749,8 @@ int libnsfdb_bucket_read(
 		if( libnsfdb_bucket_read_slots(
 		     bucket->slots_array,
 		     bucket_index_array,
-		     bucket->data,
-		     bucket->data_size,
+		     bucket_data,
+		     bucket_data_size,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
@@ -779,11 +784,14 @@ int libnsfdb_bucket_read(
 		 "%s: bucket footer:\n",
 		 function );
 		libcnotify_print_data(
-		 &( bucket->data[ bucket->data_size - footer_size ] ),
+		 &( bucket_data[ bucket_data_size - footer_size ] ),
 		 footer_size,
 		 0 );
 	}
 #endif
+	bucket->data      = bucket_data;
+	bucket->data_size = bucket_data_size;
+
 	return( 1 );
 
 on_error:
@@ -802,12 +810,10 @@ on_error:
 		 (int (*)(intptr_t **, libcerror_error_t **)) &libnsfdb_bucket_index_entry_free,
 		 NULL );
 	}
-	if( bucket->data != NULL )
+	if( bucket_data != NULL )
 	{
 		memory_free(
-		 bucket->data );
-
-		bucket->data = NULL;
+		 bucket_data );
 	}
 	return( -1 );
 }

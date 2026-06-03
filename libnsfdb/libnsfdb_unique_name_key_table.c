@@ -310,10 +310,10 @@ ssize_t libnsfdb_unique_name_key_table_read(
 			}
 			unique_name_key = NULL;
 		}
+#if defined( HAVE_DEBUG_OUTPUT )
 		/* TODO 4 byte text size ? */
 		unk_data += 4;
 
-#if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
 			libcnotify_printf(

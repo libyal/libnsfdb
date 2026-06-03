@@ -42,14 +42,17 @@ nsfdbexport_SOURCES = \
 
 nsfdbexport_LDADD = \
 	@LIBFDATETIME_LIBADD@ \
-	@LIBCPATH_LIBADD@ \
 	@LIBCFILE_LIBADD@ \
+	@LIBCPATH_LIBADD@ \
+	@LIBUNA_LIBADD@ \
 	@LIBCSPLIT_LIBADD@ \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
+	@LIBCDATA_LIBADD@ \
 	../libnsfdb/libnsfdb.la \
 	@LIBCERROR_LIBADD@ \
 	@LIBINTL@
+
 
 nsfdbinfo_SOURCES = \
 	info_handle.c info_handle.h \

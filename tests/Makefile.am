@@ -18,6 +18,9 @@ AM_CPPFLAGS = \
 	@PTHREAD_CPPFLAGS@ \
 	@LIBNSFDB_DLL_IMPORT@
 
+AM_TESTS_ENVIRONMENT = \
+	export TESTS_USE_WINAPI="@TESTS_USE_WINAPI@";
+
 TESTS = \
 	test_library.sh \
 	test_nsfdbinfo.sh \
