@@ -35,6 +35,23 @@
 extern "C" {
 #endif
 
+typedef struct nsfdbtools_option nsfdbtools_option_t;
+
+struct nsfdbtools_option
+{
+	/* The identifier typically a single character or 0 if positional argument.
+	 */
+	char identifier;
+
+	/* The name of the argument or NULL if none.
+	 */
+	const char *name;
+
+	/* The help text.
+	 */
+	const char *help;
+};
+
 #if defined( HAVE_GETOPT )
 #define nsfdbtools_getopt( argument_count, argument_values, options_string ) \
 	getopt( argument_count, argument_values, options_string )
@@ -59,6 +76,27 @@ system_integer_t nsfdbtools_getopt(
                   const system_character_t *options_string );
 
 #endif /* defined( HAVE_GETOPT ) */
+
+void nsfdbtools_getopt_wrapped_fprint(
+      FILE *stream,
+      int maximum_line_length,
+      int start_line_index,
+      const char *indentation,
+      const char *text,
+      size_t text_length );
+
+void nsfdbtools_getopt_usage_fprint(
+      FILE *stream,
+      const char *program,
+      const char *description,
+      const nsfdbtools_option_t *options,
+      int number_of_options );
+
+int nsfdbtools_getopt_get_options_string(
+     const nsfdbtools_option_t *options,
+     int number_of_options,
+     system_character_t *options_string,
+     size_t options_string_size );
 
 #if defined( __cplusplus )
 }
