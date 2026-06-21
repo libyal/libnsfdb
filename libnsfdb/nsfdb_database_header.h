@@ -150,10 +150,10 @@ struct nsfdb_database_information
 	 */
 	uint8_t allocation_granularity[ 2 ];
 
-	/* The extention granularity
+	/* The extension granularity
 	 * Consists of 4 bytes
 	 */
-	uint8_t extention_granularity[ 4 ];
+	uint8_t extension_granularity[ 4 ];
 
 	/* File size
 	 * Consists of 4 bytes

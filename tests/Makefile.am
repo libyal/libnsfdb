@@ -293,9 +293,9 @@ test_manpages: \
 
 test_tools: \
 	package.m4 \
-	test_macros.at \
 	test_inputs_nsfdbexport.at \
 	test_inputs_nsfdbinfo.at \
+	test_macros.at \
 	test_tools.at
 
 EXTRA_DIST = \
