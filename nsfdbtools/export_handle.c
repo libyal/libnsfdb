@@ -690,7 +690,6 @@ int export_handle_export_note(
      libcerror_error_t **error )
 {
 	static char *function = "export_handle_export_note";
-	size_t note_path_size = 0;
 
 	if( export_handle == NULL )
 	{

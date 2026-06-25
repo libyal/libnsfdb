@@ -1,19 +1,21 @@
 .Dd June 25, 2026
-.Dt NSFDBINFO 1
+.Dt NSFDBEXPORT 1
 .Os
 .Sh NAME
-.Nm nsfdbinfo
-.Nd determines information about a Notes Storage Facility (NSF) database file
+.Nm nsfdbexport
+.Nd exports items stored in a Notes Storage Facility (NSF) database file
 .Sh SYNOPSIS
-.Nm nsfdbinfo
+.Nm nsfdbexport
+.Op Fl l Ar log_file
+.Op Fl t Ar target
 .Op Fl hvV
 .Ar source
 .Sh DESCRIPTION
-.Nm nsfdbinfo
-is a utility to determine information about a Notes Storage Facility (NSF) \
-database file
+.Nm nsfdbexport
+is a utility to export items stored in a Notes Storage Facility (NSF) database \
+file
 .Pp
-.Nm nsfdbinfo
+.Nm nsfdbexport
 is part of the
 .Nm libnsfdb
 package.
@@ -27,6 +29,11 @@ The options are as follows:
 .Bl -tag -width Ds
 .It Fl h
 shows this help
+.It Fl l Ar log_file
+logs information about the exported items
+.It Fl t Ar target
+specify the target directory to export to (default is the source filename \
+followed by .export)
 .It Fl v
 verbose output to stderr
 .It Fl V
@@ -38,10 +45,8 @@ None
 None
 .Sh EXAMPLES
 .Bd -literal
-# nsfdbinfo bookmark.nsf
-nsfdbinfo 20260625
-.sp
-Notes Storage Facility information:
+# nsfdbexport bookmark.nsf
+nsfdbexport 20260625
 .sp
 .Ed
 .Sh DIAGNOSTICS
@@ -49,7 +54,7 @@ Errors, verbose and debug output are printed to stderr when verbose output \
 \-v is enabled.
 Verbose and debug output are only printed when enabled at compilation.
 .Sh SEE ALSO
-.Xr nsfdbexport 1
+.Xr nsfdbinfo 1
 .Sh AUTHORS
 .An Joachim Metz <joachim.metz@gmail.com>
 .Sh BUGS

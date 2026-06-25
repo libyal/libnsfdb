@@ -245,7 +245,7 @@ RUN_TEST_NSFDBTOOL_AND_COMPARE_STDOUT(
   [],
   test_inputs_nsfdbinfo)
 
-RUN_TEST_NSFDBTOOL_AND_COMPARE_STDOUT(
+RUN_TEST_NSFDBTOOL_AND_COMPARE_FILES(
   [nsfdbexport],
   [nsfdbexport],
   [],

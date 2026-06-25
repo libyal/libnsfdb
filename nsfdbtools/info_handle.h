@@ -62,12 +62,16 @@ int info_handle_signal_abort(
      info_handle_t *info_handle,
      libcerror_error_t **error );
 
-int info_handle_open(
+int info_handle_open_input(
      info_handle_t *info_handle,
      const system_character_t *filename,
      libcerror_error_t **error );
 
-int info_handle_close(
+int info_handle_close_input(
+     info_handle_t *info_handle,
+     libcerror_error_t **error );
+
+int info_handle_file_fprint(
      info_handle_t *info_handle,
      libcerror_error_t **error );
 

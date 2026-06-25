@@ -329,7 +329,6 @@ int libnsfdb_note_read(
 	static char *function                           = "libnsfdb_note_read";
 	size_t note_data_size                           = 0;
 	uint32_t non_summary_data_identifier            = 0;
-	uint32_t non_summary_data_size                  = 0;
 	uint32_t note_size                              = 0;
 	uint16_t note_item_index                        = 0;
 	uint16_t note_signature                         = 0;
@@ -340,6 +339,7 @@ int libnsfdb_note_read(
 
 	libfdatetime_nsf_timedate_t *nsf_timedate       = NULL;
 	uint64_t value_64bit                            = 0;
+	uint32_t non_summary_data_size                  = 0;
 	uint32_t value_32bit                            = 0;
 	uint16_t value_16bit                            = 0;
 #endif
@@ -518,11 +518,11 @@ int libnsfdb_note_read(
 	 ( (nsfdb_note_header_t *) note_data )->non_summary_data_identifier,
 	 non_summary_data_identifier );
 
+#if defined( HAVE_DEBUG_OUTPUT )
 	byte_stream_copy_to_uint32_little_endian(
 	 ( (nsfdb_note_header_t *) note_data )->non_summary_data_size,
 	 non_summary_data_size );
 
-#if defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )
 	{
 		if( libfdatetime_nsf_timedate_initialize(

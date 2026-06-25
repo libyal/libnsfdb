@@ -1,5 +1,5 @@
 /*
- * Shows information obtained from a Notes Storage Facility (NSF) database file
+ * Shows information obtained from a Notes Storage Facility (NSF) database file.
  *
  * Copyright (C) 2010-2026, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -20,11 +20,9 @@
  */
 
 #include <common.h>
-#include <memory.h>
+#include <file_stream.h>
 #include <system_string.h>
 #include <types.h>
-
-#include <stdio.h>
 
 #if defined( HAVE_FCNTL_H ) || defined( WINAPI )
 #include <fcntl.h>
@@ -42,6 +40,7 @@
 #include <unistd.h>
 #endif
 
+#include "info_handle.h"
 #include "nsfdbtools_getopt.h"
 #include "nsfdbtools_libcerror.h"
 #include "nsfdbtools_libclocale.h"
@@ -51,67 +50,51 @@
 #include "nsfdbtools_signal.h"
 #include "nsfdbtools_unused.h"
 
-/* Prints the executable usage information
+info_handle_t *nsfdbinfo_info_handle = NULL;
+int nsfdbinfo_abort                  = 0;
+
+/* Signal handler for nsfdbinfo
  */
-void usage_fprint(
-      FILE *stream )
+void nsfdbinfo_signal_handler(
+      nsfdbtools_signal_t signal NSFDBTOOLS_ATTRIBUTE_UNUSED )
 {
-	if( stream == NULL )
+	libcerror_error_t *error = NULL;
+	static char *function    = "nsfdbinfo_signal_handler";
+
+	NSFDBTOOLS_UNREFERENCED_PARAMETER( signal )
+
+	nsfdbinfo_abort = 1;
+
+	if( nsfdbinfo_info_handle != NULL )
 	{
-		return;
+		if( info_handle_signal_abort(
+		     nsfdbinfo_info_handle,
+		     &error ) != 1 )
+		{
+			libcnotify_printf(
+			 "%s: unable to signal info handle to abort.\n",
+			 function );
+
+			libcnotify_print_error_backtrace(
+			 error );
+			libcerror_error_free(
+			 &error );
+		}
 	}
-	fprintf( stream, "Use nsfdbinfo to determine information about a Notes Storage Facility (NSF) database file.\n\n" );
-
-	fprintf( stream, "Usage: nsfdbinfo [ -hvV ] source\n\n" );
-
-	fprintf( stream, "\tsource: the source file\n\n" );
-
-	fprintf( stream, "\t-h:     shows this help\n" );
-	fprintf( stream, "\t-v:     verbose output to stderr\n" );
-	fprintf( stream, "\t-V:     print version\n" );
-}
-
-/* Prints file information
- * Returns 1 if successful or -1 on error
- */
-int nsfdbinfo_file_info_fprint(
-     FILE *stream,
-     libnsfdb_file_t *file,
-     libnsfdb_error_t **error )
-{
-	static char *function = "nsfdbinfo_file_info_fprint";
-
-	if( stream == NULL )
+	/* Force stdin to close otherwise any function reading it will remain blocked
+	 */
+#if defined( WINAPI ) && !defined( __CYGWIN__ )
+	if( _close(
+	     0 ) != 0 )
+#else
+	if( close(
+	     0 ) != 0 )
+#endif
 	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid stream.",
+		libcnotify_printf(
+		 "%s: unable to close stdin.\n",
 		 function );
-
-		return( -1 );
 	}
-	if( file == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid file.",
-		 function );
-
-		return( -1 );
-	}
-	fprintf(
-	 stream,
-	 "Notes Storage Facility information:\n" );
-
-	fprintf(
-	 stream,
-	 "\n" );
-
-	return( 1 );
 }
 
 /* The main program
@@ -122,12 +105,23 @@ int wmain( int argc, wchar_t * const argv[] )
 int main( int argc, char * const argv[] )
 #endif
 {
-	libnsfdb_error_t *error     = NULL;
-	libnsfdb_file_t *nsfdb_file = NULL;
-	system_character_t *source  = NULL;
-	char *program               = "nsfdbinfo";
-	system_integer_t option     = 0;
-	int verbose                 = 0;
+	const char *description = \
+		"Use nsfdbinfo to determine information about a Notes Storage Facility (NSF) database file.";
+
+	nsfdbtools_option_t options[ ] = {
+		{ 'h', NULL, "shows this help" },
+		{ 'v', NULL, "verbose output to stderr" },
+		{ 'V', NULL, "print version" },
+		{ 0, "source", "the source file" },
+	};
+	system_character_t options_string[ 32 ];
+
+	libnsfdb_error_t *error    = NULL;
+	system_character_t *source = NULL;
+	char *program              = "nsfdbinfo";
+	system_integer_t option    = 0;
+	int number_of_options      = (int) ( sizeof( options ) / sizeof( nsfdbtools_option_t ) );
+	int verbose                = 0;
 
 #if defined( __MINGW32__ ) && defined( HAVE_MINGW_BINMODE )
 	_setmode( _fileno( stdout ), _O_BINARY );
@@ -141,7 +135,7 @@ int main( int argc, char * const argv[] )
 	 1 );
 
 	if( libclocale_initialize(
-             "nsfdbtools",
+	     "nsfdbtools",
 	     &error ) != 1 )
 	{
 		fprintf(
@@ -151,8 +145,8 @@ int main( int argc, char * const argv[] )
 		goto on_error;
 	}
 	if( nsfdbtools_output_initialize(
-             _IONBF,
-             &error ) != 1 )
+	     _IONBF,
+	     &error ) != 1 )
 	{
 		fprintf(
 		 stderr,
@@ -164,10 +158,22 @@ int main( int argc, char * const argv[] )
 	 stdout,
 	 program );
 
+	if( nsfdbtools_getopt_get_options_string(
+	     options,
+	     number_of_options,
+	     options_string,
+	     32 ) != 1 )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to determine options string.\n" );
+
+		goto on_error;
+	}
 	while( ( option = nsfdbtools_getopt(
 	                   argc,
 	                   argv,
-	                   _SYSTEM_STRING( "hvV" ) ) ) != (system_integer_t) -1 )
+	                   options_string ) ) != (system_integer_t) -1 )
 	{
 		switch( option )
 		{
@@ -176,16 +182,24 @@ int main( int argc, char * const argv[] )
 				fprintf(
 				 stderr,
 				 "Invalid argument: %" PRIs_SYSTEM "\n",
-				 argv[ optind ] );
+				 argv[ optind - 1 ] );
 
-				usage_fprint(
-				 stdout );
+				nsfdbtools_getopt_usage_fprint(
+				 stdout,
+				 program,
+				 description,
+				 options,
+				 number_of_options );
 
 				return( EXIT_FAILURE );
 
 			case (system_integer_t) 'h':
-				usage_fprint(
-				 stdout );
+				nsfdbtools_getopt_usage_fprint(
+				 stdout,
+				 program,
+				 description,
+				 options,
+				 number_of_options );
 
 				return( EXIT_SUCCESS );
 
@@ -207,8 +221,12 @@ int main( int argc, char * const argv[] )
 		 stderr,
 		 "Missing source file.\n" );
 
-		usage_fprint(
-		 stdout );
+		nsfdbtools_getopt_usage_fprint(
+		 stdout,
+		 program,
+		 description,
+		 options,
+		 number_of_options );
 
 		return( EXIT_FAILURE );
 	}
@@ -222,40 +240,29 @@ int main( int argc, char * const argv[] )
 	libnsfdb_notify_set_verbose(
 	 verbose );
 
-	if( libnsfdb_file_initialize(
-	     &nsfdb_file,
+	if( info_handle_initialize(
+	     &nsfdbinfo_info_handle,
 	     &error ) != 1 )
 	{
 		fprintf(
 		 stderr,
-		 "Unable to initialize libnsfdb file.\n" );
+		 "Unable to initialize info handle.\n" );
 
 		goto on_error;
 	}
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-	if( libnsfdb_file_open_wide(
-	     nsfdb_file,
+	if( info_handle_open_input(
+	     nsfdbinfo_info_handle,
 	     source,
-	     LIBNSFDB_OPEN_READ,
 	     &error ) != 1 )
-#else
-	if( libnsfdb_file_open(
-	     nsfdb_file,
-	     source,
-	     LIBNSFDB_OPEN_READ,
-	     &error ) != 1 )
-#endif
 	{
 		fprintf(
 		 stderr,
-		 "Error opening file: %" PRIs_SYSTEM ".\n",
-		 argv[ optind ] );
+		 "Unable to open source file.\n" );
 
 		goto on_error;
 	}
-	if( nsfdbinfo_file_info_fprint(
-	     stdout,
-	     nsfdb_file,
+	if( info_handle_file_fprint(
+	     nsfdbinfo_info_handle,
 	     &error ) != 1 )
 	{
 		fprintf(
@@ -264,24 +271,23 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
-	if( libnsfdb_file_close(
-	     nsfdb_file,
+	if( info_handle_close_input(
+	     nsfdbinfo_info_handle,
 	     &error ) != 0 )
 	{
 		fprintf(
 		 stderr,
-		 "Error closing file: %" PRIs_SYSTEM ".\n",
-		 argv[ optind ] );
+		 "Unable to close info handle.\n" );
 
 		goto on_error;
 	}
-	if( libnsfdb_file_free(
-	     &nsfdb_file,
+	if( info_handle_free(
+	     &nsfdbinfo_info_handle,
 	     &error ) != 1 )
 	{
 		fprintf(
 		 stderr,
-		 "Unable to free libnsfdb file.\n" );
+		 "Unable to free info handle.\n" );
 
 		goto on_error;
 	}
@@ -295,10 +301,10 @@ on_error:
 		libcerror_error_free(
 		 &error );
 	}
-	if( nsfdb_file != NULL )
+	if( nsfdbinfo_info_handle != NULL )
 	{
-		libnsfdb_file_free(
-		 &nsfdb_file,
+		info_handle_free(
+		 &nsfdbinfo_info_handle,
 		 NULL );
 	}
 	return( EXIT_FAILURE );

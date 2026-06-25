@@ -398,12 +398,12 @@ int libnsfdb_bucket_read(
 	ssize_t read_count                        = 0;
 	uint32_t footer_size                      = 0;
 	uint32_t number_of_slots                  = 0;
-	uint32_t stored_checksum                  = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT )
 	uint8_t nsf_timedate_string[ 32 ];
 
 	libfdatetime_nsf_timedate_t *nsf_timedate = NULL;
+	uint32_t stored_checksum                  = 0;
 #endif
 
 	if( bucket == NULL )
@@ -490,10 +490,11 @@ int libnsfdb_bucket_read(
 	 ( (nsfdb_bucket_header_t *) bucket_data )->size,
 	 bucket_data_size );
 
+#if defined( HAVE_DEBUG_OUTPUT )
 	byte_stream_copy_to_uint32_little_endian(
 	 ( (nsfdb_bucket_header_t *) bucket_data )->checksum,
 	 stored_checksum );
-
+#endif
 	byte_stream_copy_to_uint32_little_endian(
 	 ( (nsfdb_bucket_header_t *) bucket_data )->number_of_slots,
 	 number_of_slots );

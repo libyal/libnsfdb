@@ -58,7 +58,13 @@ int main(
 
 	return( EXIT_SUCCESS );
 
+#if defined( __GNUC__ ) && !defined( LIBNSFDB_DLL_IMPORT )
+
+/* TODO: add tests
 on_error:
 	return( EXIT_FAILURE );
+*/
+
+#endif /* defined( __GNUC__ ) && !defined( LIBNSFDB_DLL_IMPORT ) */
 }
 

@@ -97,7 +97,7 @@ If (-Not (Test-Path ${TestExecutablesDirectory}))
 	Exit ${ExitFailure}
 }
 
-$Result = ${ExitIgnore}
+$Result = ${ExitSuccess}
 
 $Profiles = @("nsfdbinfo")
 
@@ -109,16 +109,12 @@ For ($ProfileIndex = 0; $ProfileIndex -le ($Profiles.length - 1); $ProfileIndex 
 
 	ForEach ($TestInput in ${TestInputs})
 	{
-		$Result = RunToolsBinaryAndCompareStdout ${TestExecutablesDirectory} "nsfdbinfo" ${TestProfile} "" ${TestInput}
+		$ResultRun = RunToolsBinaryAndCompareStdout ${TestExecutablesDirectory} "nsfdbinfo" ${TestProfile} "" ${TestInput}
 
-		If ((${Result} -ne ${ExitSuccess}) -And (${Result} -ne ${ExitIgnore}))
+		If ((${ResultRun} -ne ${ExitSuccess}) -And (${ResultRun} -ne ${ExitIgnore}))
 		{
-			Break
+			$Result = ${ResultRun}
 		}
-	}
-	If ((${Result} -ne ${ExitSuccess}) -And (${Result} -ne ${ExitIgnore}))
-	{
-		Break
 	}
 }
 

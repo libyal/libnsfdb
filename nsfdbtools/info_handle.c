@@ -207,12 +207,12 @@ int info_handle_signal_abort(
 /* Opens the info handle
  * Returns 1 if successful or -1 on error
  */
-int info_handle_open(
+int info_handle_open_input(
      info_handle_t *info_handle,
      const system_character_t *filename,
      libcerror_error_t **error )
 {
-	static char *function = "info_handle_open";
+	static char *function = "info_handle_open_input";
 
 	if( info_handle == NULL )
 	{
@@ -254,11 +254,11 @@ int info_handle_open(
 /* Closes the info handle
  * Returns the 0 if successful or -1 on error
  */
-int info_handle_close(
+int info_handle_close_input(
      info_handle_t *info_handle,
      libcerror_error_t **error )
 {
-	static char *function = "info_handle_close";
+	static char *function = "info_handle_close_input";
 
 	if( info_handle == NULL )
 	{
@@ -285,5 +285,38 @@ int info_handle_close(
 		return( -1 );
 	}
 	return( 0 );
+}
+
+/* Prints file information
+ * Returns 1 if successful or -1 on error
+ */
+int info_handle_file_fprint(
+     info_handle_t *info_handle,
+     libcerror_error_t **error )
+{
+	static char *function = "nsfdbinfo_file_info_fprint";
+
+	if( info_handle == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid info handle.",
+		 function );
+
+		return( -1 );
+	}
+	fprintf(
+	 info_handle->notify_stream,
+	 "Notes Storage Facility information:\n" );
+
+	/* TODO add more information */
+
+	fprintf(
+	 info_handle->notify_stream,
+	 "\n" );
+
+	return( 1 );
 }
 
