@@ -2,7 +2,7 @@ AC_PREREQ([2.71])
 
 AC_INIT(
   [libnsfdb],
-  [20261010],
+  [20261112],
   [https://github.com/libyal/libnsfdb/issues])
 
 AC_CONFIG_SRCDIR(
